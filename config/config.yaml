@@ -1,0 +1,163 @@
+# 主配置文件
+# =====================================
+
+# 默认环境配置
+default_env: test
+
+# 项目信息
+project:
+  name: 接口自动化测试平台
+  version: 1.0.0
+  description: 基于pytest的接口自动化测试框架
+
+# HTTP客户端配置
+http_client:
+  # 可选: requests 或 httpx
+  type: requests
+  # 默认超时时间（秒）
+  timeout: 30
+  # 连接池大小
+  max_connections: 100
+  # 最大保持连接数
+  max_keepalive_connections: 20
+  # 是否启用连接池
+  enable_pool: true
+  # 重试次数
+  max_retries: 3
+  # 重试间隔（秒）
+  retry_interval: 1
+
+# 日志配置
+logging:
+  # 日志级别: TRACE, DEBUG, INFO, SUCCESS, WARNING, ERROR, CRITICAL
+  level: INFO
+  # 日志目录
+  dir: logs
+  # 是否控制台输出
+  console: true
+  # 是否文件输出
+  file: true
+  # 日志文件最大大小(MB)
+  rotation: 10 MB
+  # 日志保留天数
+  retention: 7 days
+  # 日志格式
+  format: "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+
+# 变量管理
+variables:
+  # 全局变量文件
+  global_file: config/global_vars.yaml
+  # 是否启用变量缓存
+  enable_cache: true
+  # 缓存过期时间（秒）
+  cache_ttl: 3600
+
+# 断言配置
+assertion:
+  # 是否启用SQL断言
+  enable_sql: true
+  # 是否启用JSON Schema断言
+  enable_schema: true
+  # 是否启用正则断言
+  enable_regex: true
+  # 断言失败时是否继续执行
+  continue_on_fail: false
+
+# 钩子配置
+hooks:
+  # 自定义钩子目录
+  dir: hooks
+  # 是否启用钩子
+  enable: true
+  # 钩子顺序文件
+  order_file: hooks/hooks_order.yaml
+
+# 通知配置
+notification:
+  # 是否启用通知
+  enable: true
+  # 通知级别: all, failed, error
+  level: failed
+  # 钉钉
+  dingtalk:
+    enable: false
+    webhook: ""
+    secret: ""
+    at_mobiles: []
+    at_all: false
+  # 飞书
+  feishu:
+    enable: false
+    webhook: ""
+    at_mobiles: []
+  # 企业微信
+  wechat:
+    enable: false
+    webhook: ""
+    mentioned_list: []
+    mentioned_mobile_list: []
+  # 邮箱
+  email:
+    enable: false
+    smtp_host: "smtp.example.com"
+    smtp_port: 587
+    sender: "test@example.com"
+    password: ""
+    receivers: ["receiver@example.com"]
+    subject: "测试报告通知"
+
+# Allurement
+allure:
+  # 报告标题
+  title: "接口自动化测试报告"
+  # 报告语言: zh-CN, en-US, ru
+  language: zh-CN
+  # 自定义环境变量
+  environment:
+    - name: 环境
+      variable: env
+    - name: 版本
+      variable: project.version
+    - name: 超时时间
+      variable: http_client.timeout
+
+# 测试数据配置
+test_data:
+  # 测试数据目录
+  dir: test_data
+  # 是否自动发现测试文件
+  auto_discovery: true
+  # 支持的文件后缀
+  extensions: [".yaml", ".yml", ".json"]
+  # 是否进行数据校验
+  validate: true
+
+# 数据库配置（用于SQL断言）
+database:
+  # 数据库类型: mysql, postgres
+  type: mysql
+  host: ""
+  port: 3306
+  user: ""
+  password: ""
+  database: ""
+  charset: utf8mb4
+  # 连接池配置
+  pool_size: 5
+  max_overflow: 10
+  pool_timeout: 30
+  pool_recycle: 3600
+
+# 其他配置
+misc:
+  # 是否显示详细堆栈
+  verbose_traceback: false
+  # 是否启用性能分析
+  enable_profiling: false
+  # 并发执行数（pytest-xdist）
+  workers: auto
+  # 是否启用重试
+  enable_rerun: false
+  # 重试次数
+  reruns: 2

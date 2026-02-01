@@ -1,0 +1,151 @@
+{
+  "module": {
+    "name": "商品模块",
+    "version": "1.0.0",
+    "description": "商品相关接口测试"
+  },
+  "config": {
+    "timeout": 30
+  },
+  "test_cases": [
+    {
+      "name": "获取商品列表",
+      "description": "获取商品列表数据",
+      "priority": "p0",
+      "tags": ["smoke", "daily"],
+      "method": "GET",
+      "url": "/products",
+      "params": {
+        "page": 1,
+        "page_size": 20,
+        "category": "electronics"
+      },
+      "validate": [
+        {
+          "type": "status_code",
+          "expected": 200
+        },
+        {
+          "type": "eq",
+          "path": "body.code",
+          "expected": 0
+        },
+        {
+          "type": "type",
+          "path": "body.data.list",
+          "expected": "list"
+        },
+        {
+          "type": "length",
+          "path": "body.data.list",
+          "min": 0,
+          "max": 20
+        }
+      ],
+      "extract": {
+        "product_id": {
+          "type": "jsonpath",
+          "expression": "$.data.list[0].product_id"
+        },
+        "product_name": {
+          "type": "jsonpath",
+          "expression": "$.data.list[0].name"
+        }
+      }
+    },
+    {
+      "name": "获取商品详情",
+      "description": "获取指定商品的详细信息",
+      "priority": "p0",
+      "tags": ["smoke"],
+      "depends_on": "获取商品列表",
+      "method": "GET",
+      "url": "/products/${$extract.product_id}",
+      "validate": [
+        {
+          "type": "status_code",
+          "expected": 200
+        },
+        {
+          "type": "eq",
+          "path": "body.code",
+          "expected": 0
+        },
+        {
+          "type": "not_none",
+          "path": "body.data.name"
+        },
+        {
+          "type": "not_none",
+          "path": "body.data.price"
+        },
+        {
+          "type": "gt",
+          "path": "body.data.price",
+          "expected": 0
+        }
+      ]
+    },
+    {
+      "name": "搜索商品",
+      "description": "根据关键词搜索商品",
+      "priority": "p1",
+      "tags": ["regression"],
+      "method": "GET",
+      "url": "/products/search",
+      "params": {
+        "keyword": "手机",
+        "page": 1,
+        "page_size": 10
+      },
+      "validate": [
+        {
+          "type": "status_code",
+          "expected": 200
+        },
+        {
+          "type": "eq",
+          "path": "body.code",
+          "expected": 0
+        },
+        {
+          "type": "regex",
+          "path": "body.data.list[0].name",
+          "pattern": "手机"
+        }
+      ]
+    },
+    {
+      "name": "添加购物车",
+      "description": "将商品添加到购物车",
+      "priority": "p1",
+      "tags": ["regression"],
+      "method": "POST",
+      "url": "/cart/add",
+      "headers": {
+        "Authorization": "Bearer ${$extract.access_token}"
+      },
+      "body": {
+        "product_id": "${$extract.product_id}",
+        "quantity": 2,
+        "sku_id": "sku_001"
+      },
+      "validate": [
+        {
+          "type": "status_code",
+          "expected": 200
+        },
+        {
+          "type": "eq",
+          "path": "body.code",
+          "expected": 0
+        },
+        {
+          "type": "eq",
+          "path": "body.data.quantity",
+          "expected": 2
+        }
+      ]
+    }
+  ]
+}
