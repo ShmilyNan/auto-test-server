@@ -12,8 +12,7 @@ project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 from src.core.context import TestContext
-from src.utils.logger import get_logger
-logger = get_logger()
+from src.utils.logger import log as logger
 
 
 def test_context_none_handling():
@@ -45,15 +44,12 @@ def test_config_loading():
     logger.info("测试2: 测试配置加载")
     
     try:
-        from ruamel.yaml import YAML
+        from src.utils.yaml_loader import load_yaml
         from pathlib import Path
-        yaml = YAML(typ='safe')
-        
+
         config_file = Path("config/config.yaml")
         if config_file.exists():
-            with open(config_file, 'r', encoding='utf-8') as f:
-                config = yaml.load(f) or {}
-            
+            config = load_yaml(config_file) or {}
             logger.success(f"✓ 测试2通过: 配置加载成功")
         else:
             logger.warning("⚠ 配置文件不存在，跳过测试2")
@@ -66,15 +62,13 @@ def test_yaml_parsing():
     logger.info("测试3: 测试YAML解析")
     
     try:
-        from ruamel.yaml import YAML
+        from src.utils.yaml_loader import load_yaml
         from pathlib import Path
-        yaml = YAML(typ='safe')
 
         
         yaml_file = Path("test_data/user_module.yaml")
         if yaml_file.exists():
-            with open(yaml_file, 'r', encoding='utf-8') as f:
-                data = yaml.load(f)
+            data = load_yaml(yaml_file)
             
             assert data is not None
             assert 'test_cases' in data

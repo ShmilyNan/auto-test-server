@@ -1,0 +1,100 @@
+# pyproject.toml
+
+# ======================
+# pytest 配置
+# ======================
+
+[tool.pytest.ini_options]
+# 测试用例目录
+testpaths = ["src/api"]
+
+# 测试文件匹配模式
+python_files = ["test_*.py", "*_test.py"]     # 匹配 test_开头或 _test结尾的文件
+python_classes = ["Test*"]                     # 匹配 Test开头的类
+python_functions = ["test_*"]                  # 匹配 test_开头的函数
+
+# 命令行默认选项
+# -v: 详细输出
+# -s: 显示print输出
+# --strict-markers: 严格检查marker
+# --tb=short: 简短的traceback
+# --alluredir: Allure报告输出目录
+# --clean-alluredir: 清理旧的Allure报告
+addopts = [
+    "-v",
+    "-s",
+    "--strict-markers",
+    "--tb=short",
+    "--alluredir=reports/allure",
+    "--clean-alluredir"
+]
+
+# pytest 最小版本要求
+minversion = "7.0"
+
+# 异步测试模式：auto表示自动处理async测试
+asyncio_mode = "auto"
+
+# 日志配置
+log_cli = true                                # 启用命令行日志
+log_cli_level = "INFO"                        # 日志级别：INFO
+log_cli_format = "%(asctime)s [%(levelname)s] %(message)s"  # 日志格式
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"     # 日期格式
+
+# 警告过滤器
+# 忽略DeprecationWarning和PendingDeprecationWarning
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning"
+]
+
+# ======================
+# 测试标记定义
+# ======================
+[tool.pytest.ini_options.markers]
+smoke = "冒烟测试"        # 核心功能验证
+regression = "回归测试"    # 回归测试套件
+daily = "每日巡检"        # 日常巡检用例
+p0 = "P0级用例"          # 最高优先级用例
+p1 = "P1级用例"          # 高优先级用例
+p2 = "P2级用例"          # 中优先级用例
+p3 = "P3级用例"          # 低优先级用例
+slow = "慢速测试"        # 执行较慢的测试
+skip = "跳过测试"        # 暂时跳过的测试
+xfail = "预期失败"       # 预期会失败的测试
+
+
+
+# 代码格式化配置
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+# 静态类型检查
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+
+# 代码质量检查
+[tool.ruff]
+target-version = "py39"
+line-length = 88
+select = ["E", "F", "I", "B"]
+ignore = ["E501"]
+
+# 测试覆盖率配置
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if __name__ == .__main__.:"
+]

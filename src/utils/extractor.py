@@ -8,8 +8,7 @@ import json
 from typing import Dict, Any, List, Optional, Union
 from jsonpath_ng import parse as jsonpath_parse
 from lxml import etree
-from src.utils.logger import get_logger
-logger = get_logger()
+from src.utils.logger import log as logger
 
 
 class Extractor:

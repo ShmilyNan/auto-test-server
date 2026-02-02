@@ -1,0 +1,47 @@
+# 生产环境配置
+
+# 基础URL
+base_url: "https://api.example.com"
+
+# 代理配置
+proxy:
+  enable: false
+  http: ""
+  https: ""
+
+# 认证配置
+auth:
+  type: bearer
+  token: "${auth.prod_token}"
+  username: ""
+  password: ""
+  api_key: ""
+  api_key_header: "X-API-Key"
+  oauth2:
+    token_url: "https://api.example.com/oauth/token"
+    client_id: ""
+    client_secret: ""
+    scope: ""
+
+# 默认请求头
+headers:
+  Content-Type: "application/json"
+  Accept: "application/json"
+  User-Agent: "AutoTestPlatform/1.0"
+  X-Env: "production"
+
+# 默认请求参数
+params: {}
+
+# 超时配置
+timeout:
+  connect: 15
+  read: 45
+
+# 数据库配置（通常不在生产环境直连）
+database:
+  host: ""
+  port: 3306
+  user: ""
+  password: ""
+  database: ""

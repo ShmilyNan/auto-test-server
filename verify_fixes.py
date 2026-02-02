@@ -6,13 +6,12 @@
 
 import sys
 from pathlib import Path
+from src.utils.logger import log as logger
 
 # 添加项目根目录到Python路径
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-from src.utils.logger import get_logger
-logger = get_logger()
 
 
 def test_imports():
@@ -24,7 +23,6 @@ def test_imports():
         from src.core.context import get_context, reset_context, TestContext
         from src.core.parser import TestParser, TestCase
         from src.core.validator import Validator, AssertionResult
-        from src.utils.logger import init_logger, get_logger
         from src.utils.extractor import get_extractor, Extractor
         from src.utils.notifier import NotificationManager
         
@@ -78,10 +76,8 @@ def test_parser():
     
     try:
         from src.core.parser import TestParser
-        from ruamel.yaml import YAML
-        yaml = YAML(typ='safe')
+        from src.utils.yaml_loader import load_yaml
 
-        
         parser = TestParser()
         
         # 测试YAML解析
@@ -94,7 +90,7 @@ test_cases:
       - type: "status_code"
         expected: 200
 """
-        test_data = yaml.load(yaml_content)
+        test_data = load_yaml(yaml_content)
         
         # 验证数据
         assert test_data is not None

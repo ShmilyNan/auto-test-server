@@ -1,0 +1,53 @@
+# 全局变量配置文件
+# ========================================
+
+# 认证相关
+auth:
+  dev_token: "Bearer dev_token_123456"
+  test_token: "Bearer test_token_789012"
+  prod_token: "Bearer prod_token_345678"
+
+# 测试数据
+test_data:
+  default_username: "testuser"
+  default_password: "Test@123456"
+  default_email: "test@example.com"
+  default_phone: "13800138000"
+
+# 业务配置
+business:
+  default_user_id: 1001
+  default_order_id: 2001
+  default_product_id: 3001
+
+# 环境标识
+environments:
+  dev: "开发环境"
+  test: "测试环境"
+  prod: "生产环境"
+
+# 时间相关
+time:
+  timeout_short: 5
+  timeout_normal: 30
+  timeout_long: 120
+  date_format: "%Y-%m-%d"
+  datetime_format: "%Y-%m-%d %H:%M:%S"
+
+# 数据库配置
+database:
+  default_charset: "utf8mb4"
+  pool_size: 5
+  max_overflow: 10
+
+# 文件路径
+paths:
+  upload_dir: "/tmp/uploads"
+  download_dir: "/tmp/downloads"
+  avatar_dir: "/tmp/avatars"
+
+# 常用URL
+urls:
+  home_page: "https://www.example.com"
+  help_page: "https://help.example.com"
+  privacy_policy: "https://www.example.com/privacy"

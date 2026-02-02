@@ -3,14 +3,12 @@
 pytest配置文件
 定义fixtures和钩子函数
 """
-
 import os
 import sys
-from ruamel.yaml import YAML
+from src.utils.yaml_loader import load_yaml
 from pathlib import Path
 from typing import Dict, Any
-from src.utils.logger import get_logger
-logger = get_logger()
+from src.utils.logger import log as logger
 
 import pytest
 import allure
@@ -18,13 +16,11 @@ import allure
 # 添加项目根目录到路径
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
-yaml = YAML(typ="safe")
 
 from src.core.client import create_client
 from src.core.context import get_context, reset_context
 from src.core.parser import TestParser
 from src.core.validator import Validator
-from src.utils.logger import get_logger
 from src.utils.extractor import get_extractor
 
 
@@ -37,7 +33,6 @@ def setup_session():
     """
     会话级fixture，在整个测试会话开始前执行一次
     """
-    logger = get_logger()
     logger.info("=" * 60)
     logger.info("测试会话开始")
     logger.info("=" * 60)
@@ -71,8 +66,7 @@ def config():
     """
     config_file = Path("config/config.yaml")
     if config_file.exists():
-        with open(config_file, 'r', encoding='utf-8') as f:
-            return yaml.load(f)
+        return load_yaml(config_file)
     return {}
 
 
@@ -85,8 +79,7 @@ def env_config(config):
     env_file = Path(f"config/env/{env}.yaml")
     
     if env_file.exists():
-        with open(env_file, 'r', encoding='utf-8') as f:
-            return yaml.load(f)
+        return load_yaml(env_file)
     
     return {}
 

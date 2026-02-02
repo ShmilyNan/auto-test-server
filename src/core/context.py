@@ -7,8 +7,7 @@ import time
 from typing import Dict, Any, Optional, Set
 from dataclasses import dataclass, field
 from threading import Lock
-from src.utils.logger import get_logger
-logger = get_logger()
+from src.utils.logger import log as logger
 
 
 @dataclass

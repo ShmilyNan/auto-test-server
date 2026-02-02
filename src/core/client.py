@@ -20,8 +20,7 @@ try:
     HTTPX_AVAILABLE = True
 except ImportError:
     HTTPX_AVAILABLE = False
-from src.utils.logger import get_logger
-logger = get_logger()
+from src.utils.logger import log as logger
 
 
 class BaseHTTPClient(ABC):

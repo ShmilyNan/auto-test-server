@@ -121,6 +121,5 @@ def get_logger():
     
     return logger
 
-
 # 为了方便使用，直接导出logger
-from loguru import logger as log
+log = get_logger()

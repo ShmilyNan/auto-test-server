@@ -1,0 +1,48 @@
+# 测试环境配置
+
+# 基础URL
+base_url: "http://test.example.com/api"
+
+# 代理配置
+proxy:
+  enable: false
+  http: "http://proxy.example.com:8080"
+  https: "http://proxy.example.com:8080"
+
+# 认证配置
+auth:
+  type: bearer
+  token: "${auth.test_token}"
+  username: ""
+  password: ""
+  api_key: ""
+  api_key_header: "X-API-Key"
+  oauth2:
+    token_url: "http://test.example.com/oauth/token"
+    client_id: ""
+    client_secret: ""
+    scope: ""
+
+# 默认请求头
+headers:
+  Content-Type: "application/json"
+  Accept: "application/json"
+  User-Agent: "AutoTestPlatform/1.0"
+  X-Env: "test"
+
+# 默认请求参数
+params:
+  debug: "false"
+
+# 超时配置
+timeout:
+  connect: 10
+  read: 30
+
+# 数据库配置
+database:
+  host: "test-mysql.example.com"
+  port: 3306
+  user: "test_user"
+  password: "test_password"
+  database: "test_db"

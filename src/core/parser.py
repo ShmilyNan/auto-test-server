@@ -2,16 +2,13 @@
 YAML/JSON测试数据解析器
 支持自动解析、校验、错误定位
 """
-from ruamel.yaml import YAML,YAMLError
-
-yaml = YAML(typ="safe")
 
 import json
 from typing import Dict, Any, List, Optional, Union
 from pathlib import Path
 from dataclasses import dataclass
-from src.utils.logger import get_logger
-logger = get_logger()
+from src.utils.logger import log as logger
+from src.utils.yaml_loader import load_yaml
 
 
 @dataclass
@@ -140,7 +137,7 @@ class TestParser:
         try:
             # 根据扩展名选择解析方式
             if file_path.suffix in ['.yaml', '.yml']:
-                data = yaml.load(content)
+                data = load_yaml(content)
             elif file_path.suffix == '.json':
                 data = json.loads(content)
             else:
@@ -156,9 +153,7 @@ class TestParser:
             logger.info(f"成功解析文件: {file_path}, 共 {len(test_cases)} 个用例")
             
             return test_cases
-            
-        except YAMLError as e:
-            raise ValueError(f"YAML解析错误: {str(e)}")
+
         except json.JSONDecodeError as e:
             raise ValueError(f"JSON解析错误: {str(e)}")
         except Exception as e:

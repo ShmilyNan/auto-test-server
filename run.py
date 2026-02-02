@@ -14,16 +14,13 @@ from pathlib import Path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-from ruamel.yaml import YAML
 import pytest
-yaml = YAML(typ='safe')
-
+from src.utils.yaml_loader import load_yaml
 from src.core.client import create_client
 from src.core.context import get_context, reset_context
 from src.core.parser import TestParser
-from src.utils.logger import init_logger, get_logger
+from src.utils.logger import init_logger, log as logger
 from src.utils.notifier import NotificationManager
-logger = get_logger()
 
 
 def load_config(config_path: str = "config/config.yaml") -> dict:
@@ -41,19 +38,19 @@ def load_config(config_path: str = "config/config.yaml") -> dict:
         logger.warning(f"配置文件不存在: {config_path}，使用默认配置")
         return {}
     
-    with open(config_file, 'r', encoding='utf-8') as f:
-        config = yaml.load(f)
+    # with open(config_file, 'r', encoding='utf-8') as f:
+    config = load_yaml(config_file)
     
     logger.info(f"加载配置文件: {config_path}")
     return config
 
 
-def load_env_config(env: str = "dev") -> dict:
+def load_env_config(env: str = "test") -> dict:
     """
     加载环境配置
     
     Args:
-        env: 环境名称 (dev/test/prod)
+        env: 环境名称 (test/prod)
         
     Returns:
         dict: 环境配置字典
@@ -63,15 +60,16 @@ def load_env_config(env: str = "dev") -> dict:
         logger.warning(f"环境配置文件不存在: {env_file}")
         return {}
     
-    with open(env_file, 'r', encoding='utf-8') as f:
-        env_config = yaml.load(f)
-    
+    # with open(env_file, 'r', encoding='utf-8') as f:
+    #     env_config = yaml.load(f)
+    env_config = load_yaml(env_file)
+
     logger.info(f"加载环境配置: {env}")
     return env_config
 
 
 def run_tests(
-    env: str = "dev",
+    env: str = "test",
     test_dir: str = "src/api",
     markers: str = None,
     verbose: bool = True,
@@ -192,9 +190,9 @@ def main():
     parser.add_argument(
         '--env',
         type=str,
-        default='dev',
-        choices=['dev', 'test', 'prod'],
-        help='测试环境 (默认: dev)'
+        default='test',
+        choices=['test', 'prod'],
+        help='测试环境 (默认: test)'
     )
     
     parser.add_argument(
