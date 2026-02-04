@@ -5,9 +5,8 @@ pytest配置文件
 """
 import os
 import sys
-from src.utils.yaml_loader import load_yaml
+from src.utils.yaml_loader import load_yaml_dict
 from pathlib import Path
-from typing import Dict, Any
 from src.utils.logger import log as logger
 
 import pytest
@@ -65,9 +64,7 @@ def config():
     配置fixture
     """
     config_file = Path("config/config.yaml")
-    if config_file.exists():
-        return load_yaml(config_file)
-    return {}
+    return load_yaml_dict(config_file, default={})
 
 
 @pytest.fixture(scope="session")
@@ -77,11 +74,7 @@ def env_config(config):
     """
     env = os.environ.get('TEST_ENV', config.get('default_env', 'dev'))
     env_file = Path(f"config/env/{env}.yaml")
-    
-    if env_file.exists():
-        return load_yaml(env_file)
-    
-    return {}
+    return load_yaml_dict(env_file, default={})
 
 
 @pytest.fixture(scope="session")
@@ -162,12 +155,12 @@ def attach_request_response(test_context):
             # 附加请求信息
             request = response.get('request', {}) or {}
             request_text = f"""
-请求方法: {request.get('method', 'N/A')}
-请求URL: {request.get('url', 'N/A')}
-请求头: {request.get('headers', {})}
-请求参数: {request.get('params', {})}
-请求体: {request.get('body', 'N/A')}
-"""
+                        请求方法: {request.get('method', 'N/A')}
+                        请求URL: {request.get('url', 'N/A')}
+                        请求头: {request.get('headers', {})}
+                        请求参数: {request.get('params', {})}
+                        请求体: {request.get('body', 'N/A')}
+                        """
             allure.attach(request_text, name="请求信息", attachment_type=allure.attachment_type.TEXT)
             
             # 附加响应信息
@@ -175,11 +168,11 @@ def attach_request_response(test_context):
             body = response.get('body')
             
             response_text = f"""
-状态码: {response.get('status_code', 'N/A')}
-响应头: {headers}
-响应体: {body if body else 'N/A'}
-耗时: {response.get('elapsed', 0):.3f}s
-"""
+                        状态码: {response.get('status_code', 'N/A')}
+                        响应头: {headers}
+                        响应体: {body if body else 'N/A'}
+                        耗时: {response.get('elapsed', 0):.3f}s
+                        """
             allure.attach(response_text, name="响应信息", attachment_type=allure.attachment_type.TEXT)
             
             # 附加JSON响应
@@ -217,6 +210,15 @@ def pytest_configure(config):
         config.addinivalue_line("markers", "slow: 慢速测试")
         config.addinivalue_line("markers", "skip: 跳过测试")
         config.addinivalue_line("markers", "xfail: 预期失败")
+        config.addinivalue_line("markers", "positive: 正向测试")
+        config.addinivalue_line("markers", "negative: 逆向测试")
+        config.addinivalue_line("markers", "performance: 性能测试")
+        config.addinivalue_line("markers", "database: 数据库测试")
+        config.addinivalue_line("markers", "file: 文件上传测试")
+        config.addinivalue_line("markers", "tag: 通用标记")
+        config.addinivalue_line("markers", "module: 模块标记")
+        config.addinivalue_line("markers", "module_user_module: 用户模块测试")
+        config.addinivalue_line("markers", "module_product_module: 商品模块测试")
     except Exception as e:
         logger.warning(f"添加自定义标记时出错: {e}")
 

@@ -4,8 +4,7 @@
 """
 
 import re
-import json
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, Any, Optional
 from jsonpath_ng import parse as jsonpath_parse
 from lxml import etree
 from src.utils.logger import log as logger
@@ -24,14 +23,12 @@ class Extractor:
     ) -> Dict[str, Any]:
         """
         根据规则提取数据
-        
         支持的提取方式:
         - jsonpath: JSONPath表达式
         - regex: 正则表达式
         - header: 响应头
         - cookie: Cookie
         - xpath: XPath（HTML/XML响应）
-        
         Args:
             response: HTTP响应数据
             rules: 提取规则 {变量名: {type: "jsonpath", expression: "$.data.id"}}
@@ -59,11 +56,9 @@ class Extractor:
     def _extract_single(self, response: Dict[str, Any], rule: Dict[str, Any]) -> Any:
         """
         单次提取
-        
         Args:
             response: 响应数据
             rule: 提取规则
-            
         Returns:
             Any: 提取的值
         """

@@ -62,13 +62,20 @@ p3 = "P3级用例"          # 低优先级用例
 slow = "慢速测试"        # 执行较慢的测试
 skip = "跳过测试"        # 暂时跳过的测试
 xfail = "预期失败"       # 预期会失败的测试
-
-
+positive = "正向测试"
+negative = "逆向测试"
+performance = "性能测试"
+database = "数据库测试"
+file = "文件上传测试"
+tag = "通用标记"
+module = "模块标记"
+module_user_module = "用户模块测试"
+module_product_module = "商品模块测试"
 
 # 代码格式化配置
 [tool.black]
 line-length = 88
-target-version = ["py39"]
+target-version = ["py313"]
 
 [tool.isort]
 profile = "black"
@@ -76,13 +83,13 @@ line_length = 88
 
 # 静态类型检查
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.13"
 warn_return_any = true
 warn_unused_configs = true
 
 # 代码质量检查
 [tool.ruff]
-target-version = "py39"
+target-version = "py313"
 line-length = 88
 select = ["E", "F", "I", "B"]
 ignore = ["E501"]

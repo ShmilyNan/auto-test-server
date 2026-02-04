@@ -3,16 +3,15 @@
 
 # 认证相关
 auth:
-  dev_token: "Bearer dev_token_123456"
-  test_token: "Bearer test_token_789012"
+  test_token: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJMZWUiLCJsb2dpbl91c2VyX2tleSI6ImZjYTdjOThiLTUyYTQtNDU2NS05ODFmLTc3Zjg5NzM0MWQ5MyJ9.PSA4tqZrRDhOYyIrRlukw8iqqXB95HAePsQDz0Qa9jE9A_swjsYS4ruT3MiJAx9IeLTrMlS2s8ulJ8AW1RnBGw"
   prod_token: "Bearer prod_token_345678"
 
 # 测试数据
 test_data:
-  default_username: "testuser"
-  default_password: "Test@123456"
-  default_email: "test@example.com"
-  default_phone: "13800138000"
+  default_username: "Lee"
+  default_password: "Working@1130"
+  default_email: "lancelee0115@gmail.com"
+  default_phone: "17711301707"
 
 # 业务配置
 business:
@@ -22,7 +21,6 @@ business:
 
 # 环境标识
 environments:
-  dev: "开发环境"
   test: "测试环境"
   prod: "生产环境"
 

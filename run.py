@@ -16,9 +16,6 @@ sys.path.insert(0, str(project_root))
 
 import pytest
 from src.utils.yaml_loader import load_yaml
-from src.core.client import create_client
-from src.core.context import get_context, reset_context
-from src.core.parser import TestParser
 from src.utils.logger import init_logger, log as logger
 from src.utils.notifier import NotificationManager
 
@@ -26,10 +23,8 @@ from src.utils.notifier import NotificationManager
 def load_config(config_path: str = "config/config.yaml") -> dict:
     """
     加载配置文件
-    
     Args:
         config_path: 配置文件路径
-        
     Returns:
         dict: 配置字典
     """
@@ -38,7 +33,6 @@ def load_config(config_path: str = "config/config.yaml") -> dict:
         logger.warning(f"配置文件不存在: {config_path}，使用默认配置")
         return {}
     
-    # with open(config_file, 'r', encoding='utf-8') as f:
     config = load_yaml(config_file)
     
     logger.info(f"加载配置文件: {config_path}")
@@ -48,10 +42,8 @@ def load_config(config_path: str = "config/config.yaml") -> dict:
 def load_env_config(env: str = "test") -> dict:
     """
     加载环境配置
-    
     Args:
         env: 环境名称 (test/prod)
-        
     Returns:
         dict: 环境配置字典
     """
@@ -59,9 +51,7 @@ def load_env_config(env: str = "test") -> dict:
     if not env_file.exists():
         logger.warning(f"环境配置文件不存在: {env_file}")
         return {}
-    
-    # with open(env_file, 'r', encoding='utf-8') as f:
-    #     env_config = yaml.load(f)
+
     env_config = load_yaml(env_file)
 
     logger.info(f"加载环境配置: {env}")
@@ -78,7 +68,6 @@ def run_tests(
 ) -> int:
     """
     运行测试
-    
     Args:
         env: 环境名称
         test_dir: 测试目录
@@ -86,7 +75,6 @@ def run_tests(
         verbose: 是否详细输出
         workers: 并发worker数
         report: 是否生成报告
-        
     Returns:
         int: 退出码
     """

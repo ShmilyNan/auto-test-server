@@ -1,0 +1,481 @@
+{
+  "module": {
+    "name": "Offer Manage",
+    "version": "1.0.0",
+    "description": "Offer Manage API Test"
+  },
+  "config": {
+    "timeout": 30
+  },
+  "test_cases": [
+    {
+      "name": "get advertiser list",
+      "description": "get advertiser list data",
+      "priority": "p2",
+      "tags": ["regression"],
+      "method": "GET",
+      "url": "/prod-api/offer/advertiser/list",
+	  "headers": {
+        "Authorization": "Bearer ${$extract.access_token}"
+      },
+      "params": {
+        "filterByPermission": true
+      },
+      "validate": [
+        {
+          "type": "status_code",
+          "expected": 200
+        },
+        {
+          "type": "eq",
+          "path": "body.code",
+          "expected": 200
+        },
+        {
+          "type": "type",
+          "path": "body.data",
+          "expected": "list"
+        },
+        {
+          "type": "length",
+          "path": "body.data",
+          "min": 1,
+          "max": 2000
+        }
+      ],
+      "extract": {
+        "advertiserId": {
+          "type": "jsonpath",
+          "expression": "$.data[0].id"
+        }
+      }
+    },
+    {
+      "name": "get country list",
+      "description": "get country list data",
+      "priority": "p2",
+      "tags": ["regression"],
+      "method": "GET",
+	  "url": "/prod-api/offer/country/list",
+	  "headers": {
+        "Authorization": "Bearer ${$extract.access_token}"
+      },
+      "validate": [
+        {
+          "type": "status_code",
+          "expected": 200
+        },
+        {
+          "type": "eq",
+          "path": "body.code",
+          "expected": 200
+        },
+        {
+          "type": "length",
+          "path": "body.data",
+          "min": 1,
+          "max": 300
+        }
+      ],
+	  "extract": {
+        "countryId": {
+          "type": "jsonpath",
+          "expression": "$.data[0].id"
+        },
+		"countryInfo": {
+          "type": "regex",
+          "expression": "\"countryInfo:\"[(^[A-Z]{2}$)]",
+		  "group": 0
+        }
+      }
+    },
+    {
+      "name": "get timezone list",
+      "description": "get timezone list data",
+      "priority": "p2",
+      "tags": ["regression"],
+      "method": "GET",
+      "url": "/prod-api/offer/timezone/list",
+	  "headers": {
+        "Authorization": "Bearer ${$extract.access_token}"
+      },
+      "validate": [
+        {
+          "type": "status_code",
+          "expected": 200
+        },
+        {
+          "type": "eq",
+          "path": "body.code",
+          "expected": 200
+        },
+        {
+          "type": "length",
+          "path": "body.data",
+          "min": 1,
+          "max": 24
+        }
+      ],
+	  "extract": {
+        "timeZoneId": {
+          "type": "jsonpath",
+          "expression": "$.data[12].id"
+        }
+      }
+    },
+    {
+      "name": "get affiliate list",
+      "description": "get affiliate list data",
+      "priority": "p2",
+      "tags": ["regression"],
+      "method": "GET",
+      "url": "/prod-api/offer/affiliate/list",
+      "headers": {
+        "Authorization": "Bearer ${$extract.access_token}"
+      },
+      "validate": [
+        {
+          "type": "status_code",
+          "expected": 200
+        },
+        {
+          "type": "eq",
+          "path": "body.code",
+          "expected": 200
+        },
+        {
+          "type": "length",
+          "path": "body.data",
+          "min": 1,
+          "max": 24
+        }
+      ],
+	  "extract": {
+        "affiliateAttribute": {
+          "type": "jsonpath",
+          "expression": "$.data[?(@.id == 1634)].affiliateAttribute"
+        },
+		"affiliateName": {
+          "type": "jsonpath",
+          "expression": "$.data[?(@.id == 1634)].affiliateName"
+        },
+		"affiliateId": {
+          "type": "jsonpath",
+          "expression": "$.data[?(@.id == 1634)].id"
+        },
+		"affiliateOrgId": {
+          "type": "jsonpath",
+          "expression": "$.data[?(@.id == 1634)].orgId"
+        },
+		"affiliatePrivateFlag": {
+          "type": "jsonpath",
+          "expression": "$.data[?(@.id == 1634)].privateFlag"
+        },
+		"affiliateStatus": {
+          "type": "jsonpath",
+          "expression": "$.data[?(@.id == 1634)].status"
+        },
+		"affiliateAttribute1": {
+          "type": "jsonpath",
+          "expression": "$.data[?(@.id == 1678)].affiliateAttribute"
+        },
+		"affiliateName1": {
+          "type": "jsonpath",
+          "expression": "$.data[?(@.id == 1678)].affiliateName"
+        },
+		"affiliateId1": {
+          "type": "jsonpath",
+          "expression": "$.data[?(@.id == 1678)].id"
+        },
+		"affiliateOrgId1": {
+          "type": "jsonpath",
+          "expression": "$.data[?(@.id == 1678)].orgId"
+        },
+		"affiliatePrivateFlag1": {
+          "type": "jsonpath",
+          "expression": "$.data[?(@.id == 1678)].privateFlag"
+        },
+		"affiliateStatus1": {
+          "type": "jsonpath",
+          "expression": "$.data[?(@.id == 1678)].status"
+        }
+      }
+    },
+    {
+      "name": "validat offer info",
+      "description": "Verify whether the offer information is correct",
+      "priority": "p0",
+      "tags": ["smoke","positive","daily"],
+      "method": "POST",
+      "url": "/prod-api/offer/validatOfferinfo",
+      "headers": {
+        "Authorization": "Bearer ${$extract.access_token}"
+      },
+	  "body": {
+        "advertiserId": "${$extract.advertiserId}",
+        "os": "ios",
+        "countryRegionId": "${$extract.countryId}",
+        "s2sOfferId": "",
+        "capDailyClicks": 0,
+        "thirdParty": 1,
+        "previewUrl": "https://apps.apple.com/us/app/cub-vietnam/id6450951295",
+        "attributionType": 1,
+        "offerUrl": "https://app.appsflyer.com/id6450951295?pid=designworlr_int&af_siteid={aff}&c=digisolacein322_NCMGEM&af_cost_currency={currency}&af_cost_value={payout}&af_click_lookback=7d&clickid={transaction_id}&advertising_id={aff_sub3}&idfa={aff_sub3}&af_model={model}&af_os_version={os_version}&is_incentivized=false&af_prt=digisolacein322&af_ip={ip}&af_lang={aff_sub4}&af_ua={ua}&af_sub_siteid={aff_sub6}&af_ad_id={affiliate_id}&af_adset_id={offer_id}&af_ad={adx_bundle_id}&af-ad-orientation={transaction_id}&af_adset={transaction_id}",
+        "impressionUrl": "",
+        "description": "Strictly Install Cap: 300 installs/day/PID\nKPI Policy: No spam clicking or fraudulent installs\nBilling: To be aligned via CRM per month (cross-checked by internal data) ,Referral Users & duplicate Users not payable\n\nClient Requirements:\nClick to Install rate above 0.15%\nInstall to Registration rate 15%\nInstall to Paid Event rate above 2%\nNote: These KPIs are not subject to deductions, however, failure to achieve them may impact long-term client relationship",
+        "status": 3,
+        "timeZoneId": "${$extract.timeZoneId}",
+        "categoryId": null,
+        "packageName": "id6450951295",
+        "p360": 1,
+        "priceType": 1,
+        "capEnable": 1,
+        "capDailyConversions": "150",
+        "offerName": "20260204_Cathay United Bank_${$extract.countryInfo}_IOS_CTA_desi_CPA_Lee",
+        "isRta": "false",
+        "retargeting": 0,
+        "autoDisabled": 1,
+        "urlType": 1,
+        "s2sEnable": 1,
+        "isOnelinkOrGolink": false,
+        "logoUrl": "",
+        "offerNameDate": 1770171146645,
+        "offerNamePid": "desi",
+        "offerNamePriceType": "CPA",
+        "offerNameOfferType": "CTA",
+        "offerNameCategory": "Cathay United Bank",
+        "offerNamePlatform": "IOS",
+        "offerNameCountry": "${$extract.countryInfo}",
+        "offerNameUser": "Lee",
+        "useMix": 1,
+        "cr": 0.0015,
+        "affiliateIds": "",
+        "affiliates": [
+          {
+            "payout": 0.002,
+            "clickPercent": 0,
+            "capDailyClick": 0,
+            "sysCap": 0,
+            "deductPercent": 0.1,
+            "capDailyConversions": "150",
+            "moreEvent": "",
+            "eventIndex": 0,
+            "affiliateId": "${$extract.affiliateId}",
+            "affiliateName": "${$extract.affiliateName}",
+            "id": "${$extract.affiliateId}",
+            "orgId": "${$extract.affiliateOrgId}",
+            "status": "${$extract.affiliateStatus}",
+            "privateFlag": "${$extract.affiliatePrivateFlag}",
+            "affiliateAttribute": "${$extract.affiliateAttribute}",
+            "revenuePerConversionInputValue": 0,
+            "postbackModel": 2
+          },
+          {
+            "payout": 0.002,
+            "clickPercent": 1,
+            "capDailyClick": 0,
+            "sysCap": 100000,
+            "deductPercent": 0.1,
+            "capDailyConversions": 0,
+            "moreEvent": "esign_view_activateCL",
+            "eventIndex": 0,
+            "affiliateId": "${$extract.affiliateId1}",
+            "affiliateName": "${$extract.affiliateName1}",
+            "id": "${$extract.affiliateId1}",
+            "orgId": "${$extract.affiliateOrgId1}",
+            "status": "${$extract.affiliateStatus1}",
+            "privateFlag": "${$extract.affiliatePrivateFlag1}",
+            "affiliateAttribute": "${$extract.affiliateAttribute1}",
+            "revenuePerConversionInputValue": 5,
+            "postbackModel": 1
+          }
+        ],
+        "costPerConversion": 0.002,
+        "revenuePayouts": [
+		  {
+		    "sdkEventName": "esign_view_activateCL",
+		    "defaultRevenueInputValue": 10,
+		    "revenue": 5,
+		    "paymentType": 2
+		  }
+        ],
+        "isCreate": 1
+      },
+      "validate": [
+        {
+          "type": "status_code",
+          "expected": 200
+        },
+        {
+          "type": "eq",
+          "path": "body.code",
+          "expected": 200
+        },
+        {
+          "type": "in",
+          "path": "body.msg",
+          "expected": ["操作成功"]
+        }
+      ]
+    },
+    {
+      "name": "create offer",
+      "description": "create offer info",
+      "priority": "p0",
+      "tags": ["smoke","positive","daily"],
+      "method": "POST",
+      "url": "/prod-api/offer/create",
+      "headers": {
+        "Authorization": "Bearer ${$extract.access_token}"
+      },
+	  "body": {
+        "advertiserId": "${$extract.advertiserId}",
+        "os": "ios",
+        "countryRegionId": "${$extract.countryId}",
+        "s2sOfferId": "",
+        "capDailyClicks": 0,
+        "thirdParty": 1,
+        "previewUrl": "https://apps.apple.com/us/app/cub-vietnam/id6450951295",
+        "attributionType": 1,
+        "offerUrl": "https://app.appsflyer.com/id6450951295?pid=designworlr_int&af_siteid={aff}&c=digisolacein322_NCMGEM&af_cost_currency={currency}&af_cost_value={payout}&af_click_lookback=7d&clickid={transaction_id}&advertising_id={aff_sub3}&idfa={aff_sub3}&af_model={model}&af_os_version={os_version}&is_incentivized=false&af_prt=digisolacein322&af_ip={ip}&af_lang={aff_sub4}&af_ua={ua}&af_sub_siteid={aff_sub6}&af_ad_id={affiliate_id}&af_adset_id={offer_id}&af_ad={adx_bundle_id}&af-ad-orientation={transaction_id}&af_adset={transaction_id}",
+        "impressionUrl": "",
+        "description": "Strictly Install Cap: 300 installs/day/PID\nKPI Policy: No spam clicking or fraudulent installs\nBilling: To be aligned via CRM per month (cross-checked by internal data) ,Referral Users & duplicate Users not payable\n\nClient Requirements:\nClick to Install rate above 0.15%\nInstall to Registration rate 15%\nInstall to Paid Event rate above 2%\nNote: These KPIs are not subject to deductions, however, failure to achieve them may impact long-term client relationship",
+        "status": 3,
+        "timeZoneId": "${$extract.timeZoneId}",
+        "categoryId": null,
+        "packageName": "id6450951295",
+        "p360": 1,
+        "priceType": 1,
+        "capEnable": 1,
+        "capDailyConversions": "150",
+        "offerName": "20260204_Cathay United Bank_${$extract.countryInfo}_IOS_CTA_desi_CPA_Lee",
+        "isRta": "false",
+        "retargeting": 0,
+        "autoDisabled": 1,
+        "urlType": 1,
+        "s2sEnable": 1,
+        "isOnelinkOrGolink": false,
+        "logoUrl": "",
+        "offerNameDate": 1770171146645,
+        "offerNamePid": "desi",
+        "offerNamePriceType": "CPA",
+        "offerNameOfferType": "CTA",
+        "offerNameCategory": "Cathay United Bank",
+        "offerNamePlatform": "IOS",
+        "offerNameCountry": "${$extract.countryInfo}",
+        "offerNameUser": "Lee",
+        "useMix": 1,
+        "cr": 0.0015,
+        "affiliateIds": "",
+        "affiliates": [
+          {
+            "payout": 0.002,
+            "clickPercent": 0,
+            "capDailyClick": 0,
+            "sysCap": 0,
+            "deductPercent": 0.1,
+            "capDailyConversions": "150",
+            "moreEvent": "",
+            "eventIndex": 0,
+            "affiliateId": "${$extract.affiliateId}",
+            "affiliateName": "${$extract.affiliateName}",
+            "id": "${$extract.affiliateId}",
+            "orgId": "${$extract.affiliateOrgId}",
+            "status": "${$extract.affiliateStatus}",
+            "privateFlag": "${$extract.affiliatePrivateFlag}",
+            "affiliateAttribute": "${$extract.affiliateAttribute}",
+            "revenuePerConversionInputValue": 0,
+            "postbackModel": 2
+          },
+          {
+            "payout": 0.002,
+            "clickPercent": 1,
+            "capDailyClick": 0,
+            "sysCap": 100000,
+            "deductPercent": 0.1,
+            "capDailyConversions": 0,
+            "moreEvent": "esign_view_activateCL",
+            "eventIndex": 0,
+            "affiliateId": "${$extract.affiliateId1}",
+            "affiliateName": "${$extract.affiliateName1}",
+            "id": "${$extract.affiliateId1}",
+            "orgId": "${$extract.affiliateOrgId1}",
+            "status": "${$extract.affiliateStatus1}",
+            "privateFlag": "${$extract.affiliatePrivateFlag1}",
+            "affiliateAttribute": "${$extract.affiliateAttribute1}",
+            "revenuePerConversionInputValue": 5,
+            "postbackModel": 1
+          }
+        ],
+        "costPerConversion": 0.002,
+        "revenuePayouts": [
+		  {
+		    "sdkEventName": "esign_view_activateCL",
+		    "defaultRevenueInputValue": 10,
+		    "revenue": 5,
+		    "paymentType": 2
+		  }
+        ],
+        "isCreate": 1
+      },
+      "validate": [
+        {
+          "type": "status_code",
+          "expected": 200
+        },
+        {
+          "type": "eq",
+          "path": "body.code",
+          "expected": 200
+        },
+        {
+          "type": "in",
+          "path": "body.msg",
+          "expected": ["操作成功"]
+        },
+        {
+          "type": "type",
+          "path": "body.data",
+          "expected": "integer"
+        }
+      ],
+	  "extract": {
+        "offerId": {
+          "type": "jsonpath",
+          "expression": "$.data"
+        }
+      }
+    },
+    {
+      "name": "get offer list",
+      "description": "get offer list data",
+      "priority": "p2",
+      "tags": ["regression"],
+      "method": "GET",
+	  "url": "/prod-api/offer/getList",
+	  "headers": {
+        "Authorization": "Bearer ${$extract.access_token}"
+      },
+      "params": {
+        "pageNum": 1,
+		"pageSize": 100
+      },
+      "validate": [
+        {
+          "type": "status_code",
+          "expected": 200
+        },
+        {
+          "type": "eq",
+          "path": "body.code",
+          "expected": 200
+        },
+        {
+          "type": "eq",
+          "path": "body.rows[0].offerId",
+          "expected": "${$extract.offerId}"
+        }
+      ]
+    }
+  ]
+}

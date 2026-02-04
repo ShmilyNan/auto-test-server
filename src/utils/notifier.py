@@ -3,7 +3,6 @@
 支持飞书、钉钉、企业微信、邮箱等通知方式
 """
 
-import json
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart

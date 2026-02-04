@@ -3,10 +3,10 @@
 
 # 模块信息
 module:
-  name: "用户模块"
+  name: "登录模块"
   version: "1.0.0"
-  description: "用户相关接口测试"
-  author: "测试团队"
+  description: "登录相关接口测试"
+  author: "Lee"
 
 # 全局配置
 config:
@@ -21,83 +21,7 @@ config:
 # 测试用例列表
 test_cases:
   # ========================================
-  # 用例1: 用户注册
-  # ========================================
-  - name: "用户注册-正常流程"
-    description: "测试用户正常注册流程"
-    priority: "p0"
-    tags: ["smoke", "regression"]
-    
-    # 请求配置
-    method: "POST"
-    url: "/user/register"  # 会自动拼接base_url
-    
-    # 请求头（可覆盖全局配置）
-    headers:
-      X-Request-Id: "${uuid()}"
-    
-    # URL参数
-    params:
-      source: "web"
-    
-    # 请求体
-    body:
-      username: "testuser_${timestamp()}"
-      password: "Test@123456"
-      email: "test_${timestamp()}@example.com"
-      phone: "13800138000"
-    
-    # 断言验证
-    validate:
-      # 状态码断言
-      - type: "status_code"
-        expected: 200
-      
-      # JSON字段断言
-      - type: "eq"
-        path: "body.code"
-        expected: 0
-      
-      - type: "eq"
-        path: "body.message"
-        expected: "success"
-      
-      - type: "not_none"
-        path: "body.data.user_id"
-      
-      # 类型检查
-      - type: "type"
-        path: "body.data"
-        expected: "dict"
-      
-      # 正则断言
-      - type: "regex"
-        path: "body.data.email"
-        pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
-    
-    # 数据提取（用于后续用例）
-    extract:
-      user_id:
-        type: "jsonpath"
-        expression: "$.data.user_id"
-      token:
-        type: "jsonpath"
-        expression: "$.data.token"
-      username:
-        type: "jsonpath"
-        expression: "$.data.username"
-    
-    # 钩子函数
-    hooks:
-      - "after_register"
-    
-    # 元数据
-    metadata:
-      feature: "用户注册"
-      severity: "critical"
-
-  # ========================================
-  # 用例2: 用户登录
+  # 用例1: 用户登录
   # ========================================
   - name: "用户登录-正常流程"
     description: "测试用户正常登录"
@@ -105,43 +29,34 @@ test_cases:
     tags: ["smoke", "daily"]
     
     method: "POST"
-    url: "/user/login"
-    
-    headers:
-      X-Request-Id: "${uuid()}"
-    
+    url: "/prod-api/login"
+
     body:
-      username: "${$extract.username}"  # 使用上一个用例提取的变量
-      password: "Test@123456"
-    
+      username: "Lee"
+      password: "Working@1130"
+
     validate:
       - type: "status_code"
         expected: 200
       
       - type: "eq"
         path: "body.code"
-        expected: 0
+        expected: 200
       
       - type: "not_none"
-        path: "body.data.token"
-      
-      - type: "not_none"
-        path: "body.data.refresh_token"
+        path: "body.token"
     
     extract:
       access_token:
         type: "jsonpath"
-        expression: "$.data.token"
-      refresh_token:
-        type: "jsonpath"
-        expression: "$.data.refresh_token"
+        expression: "$.token"
     
     metadata:
       feature: "用户登录"
       severity: "critical"
 
   # ========================================
-  # 用例3: 获取用户信息
+  # 用例2: 获取用户信息
   # ========================================
   - name: "获取用户信息-已登录"
     description: "获取已登录用户的详细信息"
@@ -152,7 +67,7 @@ test_cases:
     depends_on: "用户登录-正常流程"
     
     method: "GET"
-    url: "/user/info"
+    url: "/prod-api/getInfo"
     
     headers:
       Authorization: "Bearer ${$extract.access_token}"
@@ -163,41 +78,40 @@ test_cases:
       
       - type: "eq"
         path: "body.code"
-        expected: 0
+        expected: 200
       
       - type: "eq"
-        path: "body.data.username"
-        expected: "${$extract.username}"
+        path: "body.user.userName"
+        expected: "Lee"
       
       - type: "type"
-        path: "body.data"
+        path: "body。user"
         expected: "dict"
       
       # JSON Schema验证
       - type: "json_schema"
-        path: "body.data"
+        path: "body.user"
         schema:
           type: "object"
-          required: ["user_id", "username", "email"]
+          required: ["userId", "userName", "nickName"]
           properties:
-            user_id:
+            userId:
               type: "integer"
-            username:
+            userName:
               type: "string"
-            email:
+            nickName:
               type: "string"
-              format: "email"
 
   # ========================================
-  # 用例4: 更新用户信息
+  # 用例3: 获取用户权限
   # ========================================
-  - name: "更新用户信息-成功"
-    description: "更新用户昵称和头像"
+  - name: "获取用户权限-成功"
+    description: "获取用户权限列表"
     priority: "p1"
     tags: ["regression"]
     
-    method: "PUT"
-    url: "/user/info"
+    method: "GET"
+    url: "/prod-api/getRouters"
     
     headers:
       Authorization: "Bearer ${$extract.access_token}"
@@ -212,14 +126,14 @@ test_cases:
       
       - type: "eq"
         path: "body.code"
-        expected: 0
+        expected: 200
       
-      - type: "eq"
-        path: "body.message"
-        expected: "update success"
+      - type: "type"
+        path: "body.data"
+        expected: "list"
 
   # ========================================
-  # 用例5: 用户登出
+  # 用例4: 用户登出
   # ========================================
   - name: "用户登出"
     description: "用户正常登出"
@@ -227,7 +141,7 @@ test_cases:
     tags: ["regression"]
     
     method: "POST"
-    url: "/user/logout"
+    url: "/prod-api/logout"
     
     headers:
       Authorization: "Bearer ${$extract.access_token}"
@@ -235,13 +149,9 @@ test_cases:
     validate:
       - type: "status_code"
         expected: 200
-      
-      - type: "eq"
-        path: "body.code"
-        expected: 0
 
   # ========================================
-  # 用例6: 用户登录-密码错误
+  # 用例5: 用户登录-密码错误
   # ========================================
   - name: "用户登录-密码错误"
     description: "测试登录时输入错误密码"
@@ -249,46 +159,19 @@ test_cases:
     tags: ["regression", "negative"]
     
     method: "POST"
-    url: "/user/login"
-    
-    body:
-      username: "testuser"
-      password: "WrongPassword123"
-    
+    url: "/prod-api/login"
+
     validate:
       - type: "status_code"
         expected: 200
       
       - type: "eq"
         path: "body.code"
-        expected: 1001  # 假设1001是密码错误码
+        expected: 500
       
       - type: "in"
-        path: "body.message"
-        expected: ["密码错误", "密码不正确", "invalid password"]
-
-  # ========================================
-  # 用例7: 参数校验-缺少必填字段
-  # ========================================
-  - name: "用户注册-缺少必填字段"
-    description: "测试注册时缺少username字段"
-    priority: "p2"
-    tags: ["negative"]
-    
-    method: "POST"
-    url: "/user/register"
-    
-    body:
-      password: "Test@123456"
-      email: "test@example.com"
-    
-    validate:
-      - type: "status_code"
-        expected: 400
-      
-      - type: "in"
-        path: "body.message"
-        expected: ["缺少必填参数", "username is required"]
+        path: "body.msg"
+        expected: ["密码错误", "用户不存在", "invalid password"]
 
   # ========================================
   # 用例8: 并发请求
@@ -379,18 +262,16 @@ test_cases:
 test_suites:
   - name: "用户注册流程"
     cases:
-      - "用户注册-正常流程"
       - "用户登录-正常流程"
       - "获取用户信息-已登录"
+      - "获取用户权限-成功"
       - "用户登出"
   
-  - name: "用户注册异常场景"
+  - name: "用户登录异常场景"
     cases:
-      - "用户注册-缺少必填字段"
       - "用户登录-密码错误"
 
   - name: "冒烟测试"
     cases:
-      - "用户注册-正常流程"
       - "用户登录-正常流程"
       - "获取用户信息-已登录"

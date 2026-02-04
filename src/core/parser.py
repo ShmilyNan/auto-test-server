@@ -130,28 +130,27 @@ class TestParser:
         
         if not file_path.exists():
             raise FileNotFoundError(f"测试数据文件不存在: {file_path}")
-        
-        # 读取文件内容
-        content = file_path.read_text(encoding='utf-8')
-        
+
         try:
             # 根据扩展名选择解析方式
             if file_path.suffix in ['.yaml', '.yml']:
-                data = load_yaml(content)
+                data = load_yaml(file_path)
             elif file_path.suffix == '.json':
+                # 读取文件内容
+                content = file_path.read_text(encoding='utf-8')
                 data = json.loads(content)
             else:
                 raise ValueError(f"不支持的文件格式: {file_path.suffix}")
-            
+
             # 验证数据格式
             if not isinstance(data, dict):
                 raise ValueError("文件根元素必须是字典")
-            
+
             # 解析测试用例
             test_cases = self._parse_data(data, file_path.stem)
-            
+
             logger.info(f"成功解析文件: {file_path}, 共 {len(test_cases)} 个用例")
-            
+
             return test_cases
 
         except json.JSONDecodeError as e:
@@ -163,11 +162,9 @@ class TestParser:
     def _parse_data(self, data: Dict[str, Any], module: str) -> List[TestCase]:
         """
         解析测试数据
-        
         Args:
             data: 测试数据字典
             module: 模块名称
-            
         Returns:
             List[TestCase]: 测试用例列表
         """
@@ -194,14 +191,11 @@ class TestParser:
     def _parse_case(self, case_data: Dict[str, Any], module: str) -> TestCase:
         """
         解析单个测试用例
-        
         Args:
             case_data: 用例数据
             module: 模块名称
-            
         Returns:
             TestCase: 测试用例对象
-            
         Raises:
             ValueError: 必填字段缺失
         """
@@ -243,10 +237,8 @@ class TestParser:
     def parse_dir(self, dir_path: Optional[Union[str, Path]] = None) -> Dict[str, List[TestCase]]:
         """
         解析目录下所有测试数据文件
-        
         Args:
             dir_path: 目录路径，默认为初始化时指定的目录
-            
         Returns:
             Dict[str, List[TestCase]]: {模块名: 用例列表}
         """
@@ -284,10 +276,8 @@ class TestParser:
     def get_cases_by_module(self, module: str) -> List[TestCase]:
         """
         获取指定模块的测试用例
-        
         Args:
             module: 模块名称
-            
         Returns:
             List[TestCase]: 测试用例列表
         """
@@ -308,10 +298,8 @@ class TestParser:
     def validate_schema(self, data: Dict[str, Any]) -> bool:
         """
         验证数据格式是否符合规范
-        
         Args:
             data: 测试数据字典
-            
         Returns:
             bool: 是否合法
         """

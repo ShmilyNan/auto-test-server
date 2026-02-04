@@ -1,7 +1,7 @@
 # 测试环境配置
 
 # 基础URL
-base_url: "http://test.example.com/api"
+base_url: "https://dev-aly-us-ad-web.cdcicd.com"
 
 # 代理配置
 proxy:
@@ -27,12 +27,11 @@ auth:
 headers:
   Content-Type: "application/json"
   Accept: "application/json"
-  User-Agent: "AutoTestPlatform/1.0"
-  X-Env: "test"
+  User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
 
 # 默认请求参数
-params:
-  debug: "false"
+#params:
+#  debug: "false"
 
 # 超时配置
 timeout:
@@ -41,8 +40,8 @@ timeout:
 
 # 数据库配置
 database:
-  host: "test-mysql.example.com"
+  host: "rm-j6c68qtq22l5p8yciso.mysql.cnhk.rds.aliyuncs.com"
   port: 3306
-  user: "test_user"
-  password: "test_password"
-  database: "test_db"
+  user: "adnet"
+  password: "JGXuY8z4NedHrDJ"
+  database: "adnetwork-server"
