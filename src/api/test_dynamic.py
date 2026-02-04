@@ -3,7 +3,6 @@
 动态测试用例文件
 从 test_data 目录的 YAML/JSON 文件自动生成 pytest 测试用例
 """
-
 import sys
 import time
 from pathlib import Path
@@ -54,7 +53,7 @@ class TestCaseGenerator:
         生成参数化的测试用例数据
 
         Returns:
-            List[Dict[str, Any]]: 测试用例数据列表
+            List[Dict[str, Any]]: 测试用例数据列表（已按 order 排序）
         """
         if not self.test_cases:
             self.load_test_data()
@@ -73,7 +72,10 @@ class TestCaseGenerator:
                     'index': idx
                 })
 
-        logger.info(f"生成 {len(test_data_list)} 个参数化测试用例")
+        # 按 order 排序（跨模块排序）
+        test_data_list.sort(key=lambda x: x['test_case'].order)
+
+        logger.info(f"生成 {len(test_data_list)} 个参数化测试用例（已按 order 排序）")
         return test_data_list
 
 
@@ -334,6 +336,15 @@ for test_data in _test_data_list:
     test_func.__qualname__ = f"test_dynamic.{func_name}"
 
     # 添加 pytest 标记
+
+    # 添加执行顺序标记（优先级最高）
+    if test_case.order is not None:
+        try:
+            # 使用 pytest-order 插件的标记
+            test_func = pytest.mark.order(test_case.order)(test_func)
+        except:
+            pass
+
     # 添加优先级标记
     priority_map = {
         'p0': pytest.mark.p0,

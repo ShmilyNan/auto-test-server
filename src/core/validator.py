@@ -99,12 +99,10 @@ class Validator:
     ) -> AssertionResult:
         """
         执行单个断言
-        
         Args:
             response: 响应数据
             assertion: 断言规则
             context: 上下文
-            
         Returns:
             AssertionResult: 断言结果
         """
@@ -170,16 +168,13 @@ class Validator:
     def _extract_value(self, data: Any, path: str) -> Any:
         """
         从响应数据中提取值
-        
         支持路径格式:
         - body.data.id
         - headers.Content-Type
         - status_code
-        
         Args:
             data: 响应数据
             path: 提取路径
-            
         Returns:
             Any: 提取的值
         """
@@ -379,19 +374,38 @@ class Validator:
             assertion_type='sql'
         )
     
-    def _assert_type(self, actual: Any, expected: type) -> AssertionResult:
+    def _assert_type(self, actual: Any, expected: Union[type, str]) -> AssertionResult:
         """类型断言"""
-        passed = isinstance(actual, expected)
-        type_names = {
-            str: 'str',
-            int: 'int',
-            float: 'float',
-            bool: 'bool',
-            list: 'list',
-            dict: 'dict',
-            tuple: 'tuple'
+        type_maping = {
+            'str': str,
+            'int': int,
+            'float': float,
+            'bool': bool,
+            'list': list,
+            'dict': dict,
+            'tuple': tuple
         }
-        expected_name = type_names.get(expected, str(expected))
+
+        if isinstance(expected, str):
+            if expected in type_maping:
+                expected_type = type_maping[expected]
+                expected_name = expected
+            else:
+                raise ValueError(f"不支持类型: {expected}")
+        else:
+            expected_type = expected
+            type_names = {
+                str: 'str',
+                int: 'int',
+                float: 'float',
+                bool: 'bool',
+                list: 'list',
+                dict: 'dict',
+                tuple: 'tuple'
+            }
+            expected_name = type_names.get(expected_type, str(expected_type))
+
+        passed = isinstance(actual, expected_type)
         actual_type = type(actual).__name__
         
         return AssertionResult(

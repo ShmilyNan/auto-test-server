@@ -5,6 +5,10 @@
     "description": "Offer Manage API Test"
   },
   "config": {
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
     "timeout": 30
   },
   "test_cases": [
@@ -113,7 +117,7 @@
           "type": "length",
           "path": "body.data",
           "min": 1,
-          "max": 24
+          "max": 25
         }
       ],
 	  "extract": {

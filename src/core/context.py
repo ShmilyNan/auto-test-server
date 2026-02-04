@@ -108,6 +108,10 @@ class TestContext:
     def clear_local(self):
         """清空局部变量"""
         self.local_vars.clear()
+
+    def clear_local_all(self):
+        """清空所有局部变量"""
+        self.local_vars.clear()
         self.extract_vars.clear()
     
     def clear_cache(self):

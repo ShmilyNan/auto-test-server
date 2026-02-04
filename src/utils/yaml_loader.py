@@ -253,11 +253,9 @@ class YAMLLoader:
     ) -> Union[List[Any], Dict[str, Any]]:
         """
         批量加载多个YAML文件
-
         Args:
             file_paths: 文件路径列表
             merge: 是否合并所有文件的数据
-
         Returns:
             List或Dict: 加载的数据列表或合并后的字典
         """
@@ -287,13 +285,11 @@ class YAMLLoader:
     ) -> Any:
         """
         从嵌套字典中获取值
-
         Args:
             data: 字典数据
             path: 嵌套路径，如 "config.database.host"
             default: 默认值
             separator: 路径分隔符
-
         Returns:
             Any: 获取的值
         """
@@ -316,7 +312,6 @@ _yaml_loader = None
 def get_yaml_loader() -> YAMLLoader:
     """
     获取全局YAML加载器实例
-
     Returns:
         YAMLLoader: YAML加载器实例
     """
@@ -332,11 +327,9 @@ def get_yaml_loader() -> YAMLLoader:
 def load_yaml(file_path: Union[str, Path], default: Any = None) -> Any:
     """
     便捷函数：加载YAML文件
-
     Args:
         file_path: YAML文件路径
         default: 默认值
-
     Returns:
         Any: 解析后的数据
     """
@@ -346,11 +339,9 @@ def load_yaml(file_path: Union[str, Path], default: Any = None) -> Any:
 def load_yaml_dict(file_path: Union[str, Path], default: Optional[Dict] = None) -> Dict[str, Any]:
     """
     便捷函数：加载YAML文件为字典
-
     Args:
         file_path: YAML文件路径
         default: 默认值
-
     Returns:
         Dict: 解析后的字典数据
     """

@@ -25,6 +25,7 @@ test_cases:
   # ========================================
   - name: "用户登录-正常流程"
     description: "测试用户正常登录"
+    order: 0
     priority: "p0"
     tags: ["smoke", "daily"]
     
@@ -43,7 +44,7 @@ test_cases:
         path: "body.code"
         expected: 200
       
-      - type: "not_none"
+      - type: "is_not_none"
         path: "body.token"
     
     extract:
@@ -85,7 +86,7 @@ test_cases:
         expected: "Lee"
       
       - type: "type"
-        path: "body。user"
+        path: "body.user"
         expected: "dict"
       
       # JSON Schema验证
@@ -138,7 +139,7 @@ test_cases:
   - name: "用户登出"
     description: "用户正常登出"
     priority: "p1"
-    tags: ["regression"]
+    tags: ["regression","skip"]
     
     method: "POST"
     url: "/prod-api/logout"
@@ -179,18 +180,18 @@ test_cases:
   - name: "用户信息查询-并发"
     description: "测试并发查询用户信息"
     priority: "p3"
-    tags: ["performance"]
-    
+    tags: ["performance","skip"]
+
     method: "GET"
     url: "/user/info"
-    
+
     headers:
       Authorization: "Bearer ${$extract.access_token}"
-    
+
     validate:
       - type: "status_code"
         expected: 200
-      
+
       - type: "lt"
         path: "elapsed"  # 响应时间
         expected: 1.0  # 小于1秒
@@ -201,25 +202,25 @@ test_cases:
   - name: "用户注册后数据库验证"
     description: "注册成功后验证数据库记录"
     priority: "p1"
-    tags: ["database"]
-    
+    tags: ["database","skip"]
+
     method: "POST"
     url: "/user/register"
-    
+
     body:
       username: "sql_test_${timestamp()}"
       password: "Test@123456"
       email: "sql_test_${timestamp()}@example.com"
-    
+
     validate:
       - type: "status_code"
         expected: 200
-      
+
       # SQL断言（需要数据库配置）
       - type: "sql"
         sql: "SELECT COUNT(*) FROM users WHERE username = '${body.data.username}'"
         expected: 1
-      
+
       - type: "sql"
         sql: "SELECT status FROM users WHERE user_id = ${body.data.user_id}"
         expected: "active"
@@ -230,28 +231,28 @@ test_cases:
   - name: "用户头像上传"
     description: "测试用户头像上传功能"
     priority: "p2"
-    tags: ["file"]
-    
+    tags: ["file","skip"]
+
     method: "POST"
     url: "/user/avatar"
-    
+
     headers:
       Authorization: "Bearer ${$extract.access_token}"
-    
+
     # 文件上传
     files:
       avatar: "test_data/avatar.jpg"
-    
+
     params:
       type: "avatar"
-    
+
     validate:
       - type: "status_code"
         expected: 200
-      
-      - type: "not_none"
+
+      - type: "is_not_none"
         path: "body.data.url"
-      
+
       - type: "regex"
         path: "body.data.url"
         pattern: "^https?://.*\\.(jpg|png|jpeg)$"

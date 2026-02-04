@@ -49,9 +49,10 @@ def test_context():
     测试用例级fixture，每个用例都会创建新的上下文
     """
     # 重置上下文
-    reset_context()
+    # 不清空extract_vars上，支持用例间数据传递
+    # reset_context()
     context = get_context()
-    
+
     yield context
     
     # 清空局部变量
@@ -218,7 +219,7 @@ def pytest_configure(config):
         config.addinivalue_line("markers", "tag: 通用标记")
         config.addinivalue_line("markers", "module: 模块标记")
         config.addinivalue_line("markers", "module_user_module: 用户模块测试")
-        config.addinivalue_line("markers", "module_product_module: 商品模块测试")
+        config.addinivalue_line("markers", "module_offer_manage: offer模块测试")
     except Exception as e:
         logger.warning(f"添加自定义标记时出错: {e}")
 
