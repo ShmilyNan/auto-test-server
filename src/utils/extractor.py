@@ -122,12 +122,10 @@ class Extractor:
     ) -> Any:
         """
         使用正则表达式提取数据
-        
         Args:
             response: 响应数据
             pattern: 正则表达式
             group: 捕获组索引
-            
         Returns:
             Any: 提取的值
         """
@@ -172,11 +170,9 @@ class Extractor:
     def _extract_cookie(self, response: Dict[str, Any], cookie_name: str) -> Optional[str]:
         """
         从Cookie中提取数据
-        
         Args:
             response: 响应数据
             cookie_name: Cookie名称
-            
         Returns:
             Optional[str]: Cookie值
         """
@@ -186,11 +182,9 @@ class Extractor:
     def _extract_xpath(self, response: Dict[str, Any], xpath_expr: str) -> Any:
         """
         使用XPath提取数据（HTML/XML）
-        
         Args:
             response: 响应数据
             xpath_expr: XPath表达式
-            
         Returns:
             Any: 提取的值
         """

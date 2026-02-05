@@ -16,6 +16,7 @@ sys.path.insert(0, str(project_root))
 from src.core.parser import TestParser, TestCase
 from src.utils.yaml_loader import load_yaml_dict
 from src.utils.logger import log as logger
+from src.utils.cleaner import get_cleaner
 
 
 class TestCaseGenerator:
@@ -314,6 +315,18 @@ for test_data in _test_data_list:
                 # 执行后置处理
                 if tc.teardown:
                     _execute_teardown(tc.teardown, test_context)
+
+                # 执行数据清洗，清洗失败不影响测试执行
+                if tc.clean:
+                    try:
+                        cleaner = get_cleaner()
+                        success = cleaner.cleanup(tc.cleanup)
+                        if not success:
+                            logger.error(f"数据清理失败：{tc.name}")
+                        else:
+                            logger.info(f"数据清理成功：{tc.name}")
+                    except Exception as e:
+                        logger.error(f"数据清洗异常: {tc.name}, 错误：{str(e)}")
 
                 # 记录执行时间
                 elapsed = time.time() - start_time

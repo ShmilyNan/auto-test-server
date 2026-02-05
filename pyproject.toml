@@ -1,4 +1,64 @@
 # pyproject.toml
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auto-test-platform"
+version = "1.0.0"
+description = "基于 Python + Pytest 的接口自动化测试平台"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "MIT"}
+authors = [
+    {name = "Auto Test Platform Team"}
+]
+keywords = ["testing", "api", "automation", "pytest"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Testing",
+]
+
+dependencies = [
+    "pytest>=9.0.2",
+    "pytest-order>=1.3.0",
+    "requests>=2.31.0",
+    "httpx>=0.27.0",
+    "allure-pytest>=2.13.2",
+    "ruamel-yaml>=0.19.1",
+    "jsonschema>=4.20.0",
+    "loguru>=0.7.2",
+    "python-dotenv>=1.0.0",
+    "jmespath>=1.0.1",
+]
+
+[project.optional-dependencies]
+sql = [
+    "sqlalchemy>=2.0.0",
+    "pymysql>=1.1.0",
+]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-order>=1.3.0",
+    "allure-pytest>=2.13.2",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+    "ipython>=8.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/auto-test-platform"
+Documentation = "https://github.com/yourusername/auto-test-platform/docs"
+Repository = "https://github.com/yourusername/auto-test-platform"
+Issues = "https://github.com/yourusername/auto-test-platform/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 # ======================
 # pytest 配置
@@ -41,44 +101,104 @@ filterwarnings = [
     "ignore::PendingDeprecationWarning"
 ]
 
-# ======================
-# 测试标记定义
-# ======================
-[tool.pytest.ini_options.markers]
-smoke = "冒烟测试"        # 核心功能验证
-regression = "回归测试"    # 回归测试套件
-daily = "每日巡检"        # 日常巡检用例
-p0 = "P0级用例"          # 最高优先级用例
-p1 = "P1级用例"          # 高优先级用例
-p2 = "P2级用例"          # 中优先级用例
-p3 = "P3级用例"          # 低优先级用例
-slow = "慢速测试"        # 执行较慢的测试
-skip = "跳过测试"        # 暂时跳过的测试
-xfail = "预期失败"       # 预期会失败的测试
-positive = "正向测试"
-negative = "逆向测试"
-performance = "性能测试"
-database = "数据库测试"
-file = "文件上传测试"
-tag = "通用标记"
-module = "模块标记"
-module_user_module = "用户模块测试"
-module_offer_manage = "offer模块测试"
+# 标记定义（优化后：只保留核心标记，不再为每个模块单独注册）
+markers = [
+    # ==================== 功能分类 ====================
+    "smoke: 冒烟测试（核心功能测试）",
+    "regression: 回归测试（完整回归）",
+    "daily: 每日巡检测试",
 
-# 代码格式化配置
+    # ==================== 优先级分类 ====================
+    "p0: P0级用例（核心业务，必须通过）",
+    "p1: P1级用例（重要功能）",
+    "p2: P2级用例（一般功能）",
+    "p3: P3级用例（边缘功能）",
+
+    # ==================== 测试类型分类 ====================
+    "api: API接口测试",
+    "sql: SQL数据库测试",
+    "extract: 数据提取测试",
+    "cleanup: 数据清洗测试",
+    "performance: 性能测试",
+    "database: 数据库相关测试",
+    "file: 文件上传下载测试",
+
+    # ==================== 测试结果分类 ====================
+    "slow: 慢速测试",
+    "skip: 跳过此测试",
+    "xfail: 预期失败",
+
+    # ==================== 正负向分类 ====================
+    "positive: 正向测试（验证功能正常）",
+    "negative: 负向测试（验证异常处理）",
+
+    # ==================== 自定义标记（通用） ====================
+    "tag: 通用标记，可用于自定义分类（使用方式：@pytest.mark.tag('custom-tag')）",
+]
+
+# ============================================
+# Black 代码格式化配置
+# ============================================
 [tool.black]
-line-length = 88
+line-length = 100
 target-version = ["py313"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | \.eggs
+  | build
+  | dist
+  | reports
+  | __pycache__
+)/
+'''
+
+# ============================================
+# Flake8 代码检查配置
+# ============================================
+[tool.flake8]
+max-line-length = 100
+extend-ignore = [
+    "E203",  # whitespace before ':'
+    "W503",  # line break before binary operator
+    "E501",  # line too long (handled by black)
+]
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    "build",
+    "dist",
+    "reports",
+]
 
 [tool.isort]
 profile = "black"
 line_length = 88
 
-# 静态类型检查
+# ============================================
+# MyPy 类型检查配置
+# ============================================
 [tool.mypy]
 python_version = "3.13"
 warn_return_any = true
 warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+exclude = [
+    "build",
+    "dist",
+    "reports",
+]
+
+# ============================================
+# Allure 配置
+# ============================================
+[tool.allure]
+results-dir = "reports/allure"
+report-dir = "reports/allure-report"
 
 # 代码质量检查
 [tool.ruff]
@@ -87,14 +207,21 @@ line-length = 88
 select = ["E", "F", "I", "B"]
 ignore = ["E501"]
 
-# 测试覆盖率配置
+# ============================================
+# Coverage 配置（可选）
+# ============================================
 [tool.coverage.run]
 source = ["src"]
-omit = ["*/tests/*"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+]
 
 [tool.coverage.report]
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
-    "if __name__ == .__main__.:"
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
 ]

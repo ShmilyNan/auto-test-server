@@ -108,7 +108,7 @@ test_cases:
   # ========================================
   - name: "获取用户权限-成功"
     description: "获取用户权限列表"
-    priority: "p1"
+    priority: "p2"
     tags: ["regression"]
     
     method: "GET"
@@ -116,10 +116,6 @@ test_cases:
     
     headers:
       Authorization: "Bearer ${$extract.access_token}"
-    
-    body:
-      nickname: "新昵称_${timestamp()}"
-      avatar: "https://example.com/avatar.jpg"
     
     validate:
       - type: "status_code"
@@ -161,6 +157,10 @@ test_cases:
     
     method: "POST"
     url: "/prod-api/login"
+
+    body:
+      username: "Lee"
+      password: "Working@0610"
 
     validate:
       - type: "status_code"

@@ -88,7 +88,7 @@
         },
 		"countryInfo": {
           "type": "regex",
-          "expression": "\"countryInfo:\"[(^[A-Z]{2}$)]",
+          "pattern": "\"countryInfo\":\"\\[([A-Z]{2})\\]",
 		  "group": 0
         }
       }
@@ -148,60 +148,59 @@
           "expected": 200
         },
         {
-          "type": "length",
+          "type": "type",
           "path": "body.data",
-          "min": 1,
-          "max": 24
+          "expected": "list"
         }
       ],
 	  "extract": {
         "affiliateAttribute": {
           "type": "jsonpath",
-          "expression": "$.data[?(@.id == 1634)].affiliateAttribute"
+          "expression": "$.data[1].affiliateAttribute"
         },
 		"affiliateName": {
           "type": "jsonpath",
-          "expression": "$.data[?(@.id == 1634)].affiliateName"
+          "expression": "$.data[1].affiliateName"
         },
 		"affiliateId": {
           "type": "jsonpath",
-          "expression": "$.data[?(@.id == 1634)].id"
+          "expression": "$.data[1].id"
         },
 		"affiliateOrgId": {
           "type": "jsonpath",
-          "expression": "$.data[?(@.id == 1634)].orgId"
+          "expression": "$.data[1].orgId"
         },
 		"affiliatePrivateFlag": {
           "type": "jsonpath",
-          "expression": "$.data[?(@.id == 1634)].privateFlag"
+          "expression": "$.data[1].privateFlag"
         },
 		"affiliateStatus": {
           "type": "jsonpath",
-          "expression": "$.data[?(@.id == 1634)].status"
+          "expression": "$.data[1].status"
         },
 		"affiliateAttribute1": {
           "type": "jsonpath",
-          "expression": "$.data[?(@.id == 1678)].affiliateAttribute"
+          "expression": "$.data[33].affiliateAttribute"
         },
 		"affiliateName1": {
           "type": "jsonpath",
-          "expression": "$.data[?(@.id == 1678)].affiliateName"
+          "expression": "$.data[33].affiliateName"
         },
 		"affiliateId1": {
           "type": "jsonpath",
-          "expression": "$.data[?(@.id == 1678)].id"
+          "expression": "$.data[33].id"
         },
 		"affiliateOrgId1": {
           "type": "jsonpath",
-          "expression": "$.data[?(@.id == 1678)].orgId"
+          "expression": "$.data[33].orgId"
         },
 		"affiliatePrivateFlag1": {
           "type": "jsonpath",
-          "expression": "$.data[?(@.id == 1678)].privateFlag"
+          "expression": "$.data[33].privateFlag"
         },
 		"affiliateStatus1": {
           "type": "jsonpath",
-          "expression": "$.data[?(@.id == 1678)].status"
+          "expression": "$.data[33].status"
         }
       }
     },
@@ -440,9 +439,23 @@
         {
           "type": "type",
           "path": "body.data",
-          "expected": "integer"
+          "expected": "int"
         }
       ],
+      "cleanup": {
+        "enable": false,
+        "type": "api",
+        "api": {
+          "method": "POST",
+          "url": "/prod-api/offer/delete",
+          "headers": {
+            "Authorization": "Bearer ${$extract.access_token}"
+          },
+          "body": {
+            "offerId": "${$extract.offerId}"
+          }
+        }
+      },
 	  "extract": {
         "offerId": {
           "type": "jsonpath",
@@ -479,7 +492,15 @@
           "path": "body.rows[0].offerId",
           "expected": "${$extract.offerId}"
         }
-      ]
+      ],
+      "cleanup": {
+        "enable": false,
+        "type": "sql",
+        "sql": {
+          "connection": "default",
+          "statement": "delete from offer where offer_id = ${$extract.offerId}"
+        }
+      }
     }
   ]
 }

@@ -34,6 +34,7 @@ class TestCase:
     setup: List[Dict] = None           # 前置处理
     teardown: List[Dict] = None        # 后置处理
     hooks: List[str] = None            # 钩子函数
+    cleanup: Dict[str, Any] = None     # 数据清理（后置处理）
 
     # 提取与依赖
     extract: Dict[str, Any] = None     # 数据提取规则
@@ -75,6 +76,8 @@ class TestCase:
             self.extract = {}
         if self.metadata is None:
             self.metadata = {}
+        if self.cleanup is None:
+            self.cleanup = {}
 
     def to_dict(self) -> Dict[str, Any]:
         """转换为字典"""
@@ -284,6 +287,7 @@ class TestParser:
             setup=case_data.get('setup', []),
             teardown=case_data.get('teardown', []),
             hooks=case_data.get('hooks'),
+            cleanup=case_data.get('cleanup', {}),
             extract=case_data.get('extract', {}),
             depends_on=case_data.get('depends_on'),
             validate=case_data.get('validate', []),

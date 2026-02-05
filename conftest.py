@@ -217,9 +217,6 @@ def pytest_configure(config):
         config.addinivalue_line("markers", "database: 数据库测试")
         config.addinivalue_line("markers", "file: 文件上传测试")
         config.addinivalue_line("markers", "tag: 通用标记")
-        config.addinivalue_line("markers", "module: 模块标记")
-        config.addinivalue_line("markers", "module_user_module: 用户模块测试")
-        config.addinivalue_line("markers", "module_offer_manage: offer模块测试")
     except Exception as e:
         logger.warning(f"添加自定义标记时出错: {e}")
 
