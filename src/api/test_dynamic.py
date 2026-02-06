@@ -16,7 +16,6 @@ sys.path.insert(0, str(project_root))
 from src.core.parser import TestParser, TestCase
 from src.utils.yaml_loader import load_yaml_dict
 from src.utils.logger import log as logger
-from src.utils.cleaner import get_cleaner
 
 
 class TestCaseGenerator:
@@ -85,12 +84,13 @@ _generator = TestCaseGenerator()
 _test_data_list = _generator.generate_test_cases()
 
 
-def _generate_function_name(test_case: TestCase, idx: int) -> str:
+def _generate_function_name(test_case: TestCase, module: str, idx: int) -> str:
     """
     生成唯一的函数名
 
     Args:
         test_case: 测试用例
+        module: 模块名称
         idx: 索引
 
     Returns:
@@ -104,8 +104,8 @@ def _generate_function_name(test_case: TestCase, idx: int) -> str:
     if not name.startswith('test_'):
         name = f'test_{name}'
 
-    # 添加模块名和索引避免重复
-    func_name = f"{name}_{idx}"
+    # 添加模块名和索引避免重复，同时支持 -k 参数筛选
+    func_name = f"{name}_{module}_{idx}"
 
     return func_name
 
@@ -243,9 +243,10 @@ def _execute_teardown(teardown_steps: List[Dict], test_context):
 for test_data in _test_data_list:
     test_case = test_data['test_case']
     idx = test_data['index']
+    module_name = test_data['module']
 
     # 生成函数名
-    func_name = _generate_function_name(test_case, idx)
+    func_name = _generate_function_name(test_case, module_name, idx)
 
 
     # 创建测试函数
@@ -316,17 +317,19 @@ for test_data in _test_data_list:
                 if tc.teardown:
                     _execute_teardown(tc.teardown, test_context)
 
-                # 执行数据清洗，清洗失败不影响测试执行
-                if tc.clean:
+                # 执行数据清洗
+                if tc.cleanup:
                     try:
+                        from src.utils.cleaner import get_cleaner
                         cleaner = get_cleaner()
                         success = cleaner.cleanup(tc.cleanup)
-                        if not success:
-                            logger.error(f"数据清理失败：{tc.name}")
+                        if success:
+                            logger.debug(f"数据清洗成功: {tc.name}")
                         else:
-                            logger.info(f"数据清理成功：{tc.name}")
+                            logger.warning(f"数据清洗失败: {tc.name}")
                     except Exception as e:
-                        logger.error(f"数据清洗异常: {tc.name}, 错误：{str(e)}")
+                        logger.error(f"数据清洗异常: {tc.name}, 错误: {str(e)}")
+                        # 数据清洗失败不影响测试用例结果
 
                 # 记录执行时间
                 elapsed = time.time() - start_time
@@ -376,10 +379,10 @@ for test_data in _test_data_list:
         except:
             pass
 
-    # 添加模块名标记
-    module_name = test_data['module']
-    module_mark = getattr(pytest.mark, f'module_{module_name}', pytest.mark.module)
-    test_func = module_mark(test_func)
+    # 添加模块名标记（已通过函数名支持 -k 参数筛选）
+    # 函数名格式：test_用例名_模块名_索引
+    # 例如：test_用户登录_正常流程_user_module_0
+    # 可以通过 -k "user_module" 筛选所有用户模块的测试用例
 
     # 将函数添加到模块的命名空间
     globals()[func_name] = test_func

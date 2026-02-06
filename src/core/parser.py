@@ -177,6 +177,8 @@ class TestParser:
         """
         test_cases = []
 
+        module_name = data.get('module_name', module)
+
         #获取全局配置
         config = data.get('config', {})
         default_headers = config.get('headers', {})
@@ -185,7 +187,7 @@ class TestParser:
         cases = data.get('test_cases', [])
 
         if not cases:
-            logger.warning(f"模块 {module} 没有定义测试用例")
+            logger.warning(f"模块 {module_name} 没有定义测试用例")
             return test_cases
 
         # 解析每个测试用例
@@ -198,12 +200,12 @@ class TestParser:
                 raise
 
         # 自动为未设置 order 的用例分配顺序
-        test_cases = self._assign_order(test_cases, module)
+        test_cases = self._assign_order(test_cases, module_name)
 
         # 按 order 排序
         test_cases.sort(key=lambda x: x.order)
 
-        logger.debug(f"模块 {module} 测试用例顺序: {[f'{case.name}({case.order})' for case in test_cases]}")
+        logger.debug(f"模块 {module_name} 测试用例顺序: {[f'{case.name}({case.order})' for case in test_cases]}")
 
         return test_cases
 

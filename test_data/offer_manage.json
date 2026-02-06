@@ -1,4 +1,6 @@
 {
+  "module_name": "登录模块",
+  "module_desc": "登录相关接口测试",
   "module": {
     "name": "Offer Manage",
     "version": "1.0.0",
