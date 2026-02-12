@@ -3,7 +3,6 @@
 YAML文件加载器
 提供统一的YAML文件加载功能
 """
-
 from ruamel.yaml import YAML, YAMLError
 yaml = YAML(typ='safe')
 from pathlib import Path
@@ -17,7 +16,6 @@ class YAMLLoader:
     def __init__(self, encoding: str = 'utf-8'):
         """
         初始化YAML加载器
-
         Args:
             encoding: 文件编码，默认 utf-8
         """
@@ -30,11 +28,9 @@ class YAMLLoader:
     ) -> Any:
         """
         加载YAML文件
-
         Args:
             file_path: YAML文件路径（字符串或Path对象）
             default: 文件不存在或解析失败时的默认值
-
         Returns:
             Any: 解析后的数据，失败时返回默认值
         """
@@ -64,13 +60,10 @@ class YAMLLoader:
     ) -> Any:
         """
         加载YAML文件，失败时抛出异常
-
         Args:
             file_path: YAML文件路径
-
         Returns:
             Any: 解析后的数据
-
         Raises:
             FileNotFoundError: 文件不存在
             yaml.YAMLError: YAML解析错误
@@ -102,11 +95,9 @@ class YAMLLoader:
     ) -> Dict[str, Any]:
         """
         加载YAML文件并返回字典类型
-
         Args:
             file_path: YAML文件路径
             default: 默认值（空字典）
-
         Returns:
             Dict: 解析后的字典数据
         """
@@ -128,11 +119,9 @@ class YAMLLoader:
     ) -> List[Any]:
         """
         加载YAML文件并返回列表类型
-
         Args:
             file_path: YAML文件路径
             default: 默认值（空列表）
-
         Returns:
             List: 解析后的列表数据
         """
@@ -154,11 +143,9 @@ class YAMLLoader:
     ) -> Any:
         """
         从字符串加载YAML数据
-
         Args:
             yaml_string: YAML格式字符串
             default: 解析失败时的默认值
-
         Returns:
             Any: 解析后的数据
         """
@@ -182,12 +169,10 @@ class YAMLLoader:
     ) -> bool:
         """
         保存数据到YAML文件
-
         Args:
             data: 要保存的数据
             file_path: 目标文件路径
             sort_keys: 是否排序字典的键
-
         Returns:
             bool: 是否保存成功
         """
@@ -218,12 +203,10 @@ class YAMLLoader:
     ) -> Dict[str, Any]:
         """
         加载YAML文件并验证必填字段
-
         Args:
             file_path: YAML文件路径
             required_fields: 必填字段列表
             default: 默认值（空字典）
-
         Returns:
             Dict: 解析后的字典数据
         """
@@ -351,12 +334,10 @@ def load_yaml_dict(file_path: Union[str, Path], default: Optional[Dict] = None) 
 def save_yaml(data: Any, file_path: Union[str, Path], sort_keys: bool = False) -> bool:
     """
     便捷函数：保存数据到YAML文件
-
     Args:
         data: 要保存的数据
         file_path: 目标文件路径
         sort_keys: 是否排序字典的键
-
     Returns:
         bool: 是否保存成功
     """

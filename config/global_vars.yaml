@@ -4,7 +4,7 @@
 # 认证相关
 auth:
   test_token: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJMZWUiLCJsb2dpbl91c2VyX2tleSI6ImZjYTdjOThiLTUyYTQtNDU2NS05ODFmLTc3Zjg5NzM0MWQ5MyJ9.PSA4tqZrRDhOYyIrRlukw8iqqXB95HAePsQDz0Qa9jE9A_swjsYS4ruT3MiJAx9IeLTrMlS2s8ulJ8AW1RnBGw"
-  prod_token: "Bearer prod_token_345678"
+  prod_token: "Bearer "
 
 # 测试数据
 test_data:
@@ -40,9 +40,8 @@ database:
 
 # 文件路径
 paths:
-  upload_dir: "/tmp/uploads"
-  download_dir: "/tmp/downloads"
-  avatar_dir: "/tmp/avatars"
+  upload_dir: "/docs/uploads"
+  download_dir: "/docs/downloads"
 
 # 常用URL
 urls:

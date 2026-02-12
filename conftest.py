@@ -5,19 +5,18 @@ pytest配置文件
 """
 import os
 import sys
+import pytest
+import allure
 from src.utils.yaml_loader import load_yaml_dict
 from pathlib import Path
 from src.utils.logger import log as logger
-
-import pytest
-import allure
 
 # 添加项目根目录到路径
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 from src.core.client import create_client
-from src.core.context import get_context, reset_context
+from src.core.context import get_context
 from src.core.parser import TestParser
 from src.core.validator import Validator
 from src.utils.extractor import get_extractor
@@ -227,7 +226,7 @@ def pytest_collection_modifyitems(config, items):
     可以在这里对用例进行排序、过滤等
     """
     # 根据优先级排序用例
-    priority_order = {'p0': 0, 'p1': 1, 'p2': 2, 'p3': 3}
+    priority_order = {'p0': 1, 'p1': 2, 'p2': 3, 'p3': 4}
     
     def get_priority(item):
         for marker in item.iter_markers():

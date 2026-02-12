@@ -2,7 +2,6 @@
 日志记录器封装
 基于loguru实现
 """
-
 import sys
 from pathlib import Path
 from typing import Optional
@@ -24,7 +23,6 @@ class TestLogger:
     ):
         """
         初始化日志记录器
-        
         Args:
             log_dir: 日志目录
             log_level: 日志级别
@@ -97,7 +95,6 @@ _test_logger = None
 def init_logger(**kwargs):
     """
     初始化全局日志记录器
-    
     Args:
         **kwargs: 配置参数
     """
@@ -110,7 +107,6 @@ def init_logger(**kwargs):
 def get_logger():
     """
     获取全局日志记录器
-    
     Returns:
         Logger: loguru logger实例
     """

@@ -5,7 +5,7 @@
 
 import re
 from typing import Dict, Any, Optional
-from jsonpath_ng import parse as jsonpath_parse
+from jsonpath_ng.ext import parse as jsonpath_parse
 from lxml import etree
 from src.utils.logger import log as logger
 
@@ -32,7 +32,6 @@ class Extractor:
         Args:
             response: HTTP响应数据
             rules: 提取规则 {变量名: {type: "jsonpath", expression: "$.data.id"}}
-            
         Returns:
             Dict: 提取的数据 {变量名: 值}
         """
@@ -84,11 +83,9 @@ class Extractor:
     def _extract_jsonpath(self, response: Dict[str, Any], expression: str) -> Any:
         """
         使用JSONPath提取数据
-        
         Args:
             response: 响应数据
             expression: JSONPath表达式
-            
         Returns:
             Any: 提取的值
         """
@@ -156,11 +153,9 @@ class Extractor:
     def _extract_header(self, response: Dict[str, Any], header_name: str) -> Optional[str]:
         """
         从响应头中提取数据
-        
         Args:
             response: 响应数据
             header_name: 请求头名称
-            
         Returns:
             Optional[str]: 请求头值
         """
@@ -221,11 +216,9 @@ class Extractor:
         通过点号路径提取数据
         
         示例: data.users[0].name
-        
         Args:
             data: 数据源
             path: 路径字符串
-            
         Returns:
             Any: 提取的值
         """

@@ -57,14 +57,12 @@ class DataCleaner:
     def cleanup(self, cleanup_config: Dict[str, Any]) -> bool:
         """
         执行数据清洗
-
         Args:
             cleanup_config: 清洗配置
                 - enabled: 是否启用清洗
                 - type: 清洗类型 (api/sql)
                 - api: API 清洗配置
                 - sql: SQL 清洗配置
-
         Returns:
             bool: 清洗是否成功
         """
@@ -90,7 +88,6 @@ class DataCleaner:
     def _cleanup_by_api(self, api_config: Dict[str, Any]) -> bool:
         """
         通过 API 删除数据
-
         Args:
             api_config: API 配置
                 - method: 请求方法 (GET/POST/PUT/DELETE)
@@ -98,7 +95,6 @@ class DataCleaner:
                 - headers: 请求头
                 - params: URL参数
                 - body: 请求体
-
         Returns:
             bool: 删除是否成功
         """
@@ -167,13 +163,11 @@ class DataCleaner:
     def _cleanup_by_sql(self, sql_config: Dict[str, Any]) -> bool:
         """
         通过 SQL 删除数据
-
         Args:
             sql_config: SQL 配置
                 - connection: 数据库连接名称
                 - statement: SQL 语句
                 - params: SQL 参数
-
         Returns:
             bool: 删除是否成功
         """
@@ -209,11 +203,9 @@ class DataCleaner:
     def _execute_sql(self, statement: str, params: Optional[Dict] = None) -> bool:
         """
         执行 SQL 语句
-
         Args:
             statement: SQL 语句
             params: 参数
-
         Returns:
             bool: 执行是否成功
         """
@@ -242,7 +234,6 @@ class DataCleaner:
     def _get_db_config(self) -> Optional[Dict]:
         """
         获取数据库配置
-
         Returns:
             Optional[Dict]: 数据库配置
         """
@@ -263,12 +254,10 @@ class DataCleaner:
     def _execute_with_sqlalchemy(self, statement: str, params: Optional[Dict], db_config: Dict) -> bool:
         """
         使用 SQLAlchemy 执行 SQL
-
         Args:
             statement: SQL 语句
             params: 参数
             db_config: 数据库配置
-
         Returns:
             bool: 执行是否成功
         """
@@ -313,10 +302,8 @@ class DataCleaner:
     def cleanup_batch(self, cleanup_configs: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
         批量执行数据清洗
-
         Args:
             cleanup_configs: 清洗配置列表
-
         Returns:
             Dict: 清洗结果统计
                 - total: 总数
@@ -376,7 +363,6 @@ _cleaner = None
 def get_cleaner() -> DataCleaner:
     """
     获取全局数据清洗管理器实例
-
     Returns:
         DataCleaner: 清洗管理器实例
     """

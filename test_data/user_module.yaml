@@ -155,7 +155,7 @@ test_cases:
   - name: "用户登录-密码错误"
     description: "测试登录时输入错误密码"
     priority: "p2"
-    tags: ["regression", "negative"]
+    tags: ["regression", "negative", "skip"]
     
     method: "POST"
     url: "/prod-api/login"

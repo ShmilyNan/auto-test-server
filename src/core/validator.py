@@ -376,7 +376,7 @@ class Validator:
     
     def _assert_type(self, actual: Any, expected: Union[type, str]) -> AssertionResult:
         """类型断言"""
-        type_maping = {
+        type_mapping = {
             'str': str,
             'int': int,
             'float': float,
@@ -387,8 +387,8 @@ class Validator:
         }
 
         if isinstance(expected, str):
-            if expected in type_maping:
-                expected_type = type_maping[expected]
+            if expected in type_mapping:
+                expected_type = type_mapping[expected]
                 expected_name = expected
             else:
                 raise ValueError(f"不支持类型: {expected}")

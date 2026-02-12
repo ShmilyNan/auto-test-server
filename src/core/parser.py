@@ -2,7 +2,6 @@
 YAML/JSON测试数据解析器
 支持自动解析、校验、错误定位
 """
-
 import json
 from typing import Dict, Any, List, Optional, Union
 from pathlib import Path
@@ -114,7 +113,6 @@ class TestParser:
     def __init__(self, data_dir: str = "test_data"):
         """
         初始化解析器
-
         Args:
             data_dir: 测试数据目录
         """
@@ -124,13 +122,10 @@ class TestParser:
     def parse_file(self, file_path: Union[str, Path]) -> List[TestCase]:
         """
         解析单个测试数据文件
-
         Args:
             file_path: 文件路径
-
         Returns:
             List[TestCase]: 测试用例列表
-
         Raises:
             FileNotFoundError: 文件不存在
             ValueError: 文件格式错误
@@ -212,17 +207,14 @@ class TestParser:
     def _assign_order(self, test_cases: List[TestCase], module: str) -> List[TestCase]:
         """
         为未设置 order 的用例自动分配顺序
-
         规则:
         1. 已设置 order 的用例：保持设置的顺序
         2. 未设置 order 的用例：按文件中出现顺序，分配连续的 order 值
            - 从 0 开始，依次分配 0, 1, 2, 3, ...
            - 遇到已设置的 order 时跳过
-
         Args:
             test_cases: 测试用例列表（按文件顺序）
             module: 模块名称
-
         Returns:
             List[TestCase]: 已分配顺序的测试用例列表
         """
@@ -307,10 +299,8 @@ class TestParser:
     def parse_dir(self, dir_path: Optional[Union[str, Path]] = None) -> Dict[str, List[TestCase]]:
         """
         解析目录下所有测试数据文件
-
         Args:
             dir_path: 目录路径，默认为初始化时指定的目录
-
         Returns:
             Dict[str, List[TestCase]]: {模块名: 用例列表}
         """
@@ -348,10 +338,8 @@ class TestParser:
     def get_cases_by_module(self, module: str) -> List[TestCase]:
         """
         获取指定模块的测试用例
-
         Args:
             module: 模块名称
-
         Returns:
             List[TestCase]: 测试用例列表
         """
@@ -372,10 +360,8 @@ class TestParser:
     def validate_schema(self, data: Dict[str, Any]) -> bool:
         """
         验证数据格式是否符合规范
-
         Args:
             data: 测试数据字典
-
         Returns:
             bool: 是否合法
         """

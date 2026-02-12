@@ -2,7 +2,6 @@
 """
 自定义钩子函数示例
 """
-
 import time
 from typing import Dict, Any
 from src.core.context import get_context

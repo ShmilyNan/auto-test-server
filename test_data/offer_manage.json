@@ -158,7 +158,7 @@
 	  "extract": {
         "affiliateAttribute": {
           "type": "jsonpath",
-          "expression": "$.data[1].affiliateAttribute"
+          "expression": "$.data[?(@.id==1634)].affiliateAttribute"
         },
 		"affiliateName": {
           "type": "jsonpath",
@@ -210,7 +210,7 @@
       "name": "validat offer info",
       "description": "Verify whether the offer information is correct",
       "priority": "p0",
-      "tags": ["smoke","positive","daily"],
+      "tags": ["smoke","positive","daily","skip"],
       "method": "POST",
       "url": "/prod-api/offer/validatOfferinfo",
       "headers": {

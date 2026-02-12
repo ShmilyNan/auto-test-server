@@ -2,11 +2,10 @@
 通知发送器
 支持飞书、钉钉、企业微信、邮箱等通知方式
 """
-
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 from abc import ABC, abstractmethod
 from datetime import datetime
 from src.utils.logger import log as logger
@@ -23,12 +22,10 @@ class BaseNotifier(ABC):
     def send(self, title: str, content: str, **kwargs) -> bool:
         """
         发送通知
-        
         Args:
             title: 通知标题
             content: 通知内容
             **kwargs: 其他参数
-            
         Returns:
             bool: 是否发送成功
         """
@@ -71,7 +68,6 @@ class DingTalkNotifier(BaseNotifier):
                 string_to_sign_enc = string_to_sign.encode('utf-8')
                 hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
                 sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
-                
                 webhook_url = f"{webhook}&timestamp={timestamp}&sign={sign}"
             else:
                 webhook_url = webhook
@@ -287,7 +283,6 @@ class NotificationManager:
     def __init__(self, config: Dict[str, Any]):
         """
         初始化通知管理器
-        
         Args:
             config: 通知配置
         """
@@ -311,12 +306,10 @@ class NotificationManager:
     def send(self, title: str, content: str, **kwargs) -> Dict[str, bool]:
         """
         发送通知到所有渠道
-        
         Args:
             title: 通知标题
             content: 通知内容
             **kwargs: 其他参数
-            
         Returns:
             Dict[str, bool]: 各渠道发送结果
         """
@@ -331,10 +324,8 @@ class NotificationManager:
     def send_test_report(self, report_data: Dict[str, Any]) -> Dict[str, bool]:
         """
         发送测试报告
-        
         Args:
             report_data: 报告数据 {total, passed, failed, duration, etc.}
-            
         Returns:
             Dict[str, bool]: 发送结果
         """
@@ -347,13 +338,13 @@ class NotificationManager:
         title = f"测试报告 - {pass_rate}"
         
         content = f"""
-**测试概览**
-- 总用例数: {total}
-- 通过: {passed}
-- 失败: {failed}
-- 通过率: {pass_rate}
-- 耗时: {duration:.2f}s
-- 测试时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-"""
+                **测试概览**
+                - 总用例数: {total}
+                - 通过: {passed}
+                - 失败: {failed}
+                - 通过率: {pass_rate}
+                - 耗时: {duration:.2f}s
+                - 测试时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+                """
         
         return self.send(title, content)

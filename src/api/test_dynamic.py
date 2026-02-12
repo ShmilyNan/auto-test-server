@@ -24,7 +24,6 @@ class TestCaseGenerator:
     def __init__(self, test_data_dir: str = "test_data"):
         """
         初始化生成器
-
         Args:
             test_data_dir: 测试数据目录
         """
@@ -35,7 +34,6 @@ class TestCaseGenerator:
     def load_test_data(self) -> Dict[str, List[TestCase]]:
         """
         加载所有测试数据
-
         Returns:
             Dict[str, List[TestCase]]: {模块名: 测试用例列表}
         """
@@ -51,7 +49,6 @@ class TestCaseGenerator:
     def generate_test_cases(self) -> List[Dict[str, Any]]:
         """
         生成参数化的测试用例数据
-
         Returns:
             List[Dict[str, Any]]: 测试用例数据列表（已按 order 排序）
         """
@@ -87,12 +84,10 @@ _test_data_list = _generator.generate_test_cases()
 def _generate_function_name(test_case: TestCase, module: str, idx: int) -> str:
     """
     生成唯一的函数名
-
     Args:
         test_case: 测试用例
         module: 模块名称
         idx: 索引
-
     Returns:
         str: 函数名
     """
@@ -105,9 +100,9 @@ def _generate_function_name(test_case: TestCase, module: str, idx: int) -> str:
         name = f'test_{name}'
 
     # 添加模块名和索引避免重复，同时支持 -k 参数筛选
-    func_name = f"{name}_{module}_{idx}"
+    function_name = f"{name}_{module}_{idx}"
 
-    return func_name
+    return function_name
 
 
 def _build_url(url: str, test_context) -> str:
@@ -222,7 +217,6 @@ def _execute_setup(setup_steps: List[Dict], test_context):
 def _execute_teardown(teardown_steps: List[Dict], test_context):
     """
     执行后置处理
-
     Args:
         teardown_steps: 后置处理步骤
         test_context: 测试上下文

@@ -2,24 +2,13 @@
 HTTP客户端封装
 支持 requests 和 httpx 两种方式，可平滑切换
 """
-
 import time
+import httpx
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from typing import Dict, Any, Optional, Union
 from abc import ABC, abstractmethod
-
-try:
-    import requests
-    from requests.adapters import HTTPAdapter
-    from requests.packages.urllib3.util.retry import Retry
-    REQUESTS_AVAILABLE = True
-except ImportError:
-    REQUESTS_AVAILABLE = False
-
-try:
-    import httpx
-    HTTPX_AVAILABLE = True
-except ImportError:
-    HTTPX_AVAILABLE = False
 from src.utils.logger import log as logger
 
 
@@ -41,12 +30,10 @@ class BaseHTTPClient(ABC):
     ) -> Dict[str, Any]:
         """
         发送HTTP请求
-        
         Args:
             method: 请求方法 GET/POST/PUT/DELETE/PATCH
             url: 请求URL
             **kwargs: 其他参数
-            
         Returns:
             Dict: 包含响应信息的字典
         """
@@ -63,9 +50,7 @@ class RequestsClient(BaseHTTPClient):
     
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
-        if not REQUESTS_AVAILABLE:
-            raise ImportError("requests库未安装，请运行: pip install requests")
-        
+
         # 创建session
         self.session = requests.Session()
         
@@ -98,7 +83,6 @@ class RequestsClient(BaseHTTPClient):
     ) -> Dict[str, Any]:
         """
         发送HTTP请求
-        
         Args:
             method: 请求方法
             url: 请求URL
@@ -110,7 +94,6 @@ class RequestsClient(BaseHTTPClient):
             timeout: 超时时间
             verify: 是否验证SSL证书
             allow_redirects: 是否允许重定向
-            
         Returns:
             Dict: 响应信息
         """
@@ -188,8 +171,6 @@ class HTTPXClient(BaseHTTPClient):
     
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
-        if not HTTPX_AVAILABLE:
-            raise ImportError("httpx库未安装，请运行: pip install httpx")
         
         # 创建异步和同步客户端
         limits = httpx.Limits(
@@ -222,7 +203,6 @@ class HTTPXClient(BaseHTTPClient):
     ) -> Dict[str, Any]:
         """
         发送HTTP请求
-        
         Args:
             method: 请求方法
             url: 请求URL
@@ -234,7 +214,6 @@ class HTTPXClient(BaseHTTPClient):
             timeout: 超时时间
             verify: 是否验证SSL证书
             allow_redirects: 是否允许重定向
-            
         Returns:
             Dict: 响应信息
         """
@@ -256,7 +235,6 @@ class HTTPXClient(BaseHTTPClient):
                 json=json,
                 files=files,
                 timeout=timeout,
-                verify=verify,
                 follow_redirects=allow_redirects,
                 **kwargs
             )
@@ -310,14 +288,11 @@ class HTTPXClient(BaseHTTPClient):
 def create_client(client_type: str, config: Dict[str, Any]) -> BaseHTTPClient:
     """
     创建HTTP客户端工厂方法
-    
     Args:
         client_type: 客户端类型 'requests' 或 'httpx'
         config: 配置字典
-        
     Returns:
         BaseHTTPClient: HTTP客户端实例
-        
     Raises:
         ValueError: 不支持的客户端类型
     """
