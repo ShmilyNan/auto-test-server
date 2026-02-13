@@ -37,15 +37,8 @@ global_login:
   # Token 类型（用于 Authorization header）
   token_type: "Bearer"
   # Token 过期时间（秒），0 表示永不过期
-  token_ttl: 0
-  # 是否在会话开始时自动登录
-  auto_login: true
-  # 是否启用 Token 刷新
-  enable_refresh: false
-  # Token 刷新接口
-  refresh_url: "/api/auth/refresh"
-  # Refresh Token 提取路径
-  refresh_token_path: "$.data.refresh_token"
+  # Token 过期后会自动重新登录
+  token_ttl: 7200
 
 # 项目信息
 project:

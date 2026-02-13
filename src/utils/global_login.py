@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 全局登录工具
-支持全局前置登录、Token 管理、自动刷新等功能
+支持全局前置登录、Token 管理
+Token 过期时自动重新登录
 """
 import time
 from typing import Dict, Any, Optional
@@ -16,7 +17,6 @@ class GlobalLogin:
 
     _instance = None
     _token = None
-    _refresh_token = None
     _token_expire_time = 0
     _config = None
     _env_config = None
@@ -201,16 +201,6 @@ class GlobalLogin:
                 cls._token = token
                 cls._token_expire_time = time.time() + config.get('token_ttl', 0)
 
-                # 提取 Refresh Token（如果配置了）
-                refresh_token_path = config.get('refresh_token_path', '')
-                if refresh_token_path:
-                    try:
-                        extracted = extractor.extract(response_body,
-                                                      {'refresh_token': {'expression': refresh_token_path}})
-                        cls._refresh_token = extracted.get('refresh_token')
-                    except:
-                        logger.warning("无法提取 Refresh Token")
-
                 logger.info(f"全局登录成功: Token 有效期 {config.get('token_ttl', 0)} 秒")
                 return True
 
@@ -223,75 +213,9 @@ class GlobalLogin:
             return False
 
     @classmethod
-    def refresh_token(cls, client: BaseHTTPClient) -> bool:
-        """
-        刷新 Token
-        Args:
-            client: HTTP 客户端
-        Returns:
-            bool: 是否刷新成功
-        """
-        config = cls.get_config()
-
-        if not config.get('enable_refresh', False):
-            return False
-
-        if cls._refresh_token is None:
-            logger.warning("无法刷新 Token: Refresh Token 不存在")
-            return False
-
-        try:
-            refresh_url = config.get('refresh_url', '/api/auth/refresh')
-            headers = config.get('headers', {})
-
-            # 发送刷新请求
-            logger.info("开始刷新 Token")
-
-            response = client.request(
-                method='POST',
-                url=refresh_url,
-                headers=headers,
-                json={'refresh_token': cls._refresh_token}
-            )
-
-            # 检查响应
-            if response.get('status_code') != 200:
-                logger.error(f"Token 刷新失败: 状态码 {response.get('status_code')}")
-                return False
-
-            response_body = response.get('body', {})
-
-            # 提取新 Token
-            token_path = config.get('token_path', '$.data.token')
-            extractor = get_extractor()
-
-            try:
-                extracted = extractor.extract(response_body, {'token': {'expression': token_path}})
-                token = extracted.get('token')
-
-                if not token:
-                    logger.error("Token 刷新失败: 无法提取新 Token")
-                    return False
-
-                # 更新 Token
-                cls._token = token
-                cls._token_expire_time = time.time() + config.get('token_ttl', 0)
-
-                logger.info("Token 刷新成功")
-                return True
-
-            except Exception as e:
-                logger.error(f"Token 刷新失败: {str(e)}")
-                return False
-
-        except Exception as e:
-            logger.error(f"Token 刷新失败: {str(e)}")
-            return False
-
-    @classmethod
     def ensure_token(cls, client: BaseHTTPClient) -> bool:
         """
-        确保 Token 有效（如果不存在或已过期，则登录或刷新）
+        确保 Token 有效（如果不存在或已过期，则重新登录）
         Args:
             client: HTTP 客户端
         Returns:
@@ -305,15 +229,8 @@ class GlobalLogin:
         if cls._token is not None and not cls.is_token_expired():
             return True
 
-        # Token 不存在或已过期，尝试刷新或登录
-        config = cls.get_config()
-
-        if config.get('enable_refresh', False) and cls._refresh_token is not None:
-            # 尝试刷新 Token
-            if cls.refresh_token(client):
-                return True
-
-        # 刷新失败或未启用刷新，重新登录
+        # Token 不存在或已过期，重新登录
+        logger.info("Token 不存在或已过期，重新登录")
         return cls.login(client)
 
     @classmethod
@@ -321,7 +238,6 @@ class GlobalLogin:
         """登出（清除 Token）"""
         logger.info("执行全局登出")
         cls._token = None
-        cls._refresh_token = None
         cls._token_expire_time = 0
 
 

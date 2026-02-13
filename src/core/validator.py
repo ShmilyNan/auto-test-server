@@ -4,7 +4,6 @@
 """
 
 import re
-import json
 from typing import Dict, Any, List, Optional, Union
 from dataclasses import dataclass
 from jsonschema import validate, ValidationError as JsonSchemaValidationError
@@ -36,6 +35,7 @@ class Validator:
         'in': '包含',
         'not_in': '不包含',
         'contains': '包含（字符串/列表）',
+        'array_contains': '数组包含元素',
         'regex': '正则匹配',
         'json_schema': 'JSON Schema验证',
         'sql': 'SQL断言',
@@ -132,6 +132,8 @@ class Validator:
             return self._assert_less_equal(actual, expected)
         elif assert_type in ['in', 'contains']:
             return self._assert_in(actual, expected)
+        elif assert_type == 'array_contains':
+            return self._assert_array_contains(response, path, expected)
         elif assert_type == 'not_in':
             return self._assert_not_in(actual, expected)
         elif assert_type == 'regex':
@@ -303,7 +305,146 @@ class Validator:
                 expected=expected,
                 assertion_type='not_in'
             )
-    
+
+    def _assert_array_contains(
+            self,
+            response: Dict[str, Any],
+            path: str,
+            expected: Any
+    ) -> AssertionResult:
+        """
+        数组包含断言
+        验证数组中是否存在符合条件的元素
+        使用方式:
+        - path: body.rows[*].offerId  # 提取所有 rows 中的 offerId
+        - expected: "${$extract.offerId}"  # 验证是否包含这个值
+        Args:
+            response: 响应数据
+            path: 提取路径，支持通配符 [*]
+            expected: 期望包含的值
+        Returns:
+            AssertionResult: 断言结果
+        """
+        try:
+            # 解析路径
+            # 例如: body.rows[*].offerId
+            # 需要提取 body.rows 数组中所有元素的 offerId
+
+            if '[*]' not in path:
+                # 如果没有通配符，回退到普通的 in 断言
+                actual = self._extract_value(response, path)
+                return AssertionResult(
+                    passed=actual == expected,
+                    message=f"{'通过' if actual == expected else '失败'}: {actual} {'==' if actual == expected else '!='} {expected}",
+                    actual=actual,
+                    expected=expected,
+                    assertion_type='array_contains'
+                )
+
+            # 分割路径
+            # body.rows[*].offerId -> ['body', 'rows', '[*]', 'offerId']
+            parts = path.split('.')
+
+            # 找到数组位置和字段位置
+            array_path = []
+            field_path = None
+            found_wildcard = False
+
+            for i, part in enumerate(parts):
+                if '[*]' in part:
+                    found_wildcard = True
+                    # 保存通配符之前的路径（不包括通配符）
+                    # 例如: rows[*] -> rows
+                    array_key = part.replace('[*]', '')
+                    array_path.append(array_key)
+                    # 保存通配符之后的路径
+                    # 例如: offerId
+                    field_path = '.'.join(parts[i + 1:]) if i + 1 < len(parts) else None
+                    break
+                else:
+                    array_path.append(part)
+
+            if not found_wildcard:
+                return AssertionResult(
+                    passed=False,
+                    message=f"无效的通配符路径: {path}",
+                    assertion_type='array_contains'
+                )
+
+            # 提取数组
+            array_data = response
+            for key in array_path:
+                if isinstance(array_data, dict):
+                    array_data = array_data.get(key)
+                else:
+                    array_data = None
+                    break
+
+                if array_data is None:
+                    break
+
+            if not isinstance(array_data, (list, tuple)):
+                return AssertionResult(
+                    passed=False,
+                    message=f"路径 {array_path} 不是数组: {type(array_data)}",
+                    assertion_type='array_contains',
+                    actual=None,
+                    expected=expected
+                )
+
+            # 从数组中提取指定字段的值
+            extracted_values = []
+            for item in array_data:
+                if not isinstance(item, dict):
+                    continue
+
+                # 提取字段
+                value = item
+                if field_path:
+                    # 支持嵌套字段，例如 items[*].details.id
+                    field_parts = field_path.split('.')
+                    for field_key in field_parts:
+                        if isinstance(value, dict):
+                            value = value.get(field_key)
+                        elif isinstance(value, (list, tuple)) and field_key.isdigit():
+                            value = value[int(field_key)]
+                        else:
+                            value = None
+                            break
+                        if value is None:
+                            break
+
+                extracted_values.append(str(value))
+
+            # 验证是否包含 expected
+            passed = expected in extracted_values
+
+            # 如果没有找到，提供更多信息
+            message = f"{'通过' if passed else '失败'}: {expected} {'在' if passed else '不在'} 提取的值列表中"
+            if not passed:
+                message += f"\n提取的值列表: {extracted_values}"
+
+            return AssertionResult(
+                passed=passed,
+                message=message,
+                actual=extracted_values,
+                expected=expected,
+                assertion_type='array_contains',
+                detail={
+                    'array_length': len(array_data),
+                    'extracted_count': len(extracted_values),
+                    'sample_values': extracted_values[:10] if len(extracted_values) > 10 else extracted_values
+                }
+            )
+
+        except Exception as e:
+            return AssertionResult(
+                passed=False,
+                message=f"数组包含断言执行异常: {str(e)}",
+                assertion_type='array_contains',
+                expected=expected
+            )
+
     def _assert_regex(self, actual: Any, pattern: str) -> AssertionResult:
         """正则断言"""
         try:

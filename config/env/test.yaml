@@ -6,8 +6,8 @@ base_url: "https://dev-aly-us-ad-web.cdcicd.com"
 # 代理配置
 proxy:
   enable: false
-  http: "http://proxy.example.com:8080"
-  https: "http://proxy.example.com:8080"
+  http: ""
+  https: ""
 
 # 认证配置
 auth:

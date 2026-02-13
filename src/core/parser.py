@@ -11,7 +11,7 @@ from src.utils.yaml_loader import load_yaml
 
 
 @dataclass
-class TestCase:
+class CaseDataStructure:
     """测试用例数据结构"""
     # 用例基本信息
     name: str                          # 用例名称
@@ -107,7 +107,7 @@ class TestCase:
         }
 
 
-class TestParser:
+class CaseDataParser:
     """测试数据解析器"""
 
     def __init__(self, data_dir: str = "test_data"):
@@ -117,15 +117,15 @@ class TestParser:
             data_dir: 测试数据目录
         """
         self.data_dir = Path(data_dir)
-        self._test_cases: Dict[str, List[TestCase]] = {}
+        self._test_cases: Dict[str, List[CaseDataStructure]] = {}
 
-    def parse_file(self, file_path: Union[str, Path]) -> List[TestCase]:
+    def parse_file(self, file_path: Union[str, Path]) -> List[CaseDataStructure]:
         """
         解析单个测试数据文件
         Args:
             file_path: 文件路径
         Returns:
-            List[TestCase]: 测试用例列表
+            List[CaseDataStructure]: 测试用例列表
         Raises:
             FileNotFoundError: 文件不存在
             ValueError: 文件格式错误
@@ -161,14 +161,14 @@ class TestParser:
             logger.error(f"解析文件失败: {file_path}, 错误: {str(e)}")
             raise
 
-    def _parse_data(self, data: Dict[str, Any], module: str) -> List[TestCase]:
+    def _parse_data(self, data: Dict[str, Any], module: str) -> List[CaseDataStructure]:
         """
         解析测试数据
         Args:
             data: 测试数据字典
             module: 模块名称
         Returns:
-            List[TestCase]: 测试用例列表（已按顺序排列）
+            List[CaseDataStructure]: 测试用例列表（已按顺序排列）
         """
         test_cases = []
 
@@ -204,7 +204,7 @@ class TestParser:
 
         return test_cases
 
-    def _assign_order(self, test_cases: List[TestCase], module: str) -> List[TestCase]:
+    def _assign_order(self, test_cases: List[CaseDataStructure], module: str) -> List[CaseDataStructure]:
         """
         为未设置 order 的用例自动分配顺序
         规则:
@@ -216,7 +216,7 @@ class TestParser:
             test_cases: 测试用例列表（按文件顺序）
             module: 模块名称
         Returns:
-            List[TestCase]: 已分配顺序的测试用例列表
+            List[CaseDataStructure]: 已分配顺序的测试用例列表
         """
         # 收集已设置的 order 值
         existing_orders = set()
@@ -239,7 +239,7 @@ class TestParser:
 
         return test_cases
 
-    def _parse_case(self, case_data: Dict[str, Any], module: str, default_headers: Optional[Dict[str, str]] =  None) -> TestCase:
+    def _parse_case(self, case_data: Dict[str, Any], module: str, default_headers: Optional[Dict[str, str]] =  None) -> CaseDataStructure:
         """
         解析单个测试用例
         Args:
@@ -247,7 +247,7 @@ class TestParser:
             module: 模块名称
             default_headers: 默认请求头
         Returns:
-            TestCase: 测试用例对象
+            CaseDataStructure: 测试用例对象
         Raises:
             ValueError: 必填字段缺失
         """
@@ -265,7 +265,7 @@ class TestParser:
             merged_headers = case_headers
 
         # 创建用例对象
-        case = TestCase(
+        case = CaseDataStructure(
             name=case_data['name'],
             module=module,
             description=case_data.get('description'),
@@ -296,13 +296,13 @@ class TestParser:
 
         return case
 
-    def parse_dir(self, dir_path: Optional[Union[str, Path]] = None) -> Dict[str, List[TestCase]]:
+    def parse_dir(self, dir_path: Optional[Union[str, Path]] = None) -> Dict[str, List[CaseDataStructure]]:
         """
         解析目录下所有测试数据文件
         Args:
             dir_path: 目录路径，默认为初始化时指定的目录
         Returns:
-            Dict[str, List[TestCase]]: {模块名: 用例列表}
+            Dict[str, List[CaseDataStructure]]: {模块名: 用例列表}
         """
         if dir_path:
             dir_path = Path(dir_path)
@@ -335,22 +335,22 @@ class TestParser:
 
         return all_cases
 
-    def get_cases_by_module(self, module: str) -> List[TestCase]:
+    def get_cases_by_module(self, module: str) -> List[CaseDataStructure]:
         """
         获取指定模块的测试用例
         Args:
             module: 模块名称
         Returns:
-            List[TestCase]: 测试用例列表
+            List[CaseDataStructure]: 测试用例列表
         """
         return self._test_cases.get(module, [])
 
-    def get_all_cases(self) -> List[TestCase]:
+    def get_all_cases(self) -> List[CaseDataStructure]:
         """
         获取所有测试用例
 
         Returns:
-            List[TestCase]: 测试用例列表
+            List[CaseDataStructure]: 测试用例列表
         """
         all_cases = []
         for cases in self._test_cases.values():

@@ -12,6 +12,7 @@
 ✅ **动态参数化**：全局变量、局部变量、缓存变量、关联变量
 ✅ **数据依赖**：接口返回数据共享，轻松实现依赖
 ✅ **数据清洗**：支持 API 和 SQL 删除测试数据，保持测试环境干净 🆕
+✅ **全局前置登录**：测试会话开始时自动登录，Token 自动添加到所有测试用例，无需手动配置 Authorization header 🆕
 ✅ **优化标记系统**：精简的 marker 配置，支持按模块名称灵活筛选，配置文件更简洁 🆕
 ✅ **配置管理现代化**：使用 pyproject.toml 统一管理项目配置，支持多工具集成 🆕
 ✅ **钩子函数**：支持自定义钩子扩展功能
@@ -28,7 +29,6 @@ auto-test-platform/
 ├── README.md                          # 项目说明
 ├── requirements.txt                   # 依赖清单
 ├── pyproject.toml                    # 项目配置（pytest、black、flake8等）🆕
-├── pytest.ini                        # pytest配置（已废弃，建议使用 pyproject.toml）
 ├── run.py                            # 运行入口
 ├── config/                           # 配置目录
 │   ├── __init__.py
@@ -52,15 +52,17 @@ auto-test-platform/
 │   │   ├── __init__.py
 │   │   ├── logger.py                 # loguru日志
 │   │   ├── extractor.py              # 数据提取器
-│   │   └── notifier.py               # 通知发送器
+│   │   ├── notifier.py               # 通知发送器
+│   │   ├── cleaner.py                # 🆕 数据清洗工具
+│   │   ├── global_login.py           # 🆕 全局登录管理器
+│   │   └── yaml_loader.py            # YAML加载器
 │   └── api/                          # API测试用例
 │       ├── __init__.py
 │       ├── test_dynamic.py           # 🆕 动态测试用例生成器
 │       └── test_cases/               # 测试用例目录
 ├── test_data/                        # 测试数据
 │   ├── user_module.yaml
-│   ├── order_module.yaml
-│   └── product_module.json
+│   ├── offer_manage.json
 ├── hooks/                            # 自定义钩子
 │   ├── __init__.py
 │   └── custom_hooks.py
@@ -79,7 +81,11 @@ auto-test-platform/
     ├── marker_optimization_guide.md  # 🆕 Marker优化方案与使用指南
     ├── marker_optimization_summary.md# 🆕 Marker优化总结
     ├── module_info_definition.md     # 🆕 模块信息定义示例
-    └── marker_quick_reference.md     # 🆕 Marker快速参考指南
+    ├── marker_quick_reference.md     # 🆕 Marker快速参考指南
+    ├── code_adaptation_guide.md      # 🆕 代码适配与YAML配置迁移指南
+    ├── code_adaptation_summary.md    # 🆕 代码适配与YAML配置修改完成总结
+    ├── global_login_guide.md         # 🆕 全局登录功能使用指南
+    └── global_login_summary.md       # 🆕 全局登录功能实现总结
 ```
 
 ## 🚀 快速开始
@@ -100,7 +106,7 @@ pip install -r requirements.txt
 编辑 `config/config.yaml` 设置默认环境：
 
 ```yaml
-default_env: dev  # 默认环境：dev/test/prod
+default_env: test  # 默认环境：test/prod
 log_level: INFO   # 日志级别
 ```
 
@@ -181,18 +187,64 @@ python -m pytest src/api/test_dynamic.py --collect-only
 
 详见 `docs/default_headers.md`
 
-### 3. 多环境配置
+### 3. 全局前置登录功能 🆕
 
-支持 dev/test/prod 环境动态切换，配置文件位于 `config/env/`
+支持在测试会话开始时自动执行登录操作，获取 Token 并自动添加到所有测试用例的请求头中：
 
-### 4. 参数化支持
+- **自动登录**：测试会话开始时自动执行登录
+- **自动添加 Authorization header**：所有测试用例自动携带 Token
+- **Token 管理**：支持 Token 过期管理和自动刷新
+- **灵活配置**：支持自定义登录接口、请求头、请求体等
+- **用户可覆盖**：测试用例可以自定义 Authorization header 覆盖全局配置
+
+**使用方式**：
+
+1. 在 `config/config.yaml` 中配置全局登录：
+
+```yaml
+global_login:
+  enable: true
+  login_url: "/api/auth/login"
+  username: "admin"
+  password: "admin123"
+  request_method: "POST"
+  request_body_type: "json"
+  body_template: |
+    {
+      "username": "${username}",
+      "password": "${password}"
+    }
+  token_path: "$.data.token"
+  token_type: "Bearer"
+  token_ttl: 7200
+```
+
+2. 测试用例无需配置 Authorization header：
+
+```yaml
+test_cases:
+  - name: "获取用户信息"
+    method: GET
+    url: /api/user/info
+    # 不需要配置 Authorization header
+    validate:
+      - eq: ["status_code", 200]
+```
+
+详见 `docs/global_login_guide.md`
+
+### 4. 多环境配置
+
+支持 test/prod 环境动态切换，配置文件位于 `config/env/`
+
+### 5. 参数化支持
 
 - `${global_var}` - 全局变量
 - `${local_var}` - 局部变量
 - `${cache.var}` - 缓存变量
 - `${$extract.var}` - 关联变量（从响应中提取）
 
-### 5. 断言类型
+### 6. 断言类型
 
 - `eq` - 等于
 - `ne` - 不等于
@@ -203,9 +255,9 @@ python -m pytest src/api/test_dynamic.py --collect-only
 - `json_schema` - JSON Schema 验证
 - `sql` - SQL 断言
 
-### 6. 配置管理优化 🆕
+### 7. 配置管理优化 🆕
 
-#### 6.1 pyproject.toml 统一配置管理
+#### 7.1 pyproject.toml 统一配置管理
 
 项目已迁移到使用 `pyproject.toml` 统一管理项目配置，替代传统的 `pytest.ini`：
 
@@ -228,7 +280,7 @@ markers = [
 
 详见 `docs/marker_optimization_guide.md`
 
-#### 6.2 Marker 优化方案 🆕
+#### 7.2 Marker 优化方案 🆕
 
 优化了 pytest marker 的注册方式，解决了 markers 数量臃肿的问题：
 
@@ -276,7 +328,7 @@ python -m pytest -k "user_module and positive" -v
 
 详见 `docs/marker_optimization_guide.md`
 
-### 7. 数据清洗功能 🆕
+### 8. 数据清洗功能 🆕
 
 ## 📊 测试报告
 

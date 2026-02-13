@@ -187,9 +187,9 @@ test_cases:
 ### 方法1：查看解析结果
 
 ```python
-from src.core.parser import TestParser
+from src.core.parser import CaseDataParser
 
-parser = TestParser('test_data')
+parser = CaseDataParser('test_data')
 cases_dict = parser.parse_dir()
 
 for module_name, cases in cases_dict.items():

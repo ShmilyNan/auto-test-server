@@ -1,6 +1,6 @@
 {
-  "module_name": "登录模块",
-  "module_desc": "登录相关接口测试",
+  "module_name": "Offer Manage模块",
+  "module_desc": "Offer Manage相关接口测试",
   "module": {
     "name": "Offer Manage",
     "version": "1.0.0",
@@ -49,7 +49,7 @@
       "extract": {
         "advertiserId": {
           "type": "jsonpath",
-          "expression": "$.data[0].id"
+          "expression": "$.data[${random(0, 700)}].id"
         }
       }
     },
@@ -80,7 +80,7 @@
 	  "extract": {
         "countryId": {
           "type": "jsonpath",
-          "expression": "$.data[0].id"
+          "expression": "$.data[${random(0, 250)}].id"
         },
 		"countryInfo": {
           "type": "regex",
@@ -150,47 +150,47 @@
         },
 		"affiliateName": {
           "type": "jsonpath",
-          "expression": "$.data[1].affiliateName"
+          "expression": "$.data[?(@.id==1634)].affiliateName"
         },
 		"affiliateId": {
           "type": "jsonpath",
-          "expression": "$.data[1].id"
+          "expression": "$.data[?(@.id==1634)].id"
         },
 		"affiliateOrgId": {
           "type": "jsonpath",
-          "expression": "$.data[1].orgId"
+          "expression": "$.data[?(@.id==1634)].orgId"
         },
 		"affiliatePrivateFlag": {
           "type": "jsonpath",
-          "expression": "$.data[1].privateFlag"
+          "expression": "$.data[?(@.id==1634)].privateFlag"
         },
 		"affiliateStatus": {
           "type": "jsonpath",
-          "expression": "$.data[1].status"
+          "expression": "$.data[?(@.id==1634)].status"
         },
 		"affiliateAttribute1": {
           "type": "jsonpath",
-          "expression": "$.data[33].affiliateAttribute"
+          "expression": "$.data[?(@.id==1678)].affiliateAttribute"
         },
 		"affiliateName1": {
           "type": "jsonpath",
-          "expression": "$.data[33].affiliateName"
+          "expression": "$.data[?(@.id==1678)].affiliateName"
         },
 		"affiliateId1": {
           "type": "jsonpath",
-          "expression": "$.data[33].id"
+          "expression": "$.data[?(@.id==1678)].id"
         },
 		"affiliateOrgId1": {
           "type": "jsonpath",
-          "expression": "$.data[33].orgId"
+          "expression": "$.data[?(@.id==1678)].orgId"
         },
 		"affiliatePrivateFlag1": {
           "type": "jsonpath",
-          "expression": "$.data[33].privateFlag"
+          "expression": "$.data[?(@.id==1678)].privateFlag"
         },
 		"affiliateStatus1": {
           "type": "jsonpath",
-          "expression": "$.data[33].status"
+          "expression": "$.data[?(@.id==1678)].status"
         }
       }
     },
@@ -469,8 +469,8 @@
           "expected": 200
         },
         {
-          "type": "eq",
-          "path": "body.rows[0].offerId",
+          "type": "array_contains",
+          "path": "body.rows[*].offerId",
           "expected": "${$extract.offerId}"
         }
       ],

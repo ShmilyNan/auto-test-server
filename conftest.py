@@ -17,7 +17,7 @@ sys.path.insert(0, str(project_root))
 
 from src.core.client import create_client
 from src.core.context import get_context
-from src.core.parser import TestParser
+from src.core.parser import CaseDataParser
 from src.core.validator import Validator
 from src.utils.extractor import get_extractor
 from src.utils.global_login import get_global_login
@@ -306,7 +306,7 @@ def generate_test_data_from_yaml():
     从YAML文件生成测试用例
     这是一个可选的动态测试生成器
     """
-    parser = TestParser()
+    parser = CaseDataParser()
     test_data_dir = Path("test_data")
     
     if not test_data_dir.exists():

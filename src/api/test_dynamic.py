@@ -13,12 +13,12 @@ import pytest
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.core.parser import TestParser, TestCase
+from src.core.parser import CaseDataParser, CaseDataStructure
 from src.utils.yaml_loader import load_yaml_dict
 from src.utils.logger import log as logger
 
 
-class TestCaseGenerator:
+class CaseGenerator:
     """测试用例生成器"""
 
     def __init__(self, test_data_dir: str = "test_data"):
@@ -28,14 +28,14 @@ class TestCaseGenerator:
             test_data_dir: 测试数据目录
         """
         self.test_data_dir = Path(test_data_dir)
-        self.parser = TestParser(test_data_dir)
-        self.test_cases: Dict[str, List[TestCase]] = {}
+        self.parser = CaseDataParser(test_data_dir)
+        self.test_cases: Dict[str, List[CaseDataStructure]] = {}
 
-    def load_test_data(self) -> Dict[str, List[TestCase]]:
+    def load_test_data(self) -> Dict[str, List[CaseDataStructure]]:
         """
         加载所有测试数据
         Returns:
-            Dict[str, List[TestCase]]: {模块名: 测试用例列表}
+            Dict[str, List[CaseDataStructure]]: {模块名: 测试用例列表}
         """
         logger.info(f"开始加载测试数据: {self.test_data_dir}")
 
@@ -77,11 +77,11 @@ class TestCaseGenerator:
 
 
 # 创建生成器实例
-_generator = TestCaseGenerator()
+_generator = CaseGenerator()
 _test_data_list = _generator.generate_test_cases()
 
 
-def _generate_function_name(test_case: TestCase, module: str, idx: int) -> str:
+def _generate_function_name(test_case: CaseDataStructure, module: str, idx: int) -> str:
     """
     生成唯一的函数名
     Args:
@@ -133,7 +133,7 @@ def _build_url(url: str, test_context) -> str:
     return url
 
 
-def _prepare_request_data(test_case: TestCase, test_context, http_client= None):
+def _prepare_request_data(test_case: CaseDataStructure, test_context, http_client= None):
     """
     准备请求数据
     Args:
@@ -299,14 +299,18 @@ for test_data in _test_data_list:
 
                 # 提取数据
                 if tc.extract:
-                    extracted_data = extractor.extract(response, tc.extract)
+                    # 对提取规则进行变量替换（支持随机数等函数）
+                    extract_rules = test_context.replace_vars_dict(tc.extract)
+                    extracted_data = extractor.extract(response, extract_rules)
                     for key, value in extracted_data.items():
                         test_context.set_extract(key, value)
                         logger.debug(f"提取变量: {key} = {value}")
 
                 # 执行断言
                 if tc.validate:
-                    results = validator.validate(response, tc.validate)
+                    # 对断言规则进行变量替换（特别是 expected 字段）
+                    assertions = test_context.replace_vars_dict(tc.validate)
+                    results = validator.validate(response, assertions)
                     failed_results = [r for r in results if not r.passed]
 
                     if failed_results:
