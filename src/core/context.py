@@ -28,13 +28,24 @@ class TestContext:
     
     # 上一个响应数据
     last_response: Optional[Dict[str, Any]] = None
+
+    # 默认请求头
+    default_headers: Dict[str, str] = field(default_factory=dict)
     
     # 测试元数据
     metadata: Dict[str, Any] = field(default_factory=dict)
     
     # 线程锁（用于并发安全）
     _lock: Lock = field(default_factory=Lock)
-    
+
+    def set_default_headers(self, headers: Dict[str, str]):
+        """设置默认请求头"""
+        self.default_headers = headers.copy()
+
+    def get_default_headers(self) -> Dict[str, str]:
+        """获取默认请求头"""
+        return self.default_headers.copy()
+
     def set_global(self, key: str, value: Any):
         """设置全局变量"""
         with self._lock:
@@ -188,10 +199,8 @@ class TestContext:
     def replace_vars_dict(self, data: Any) -> Any:
         """
         递归替换字典/列表中的变量
-        
         Args:
             data: 数据（字典/列表/字符串/其他）
-            
         Returns:
             Any: 替换后的数据
         """

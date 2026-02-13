@@ -11,17 +11,8 @@ proxy:
 
 # 认证配置
 auth:
-  type: bearer
-  token: "${auth.test_token}"
-  username: ""
-  password: ""
-  api_key: ""
-  api_key_header: "X-API-Key"
-  oauth2:
-    token_url: "http://test.example.com/oauth/token"
-    client_id: ""
-    client_secret: ""
-    scope: ""
+  username: "Lee"
+  password: "Working@1130"
 
 # 默认请求头
 headers:

@@ -4,6 +4,49 @@
 # 默认环境配置
 default_env: test
 
+# 全局登录配置
+global_login:
+  # 是否启用全局登录
+  enable: true
+  # 登录接口路径（相对于 base_url，或绝对URL）
+  # 如果是相对路径，会自动拼接 env 配置中的 base_url
+  login_url: "/prod-api/login"
+  # 登录方式: password, token, oauth, saml
+  login_type: "password"
+  # 用户名/账号（可选，如果 env 配置中有 auth.username 则优先使用）
+  username: "admin"
+  # 密码（可选，如果 env 配置中有 auth.password 则优先使用）
+  password: "admin123"
+  # 请求方式: POST, GET
+  request_method: "POST"
+  # 请求体格式: json, form
+  request_body_type: "json"
+  # 自定义请求头
+  headers:
+    Content-Type: "application/json"
+    Accept: "application/json"
+    User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+  # 自定义请求体（支持 ${username} 和 ${password} 变量替换）
+  body_template: |
+    {
+      "username": "${username}",
+      "password": "${password}"
+    }
+  # Token 提取路径（JSONPath）
+  token_path: "$.token"
+  # Token 类型（用于 Authorization header）
+  token_type: "Bearer"
+  # Token 过期时间（秒），0 表示永不过期
+  token_ttl: 0
+  # 是否在会话开始时自动登录
+  auto_login: true
+  # 是否启用 Token 刷新
+  enable_refresh: false
+  # Token 刷新接口
+  refresh_url: "/api/auth/refresh"
+  # Refresh Token 提取路径
+  refresh_token_path: "$.data.refresh_token"
+
 # 项目信息
 project:
   name: 接口自动化测试平台

@@ -21,9 +21,6 @@
       "tags": ["regression"],
       "method": "GET",
       "url": "/prod-api/offer/advertiser/list",
-	  "headers": {
-        "Authorization": "Bearer ${$extract.access_token}"
-      },
       "params": {
         "filterByPermission": true
       },
@@ -63,9 +60,6 @@
       "tags": ["regression"],
       "method": "GET",
 	  "url": "/prod-api/offer/country/list",
-	  "headers": {
-        "Authorization": "Bearer ${$extract.access_token}"
-      },
       "validate": [
         {
           "type": "status_code",
@@ -102,9 +96,6 @@
       "tags": ["regression"],
       "method": "GET",
       "url": "/prod-api/offer/timezone/list",
-	  "headers": {
-        "Authorization": "Bearer ${$extract.access_token}"
-      },
       "validate": [
         {
           "type": "status_code",
@@ -136,9 +127,6 @@
       "tags": ["regression"],
       "method": "GET",
       "url": "/prod-api/offer/affiliate/list",
-      "headers": {
-        "Authorization": "Bearer ${$extract.access_token}"
-      },
       "validate": [
         {
           "type": "status_code",
@@ -213,9 +201,6 @@
       "tags": ["smoke","positive","daily","skip"],
       "method": "POST",
       "url": "/prod-api/offer/validatOfferinfo",
-      "headers": {
-        "Authorization": "Bearer ${$extract.access_token}"
-      },
 	  "body": {
         "advertiserId": "${$extract.advertiserId}",
         "os": "ios",
@@ -330,9 +315,6 @@
       "tags": ["smoke","positive","daily"],
       "method": "POST",
       "url": "/prod-api/offer/create",
-      "headers": {
-        "Authorization": "Bearer ${$extract.access_token}"
-      },
 	  "body": {
         "advertiserId": "${$extract.advertiserId}",
         "os": "ios",
@@ -472,9 +454,6 @@
       "tags": ["regression"],
       "method": "GET",
 	  "url": "/prod-api/offer/getList",
-	  "headers": {
-        "Authorization": "Bearer ${$extract.access_token}"
-      },
       "params": {
         "pageNum": 1,
 		"pageSize": 100

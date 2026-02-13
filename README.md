@@ -34,7 +34,6 @@ auto-test-platform/
 │   ├── __init__.py
 │   ├── config.yaml                   # 主配置文件
 │   └── env/                          # 环境配置
-│       ├── dev.yaml                  # 开发环境
 │       ├── test.yaml                 # 测试环境
 │       └── prod.yaml                 # 生产环境
 ├── src/                              # 核心代码

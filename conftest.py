@@ -20,6 +20,7 @@ from src.core.context import get_context
 from src.core.parser import TestParser
 from src.core.validator import Validator
 from src.utils.extractor import get_extractor
+from src.utils.global_login import get_global_login
 
 
 # ========================================
@@ -27,13 +28,35 @@ from src.utils.extractor import get_extractor
 # ========================================
 
 @pytest.fixture(scope="session", autouse=True)
-def setup_session():
+def setup_session(http_client, env_config, default_headers):
     """
     会话级fixture，在整个测试会话开始前执行一次
     """
     logger.info("=" * 60)
     logger.info("测试会话开始")
+    logger.info(f"当前环境: {env_config.get('base_url', 'N/A')}")
     logger.info("=" * 60)
+
+    # 设置默认请求头到全局 context
+    context = get_context()
+    context.set_default_headers(default_headers)
+    logger.info(f"已设置默认请求头: {default_headers}")
+
+    # 执行全局登录（如果启用）
+    global_login = get_global_login()
+    if global_login.is_enabled():
+        logger.info("检测到全局登录已启用，开始执行全局登录...")
+        if global_login.login(http_client, env_config):
+            logger.info("全局登录成功")
+            # 更新默认请求头中的 Authorization
+            auth_header = global_login.get_auth_header()
+            if auth_header:
+                updated_headers = context.get_default_headers()
+                updated_headers['Authorization'] = auth_header
+                context.set_default_headers(updated_headers)
+                logger.info(f"已更新默认请求头中的 Authorization: {auth_header}")
+        else:
+            logger.warning("全局登录失败，后续测试可能收到影响")
     
     yield
     
@@ -72,7 +95,7 @@ def env_config(config):
     """
     环境配置fixture
     """
-    env = os.environ.get('TEST_ENV', config.get('default_env', 'dev'))
+    env = os.environ.get('TEST_ENV', config.get('default_env', 'test'))
     env_file = Path(f"config/env/{env}.yaml")
     return load_yaml_dict(env_file, default={})
 
@@ -107,6 +130,43 @@ def extractor():
     数据提取器fixture
     """
     return get_extractor()
+
+
+@pytest.fixture(scope="session")
+def default_headers(env_config):
+    """
+    默认请求头fixture
+    从 env 配置中获取默认请求头，包括：
+    - Content-Type
+    - Accept
+    - User-Agent
+    - Authorization（由全局登录自动添加）
+    Returns:
+        Dict: 默认请求头字典
+    """
+    headers = {}
+
+    # 从 env 配置获取默认请求头
+    env_headers = env_config.get('headers', {})
+
+    # 默认请求头
+    default_headers_map = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'
+    }
+
+    # 合并默认请求头，env 配置优先
+    for key, default_value in default_headers_map.items():
+        headers[key] = env_headers.get(key, default_value)
+
+    # 其他 env 配置中的请求头
+    for key, value in env_headers.items():
+        if key not in headers and value:
+            headers[key] = value
+
+    logger.debug(f"默认请求头: {headers}")
+    return headers
 
 
 # ========================================

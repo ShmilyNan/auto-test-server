@@ -29,7 +29,7 @@ test_cases:
     description: "测试用户正常登录"
     order: 0
     priority: "p0"
-    tags: ["smoke", "daily"]
+    tags: ["smoke", "daily", "skip"]
     
     method: "POST"
     url: "/prod-api/login"
@@ -72,8 +72,8 @@ test_cases:
     method: "GET"
     url: "/prod-api/getInfo"
     
-    headers:
-      Authorization: "Bearer ${$extract.access_token}"
+#    headers:
+#      Authorization: "Bearer ${$extract.access_token}"
     
     validate:
       - type: "status_code"
@@ -116,8 +116,8 @@ test_cases:
     method: "GET"
     url: "/prod-api/getRouters"
     
-    headers:
-      Authorization: "Bearer ${$extract.access_token}"
+#    headers:
+#      Authorization: "Bearer ${$extract.access_token}"
     
     validate:
       - type: "status_code"
@@ -142,8 +142,8 @@ test_cases:
     method: "POST"
     url: "/prod-api/logout"
     
-    headers:
-      Authorization: "Bearer ${$extract.access_token}"
+#    headers:
+#      Authorization: "Bearer ${$extract.access_token}"
     
     validate:
       - type: "status_code"
@@ -187,8 +187,8 @@ test_cases:
     method: "GET"
     url: "/user/info"
 
-    headers:
-      Authorization: "Bearer ${$extract.access_token}"
+#    headers:
+#      Authorization: "Bearer ${$extract.access_token}"
 
     validate:
       - type: "status_code"

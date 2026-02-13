@@ -108,11 +108,9 @@ def _generate_function_name(test_case: TestCase, module: str, idx: int) -> str:
 def _build_url(url: str, test_context) -> str:
     """
     构建完整URL
-
     Args:
         url: URL路径
         test_context: 测试上下文
-
     Returns:
         str: 完整URL
     """
@@ -121,7 +119,7 @@ def _build_url(url: str, test_context) -> str:
 
     # 获取基础URL
     config = load_yaml_dict("config/config.yaml", default={})
-    default_env = config.get('default_env', 'dev')
+    default_env = config.get('default_env', 'test')
 
     env_config = load_yaml_dict(f"config/env/{default_env}.yaml", default={})
     base_url = env_config.get('base_url', '')
@@ -135,22 +133,32 @@ def _build_url(url: str, test_context) -> str:
     return url
 
 
-def _prepare_request_data(test_case: TestCase, test_context):
+def _prepare_request_data(test_case: TestCase, test_context, http_client= None):
     """
     准备请求数据
-
     Args:
         test_case: 测试用例
         test_context: 测试上下文
-
+        http_client: HTTP客户端（可选，用于全局登录）
     Returns:
         Dict: 请求数据
     """
     request_data = {}
 
-    # 请求头
+    # 获取默认请求头（包括 Content-Type、Accept、User-Agent、Authorization）
+    default_headers = test_context.get_default_headers()
+
+    # 合并请求头：默认请求头 + 测试用例请求头
+    # 测试用例请求头优先级更高，会覆盖默认请求头
+    merged_headers = default_headers.copy()
+
     if test_case.headers:
-        request_data['headers'] = test_context.replace_vars_dict(test_case.headers)
+        case_headers = test_context.replace_vars_dict(test_case.headers)
+        merged_headers.update(case_headers)
+
+    request_data['headers'] = merged_headers
+
+    logger.debug(f"合并后的请求头: {merged_headers}")
 
     # URL参数
     if test_case.params:
@@ -162,12 +170,10 @@ def _prepare_request_data(test_case: TestCase, test_context):
 
         # 检查请求头中的 Content-Type
         content_type = None
-        if test_case.headers:
-            headers = test_context.replace_vars_dict(test_case.headers)
-            for key, value in headers.items():
-                if key.lower() == 'content-type':
-                    content_type = value
-                    break
+        for key, value in merged_headers.items():
+            if key.lower() == 'content-type':
+                content_type = value
+                break
 
         # 如果是 JSON 格式，使用 json 参数
         if content_type and 'application/json' in content_type.lower():
@@ -273,7 +279,7 @@ for test_data in _test_data_list:
                     _execute_setup(tc.setup, test_context)
 
                 # 准备请求参数
-                request_data = _prepare_request_data(tc, test_context)
+                request_data = _prepare_request_data(tc, test_context, http_client)
 
                 # 构建完整URL
                 url = _build_url(tc.url, test_context)

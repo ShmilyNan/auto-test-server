@@ -118,7 +118,7 @@ class DataCleaner:
             # 需要拼接 base_url
             from src.utils.yaml_loader import load_yaml_dict
             config = load_yaml_dict("config/config.yaml", default={})
-            default_env = config.get('default_env', 'dev')
+            default_env = config.get('default_env', 'test')
             env_config = load_yaml_dict(f"config/env/{default_env}.yaml", default={})
             base_url = env_config.get('base_url', '')
             if base_url:
