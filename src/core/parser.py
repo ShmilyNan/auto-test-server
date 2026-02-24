@@ -6,7 +6,7 @@ import json
 from typing import Dict, Any, List, Optional, Union
 from pathlib import Path
 from dataclasses import dataclass
-from src.utils.logger import log as logger
+from src.utils.logger import logger
 from src.utils.yaml_loader import load_yaml
 
 
@@ -54,6 +54,7 @@ class CaseDataStructure:
     skip_reason: Optional[str] = None  # 跳过原因
     retry: int = 0                     # 重试次数
     metadata: Dict[str, Any] = None    # 元数据
+    save_to_file: Optional[Dict[str, str]] = None   # 保存结果到文件（filename, sub_dir）
 
     def __post_init__(self):
         """初始化后处理"""
@@ -103,7 +104,8 @@ class CaseDataStructure:
             'skip': self.skip,
             'skip_reason': self.skip_reason,
             'retry': self.retry,
-            'metadata': self.metadata
+            'metadata': self.metadata,
+            'save_to_file': self.save_to_file
         }
 
 
@@ -166,13 +168,15 @@ class CaseDataParser:
         解析测试数据
         Args:
             data: 测试数据字典
-            module: 模块名称
+            module: 模块名称（默认为文件名，会被 module.name 覆盖）
         Returns:
             List[CaseDataStructure]: 测试用例列表（已按顺序排列）
         """
         test_cases = []
 
-        module_name = data.get('module_name', module)
+        # 优先使用 module.name 字段，否则使用文件名
+        module_info = data.get('module', {})
+        module_name = module_info.get('name', module)
 
         #获取全局配置
         config = data.get('config', {})
@@ -291,7 +295,8 @@ class CaseDataParser:
             skip=case_data.get('skip', False),
             skip_reason=case_data.get('skip_reason'),
             retry=case_data.get('retry', 0),
-            metadata=case_data.get('metadata', {})
+            metadata=case_data.get('metadata', {}),
+            save_to_file=case_data.get('save_to_file')
         )
 
         return case

@@ -4,13 +4,12 @@
 """
 
 import time
-import re
 import random
 import uuid
 from typing import Dict, Any, Optional
 from dataclasses import dataclass, field
 from threading import Lock
-from src.utils.logger import log as logger
+from src.utils.logger import logger
 
 
 @dataclass

@@ -6,7 +6,7 @@ Token 过期时自动重新登录
 """
 import time
 from typing import Dict, Any, Optional
-from src.utils.logger import log as logger
+from src.utils.logger import logger
 from src.core.client import BaseHTTPClient
 from src.utils.yaml_loader import load_yaml_dict
 from src.utils.extractor import get_extractor

@@ -7,7 +7,7 @@ import re
 from typing import Dict, Any, Optional
 from jsonpath_ng.ext import parse as jsonpath_parse
 from lxml import etree
-from src.utils.logger import log as logger
+from src.utils.logger import logger
 
 
 class Extractor:

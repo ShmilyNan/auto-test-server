@@ -9,7 +9,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from typing import Dict, Any, Optional, Union
 from abc import ABC, abstractmethod
-from src.utils.logger import log as logger
+from src.utils.logger import logger
 
 
 class BaseHTTPClient(ABC):
@@ -133,6 +133,7 @@ class RequestsClient(BaseHTTPClient):
                 'headers': dict(response.headers),
                 'body': response_json,
                 'text': response.text,
+                'content': response.content,  # 添加二进制内容
                 'elapsed': elapsed,
                 'cookies': dict(response.cookies),
                 'request': {
@@ -252,6 +253,7 @@ class HTTPXClient(BaseHTTPClient):
                 'headers': dict(response.headers),
                 'body': response_json,
                 'text': response.text,
+                'content': response.content,  # 添加二进制内容
                 'elapsed': elapsed,
                 'cookies': dict(response.cookies),
                 'request': {

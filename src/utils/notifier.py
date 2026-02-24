@@ -8,7 +8,7 @@ from email.mime.multipart import MIMEMultipart
 from typing import Dict, Any
 from abc import ABC, abstractmethod
 from datetime import datetime
-from src.utils.logger import log as logger
+from src.utils.logger import logger
 
 
 class BaseNotifier(ABC):

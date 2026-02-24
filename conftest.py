@@ -9,7 +9,8 @@ import pytest
 import allure
 from src.utils.yaml_loader import load_yaml_dict
 from pathlib import Path
-from src.utils.logger import log as logger
+from loguru import logger
+from src.utils.logger import init_logger, get_logger
 
 # 添加项目根目录到路径
 project_root = Path(__file__).parent
@@ -32,6 +33,7 @@ def setup_session(http_client, env_config, default_headers):
     """
     会话级fixture，在整个测试会话开始前执行一次
     """
+    logger = get_logger()
     logger.info("=" * 60)
     logger.info("测试会话开始")
     logger.info(f"当前环境: {env_config.get('base_url', 'N/A')}")
@@ -144,6 +146,7 @@ def default_headers(env_config):
     Returns:
         Dict: 默认请求头字典
     """
+    logger = get_logger()
     headers = {}
 
     # 从 env 配置获取默认请求头
@@ -259,6 +262,19 @@ def pytest_configure(config):
     pytest配置钩子
     """
     try:
+        # 初始化logger（确保日志配置生效）
+        try:
+            init_logger(
+                log_dir="logs",
+                log_level="INFO",
+                console=True,
+                file=True,
+                rotation="10 MB",
+                retention="7 days"
+            )
+        except Exception as e:
+            # 如果初始化失败，继续执行（logger 可能已经被初始化）
+            pass
         # 添加自定义标记
         config.addinivalue_line("markers", "smoke: 冒烟测试")
         config.addinivalue_line("markers", "regression: 回归测试")
@@ -277,7 +293,7 @@ def pytest_configure(config):
         config.addinivalue_line("markers", "file: 文件上传测试")
         config.addinivalue_line("markers", "tag: 通用标记")
     except Exception as e:
-        logger.warning(f"添加自定义标记时出错: {e}")
+        print(f"pytest_configure 出错: {e}")
 
 
 def pytest_collection_modifyitems(config, items):

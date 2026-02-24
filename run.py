@@ -16,7 +16,7 @@ sys.path.insert(0, str(project_root))
 
 import pytest
 from src.utils.yaml_loader import load_yaml
-from src.utils.logger import init_logger, log as logger
+from src.utils.logger import init_logger, logger
 from src.utils.notifier import NotificationManager
 
 

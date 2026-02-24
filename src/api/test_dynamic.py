@@ -15,7 +15,7 @@ sys.path.insert(0, str(project_root))
 
 from src.core.parser import CaseDataParser, CaseDataStructure
 from src.utils.yaml_loader import load_yaml_dict
-from src.utils.logger import log as logger
+from src.utils.logger import logger
 
 
 class CaseGenerator:
@@ -316,6 +316,29 @@ for test_data in _test_data_list:
                     if failed_results:
                         error_messages = [r.message for r in failed_results]
                         pytest.fail(f"断言失败: {'; '.join(error_messages)}")
+
+                # 保存文件（如果有配置）
+                if tc.save_to_file and response.get('content'):
+                    try:
+                        from src.utils.file_downloader import FileDownloader
+                        downloader = FileDownloader()
+
+                        filename = tc.save_to_file.get('filename')
+                        sub_dir = tc.save_to_file.get('sub_dir')
+
+                        if filename:
+                            saved_path = downloader.save_response_file(
+                                response=response,
+                                filename=filename,
+                                sub_dir=sub_dir
+                            )
+                            if saved_path:
+                                logger.info(f"文件已保存: {saved_path}")
+                                # 将保存的文件路径存入上下文，供后续用例使用
+                                test_context.set_local('saved_file_path', saved_path)
+                    except Exception as e:
+                        logger.warning(f"文件保存失败: {str(e)}")
+                        # 文件保存失败不影响测试用例结果
 
                 # 执行后置处理
                 if tc.teardown:

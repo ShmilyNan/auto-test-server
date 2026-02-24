@@ -4,10 +4,16 @@ YAML文件加载器
 提供统一的YAML文件加载功能
 """
 from ruamel.yaml import YAML, YAMLError
-yaml = YAML(typ='safe')
 from pathlib import Path
 from typing import Dict, Any, Optional, Union, List
-from src.utils.logger import log as logger
+from src.utils.logger import logger
+
+# 创建 YAML 实例
+_yaml = YAML(typ='rt')
+_yaml.default_flow_style = False
+_yaml.allow_unicode = True
+_yaml.preserve_quotes = True
+_yaml.sort_keys = False
 
 
 class YAMLLoader:
@@ -20,6 +26,12 @@ class YAMLLoader:
             encoding: 文件编码，默认 utf-8
         """
         self.encoding = encoding
+        # 创建专用的 YAML 实例
+        self.yaml = YAML(typ='safe')
+        self.yaml.default_flow_style = False
+        self.yaml.allow_unicode = True
+        self.yaml.preserve_quotes = True
+        self.yaml.sort_keys = False
 
     def load(
             self,
@@ -42,7 +54,7 @@ class YAMLLoader:
                 return default
 
             with open(file_path, 'r', encoding=self.encoding) as f:
-                data = yaml.load(f)
+                data = self.yaml.load(f)
 
             logger.debug(f"成功加载YAML文件: {file_path}")
             return data
@@ -66,7 +78,7 @@ class YAMLLoader:
             Any: 解析后的数据
         Raises:
             FileNotFoundError: 文件不存在
-            yaml.YAMLError: YAML解析错误
+            YAMLError: YAML解析错误
             IOError: 文件读取错误
         """
         file_path = Path(file_path)
@@ -76,7 +88,7 @@ class YAMLLoader:
 
         try:
             with open(file_path, 'r', encoding=self.encoding) as f:
-                data = yaml.load(f)
+                data = self.yaml.load(f)
 
             logger.info(f"成功加载YAML文件: {file_path}")
             return data
@@ -153,7 +165,8 @@ class YAMLLoader:
             if not yaml_string or not yaml_string.strip():
                 return default
 
-            data = yaml.load(yaml_string)
+            # 使用全局 YAML 实例从字符串加载
+            data = _yaml.load(yaml_string)
             logger.debug("成功从字符串加载YAML数据")
             return data
 
@@ -182,11 +195,11 @@ class YAMLLoader:
             # 确保目录存在
             file_path.parent.mkdir(parents=True, exist_ok=True)
 
-            yaml.allow_unicode = True
-            yaml.default_flow_style = False
-            yaml.sort_keys = sort_keys
+            # 设置排序
+            self.yaml.sort_keys = sort_keys
+
             with open(file_path, 'w', encoding=self.encoding) as f:
-                yaml.dump(data, f)
+                self.yaml.dump(data, f)
 
             logger.info(f"成功保存YAML文件: {file_path}")
             return True

@@ -118,4 +118,6 @@ def get_logger():
     return logger
 
 # 为了方便使用，直接导出logger
-log = get_logger()
+logger = get_logger()
+
+__all__ = ['logger', 'init_logger', 'get_logger', 'TestLogger']

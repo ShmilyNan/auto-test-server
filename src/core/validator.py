@@ -7,7 +7,7 @@ import re
 from typing import Dict, Any, List, Optional, Union
 from dataclasses import dataclass
 from jsonschema import validate, ValidationError as JsonSchemaValidationError
-from src.utils.logger import log as logger
+from src.utils.logger import logger
 
 
 @dataclass
