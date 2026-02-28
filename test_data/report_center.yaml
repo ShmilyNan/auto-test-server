@@ -1,0 +1,6893 @@
+# 测试数据文件（批量追加模式）
+# 最后更新时间: 2026-02-28 18:08:08
+# ========================================
+
+# 测试数据文件（批量追加模式）
+# 最后更新时间: 2026-02-28 18:08:07
+# ========================================
+
+# 测试数据文件（批量追加模式）
+# 最后更新时间: 2026-02-28 16:32:08
+# ========================================
+
+# 测试数据文件（批量追加模式）
+# 最后更新时间: 2026-02-14 18:23:57
+# ========================================
+
+# 测试数据文件（批量追加模式）
+# 最后更新时间: 2026-02-14 18:20:25
+# ========================================
+
+module:
+  name: report_center
+  version: 1.0.0
+  description: report_center 模块的测试用例
+  author: 从cURL转换
+config:
+  headers:
+    Accept: application/json, text/plain, */*
+  timeout: 30
+test_cases:
+- name: get_offer_report_list-正常流程
+  description: 测试 GET get_offer_report_list 正常流程
+  priority: p1
+  tags:
+  - daily
+  - regression
+  method: GET
+  url: /prod-api/report/template/list
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  params:
+    templateType: '1'
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-参数错误
+  description: 测试 get_offer_report_list 参数错误时的处理
+  priority: p2
+  tags:
+  - daily
+  - regression
+  method: GET
+  url: /prod-api/report/template/list
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  params:
+    templateType: invalid_value
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-正常流程
+  description: 测试 POST export_offer_report_list 正常流程
+  priority: p1
+  tags:
+  - daily
+  - regression
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-完整条件查询
+  description: 使用所有查询条件的完整查询
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_id: &id001
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate: &id002
+      - 1634-1634-Private EMU-XY
+      advertiser: &id003
+      - 1014-Justdo-LL
+      am: &id004
+      - romy
+      pm: &id005
+      - lorna
+      package_name: &id006
+      - com.adakami.dana.kredit.pinjaman
+      third_party: &id007
+      - Appsflyer
+      country: &id008
+      - ID
+      pid: &id009
+      - socialmed62_int
+      platform: &id010
+      - android
+      agency: &id011
+      - felyrida
+      dept_name: &id012
+      - 西安运营一组
+      attribution_type: &id013
+      - CTA
+      offer_status: 3
+      affiliate_private: &id014
+      - 0
+      - 1
+      affiliate_attribute: &id015
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-offer_id
+  description: 仅使用 offer_id 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_id: *id001
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-offer_name
+  description: 仅使用 offer_name 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_name: 20260204_Adakami
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-affiliate
+  description: 仅使用 affiliate 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      affiliate: *id002
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-advertiser
+  description: 仅使用 advertiser 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      advertiser: *id003
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-am
+  description: 仅使用 am 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      am: *id004
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-pm
+  description: 仅使用 pm 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      pm: *id005
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-package_name
+  description: 仅使用 package_name 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      package_name: *id006
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-third_party
+  description: 仅使用 third_party 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      third_party: *id007
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-country
+  description: 仅使用 country 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      country: *id008
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-pid
+  description: 仅使用 pid 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      pid: *id009
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-platform
+  description: 仅使用 platform 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      platform: *id010
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-agency
+  description: 仅使用 agency 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      agency: *id011
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-dept_name
+  description: 仅使用 dept_name 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      dept_name: *id012
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-attribution_type
+  description: 仅使用 attribution_type 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      attribution_type: *id013
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-offer_status
+  description: 仅使用 offer_status 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_status: 3
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-affiliate_private
+  description: 仅使用 affiliate_private 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      affiliate_private: *id014
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-单条件查询-affiliate_attribute
+  description: 仅使用 affiliate_attribute 作为查询条件
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      affiliate_attribute: *id015
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: 
+    get_offer_report_list-组合查询-offer_name_affiliate_package_name_pid_platform_dept_name_attribution_type_offer_status_affiliate_private_affiliate_attribute
+  description: '组合查询条件: offer_name, affiliate, package_name, pid, platform, dept_name,
+    attribution_type, offer_status, affiliate_private, affiliate_attribute'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_name: 20260204_Adakami
+      affiliate: *id002
+      package_name: *id006
+      pid: *id009
+      platform: *id010
+      dept_name: *id012
+      attribution_type: *id013
+      offer_status: 3
+      affiliate_private: *id014
+      affiliate_attribute: *id015
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: 
+    get_offer_report_list-组合查询-offer_name_affiliate_advertiser_am_pm_package_name_third_party_country_platform_agency_attribution_type_offer_status_affiliate_private_affiliate_attribute
+  description: '组合查询条件: offer_name, affiliate, advertiser, am, pm, package_name, third_party,
+    country, platform, agency, attribution_type, offer_status, affiliate_private,
+    affiliate_attribute'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_name: 20260204_Adakami
+      affiliate: *id002
+      advertiser: *id003
+      am: *id004
+      pm: *id005
+      package_name: *id006
+      third_party: *id007
+      country: *id008
+      platform: *id010
+      agency: *id011
+      attribution_type: *id013
+      offer_status: 3
+      affiliate_private: *id014
+      affiliate_attribute: *id015
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: 
+    get_offer_report_list-组合查询-offer_id_affiliate_package_name_third_party_country_pid_platform_dept_name_attribution_type_offer_status_affiliate_private
+  description: '组合查询条件: offer_id, affiliate, package_name, third_party, country, pid,
+    platform, dept_name, attribution_type, offer_status, affiliate_private'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_id: *id001
+      affiliate: *id002
+      package_name: *id006
+      third_party: *id007
+      country: *id008
+      pid: *id009
+      platform: *id010
+      dept_name: *id012
+      attribution_type: *id013
+      offer_status: 3
+      affiliate_private: *id014
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: 
+    get_offer_report_list-组合查询-offer_id_offer_name_am_third_party_country_pid_agency_attribution_type_affiliate_private_affiliate_attribute
+  description: '组合查询条件: offer_id, offer_name, am, third_party, country, pid, agency,
+    attribution_type, affiliate_private, affiliate_attribute'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_id: *id001
+      offer_name: 20260204_Adakami
+      am: *id004
+      third_party: *id007
+      country: *id008
+      pid: *id009
+      agency: *id011
+      attribution_type: *id013
+      affiliate_private: *id014
+      affiliate_attribute: *id015
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: 
+    get_offer_report_list-组合查询-offer_name_advertiser_am_package_name_third_party_attribution_type
+  description: '组合查询条件: offer_name, advertiser, am, package_name, third_party, attribution_type'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_name: 20260204_Adakami
+      advertiser: *id003
+      am: *id004
+      package_name: *id006
+      third_party: *id007
+      attribution_type: *id013
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-完整条件查询
+  description: 使用所有查询条件的完整查询
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-granularity-MONTH
+  description: '时间粒度: MONTH, 时间格式: 202602'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: MONTH
+    startTime: '202602'
+    endTime: '202602'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-granularity-DATE
+  description: '时间粒度: DATE, 时间格式: 20260227'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DATE
+    startTime: '20260227'
+    endTime: '20260227'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-granularity-HOUR
+  description: '时间粒度: HOUR, 时间格式: 2026022700'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: HOUR
+    startTime: '2026022700'
+    endTime: '2026022723'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-basicFields-单条件-affiliate
+  description: 'basicFields 仅包含: affiliate'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-basicFields-单条件-advertiser
+  description: 'basicFields 仅包含: advertiser'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - advertiser
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-basicFields-单条件-package_name
+  description: 'basicFields 仅包含: package_name'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - package_name
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-basicFields-单条件-pid
+  description: 'basicFields 仅包含: pid'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - pid
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-basicFields-单条件-agency
+  description: 'basicFields 仅包含: agency'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - agency
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-basicFields-组合-advertiser_package_name_pid
+  description: 'basicFields 组合: advertiser, package_name, pid'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - advertiser
+      - package_name
+      - pid
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-basicFields-组合-affiliate_package_name_agency
+  description: 'basicFields 组合: affiliate, package_name, agency'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - package_name
+      - agency
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-basicFields-组合-affiliate_package_name_pid
+  description: 'basicFields 组合: affiliate, package_name, pid'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - package_name
+      - pid
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-click
+  description: 'statisticsFields 仅包含: click'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - click
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-af_click
+  description: 'statisticsFields 仅包含: af_click'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - af_click
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-impression
+  description: 'statisticsFields 仅包含: impression'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - impression
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-af_impression
+  description: 'statisticsFields 仅包含: af_impression'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - af_impression
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-hope_click
+  description: 'statisticsFields 仅包含: hope_click'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - hope_click
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-conversion
+  description: 'statisticsFields 仅包含: conversion'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - conversion
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-reject_num
+  description: 'statisticsFields 仅包含: reject_num'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - reject_num
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-cr
+  description: 'statisticsFields 仅包含: cr'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - cr
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-af_cr
+  description: 'statisticsFields 仅包含: af_cr'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - af_cr
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-event_num
+  description: 'statisticsFields 仅包含: event_num'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - event_num
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-revenue
+  description: 'statisticsFields 仅包含: revenue'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - revenue
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-cost
+  description: 'statisticsFields 仅包含: cost'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - cost
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-profit
+  description: 'statisticsFields 仅包含: profit'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - profit
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-单条件-roi
+  description: 'statisticsFields 仅包含: roi'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: 
+    export_offer_report_list-statisticsFields-组合-af_impression_reject_num_revenue
+  description: 'statisticsFields 组合: af_impression, reject_num, revenue'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - af_impression
+      - reject_num
+      - revenue
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-statisticsFields-组合-af_click_reject_num_profit
+  description: 'statisticsFields 组合: af_click, reject_num, profit'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - af_click
+      - reject_num
+      - profit
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: 
+    export_offer_report_list-statisticsFields-组合-hope_click_event_num_revenue
+  description: 'statisticsFields 组合: hope_click, event_num, revenue'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - hope_click
+      - event_num
+      - revenue
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-filters-空
+  description: filters 为空字典
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: export_offer_report_list-basicFields-空
+  description: basicFields 和 filters 均为空
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/export
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026021300'
+    endTime: '2026021323'
+    timeZone: UTC-0
+    options:
+      basicFields: []
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-granularity-MONTH
+  description: '时间粒度: MONTH, 时间格式: 202602'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: MONTH
+    startTime: '202602'
+    endTime: '202602'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-granularity-DATE
+  description: '时间粒度: DATE, 时间格式: 20260227'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DATE
+    startTime: '20260227'
+    endTime: '20260227'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-granularity-HOUR
+  description: '时间粒度: HOUR, 时间格式: 2026022700'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: HOUR
+    startTime: '2026022700'
+    endTime: '2026022723'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-affiliate
+  description: 'basicFields 仅包含: affiliate'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      affiliate:
+      - 1634-1634-Private EMU-XY
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-advertiser
+  description: 'basicFields 仅包含: advertiser'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - advertiser
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      advertiser:
+      - 1014-Justdo-LL
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-package_name
+  description: 'basicFields 仅包含: package_name'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - package_name
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-pid
+  description: 'basicFields 仅包含: pid'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - pid
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      pid:
+      - socialmed62_int
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-agency
+  description: 'basicFields 仅包含: agency'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - agency
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      agency:
+      - felyrida
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-offer_id
+  description: 'basicFields 仅包含: offer_id'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - offer_id
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_id:
+      - '1017926'
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-offer_name
+  description: 'basicFields 仅包含: offer_name'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - offer_name
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_name: 20260204_Adakami
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-attribution_type
+  description: 'basicFields 仅包含: attribution_type'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - attribution_type
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      attribution_type:
+      - CTA
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-third_party
+  description: 'basicFields 仅包含: third_party'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - third_party
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      third_party:
+      - Appsflyer
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-offer_status
+  description: 'basicFields 仅包含: offer_status'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - offer_status
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_status: 3
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-country
+  description: 'basicFields 仅包含: country'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - country
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      country:
+      - ID
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-affiliate_private
+  description: 'basicFields 仅包含: affiliate_private'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate_private
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      affiliate_private:
+      - 0
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-affiliate_attribute
+  description: 'basicFields 仅包含: affiliate_attribute'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate_attribute
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-platform
+  description: 'basicFields 仅包含: platform'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - platform
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      platform:
+      - android
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-dept_name
+  description: 'basicFields 仅包含: dept_name'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - dept_name
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      dept_name:
+      - 西安运营一组
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-am
+  description: 'basicFields 仅包含: am'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - am
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      am:
+      - romy
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-pm
+  description: 'basicFields 仅包含: pm'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - pm
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      pm:
+      - lorna
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-单条件-bd
+  description: 'basicFields 仅包含: bd'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-组合-offer_id_country_dept_name
+  description: 'basicFields 组合: offer_id, country, dept_name'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - offer_id
+      - country
+      - dept_name
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_id:
+      - '1017926'
+      country:
+      - ID
+      dept_name:
+      - 西安运营一组
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: 
+    get_offer_report_list-basicFields-组合-agency_offer_status_affiliate_attribute
+  description: 'basicFields 组合: agency, offer_status, affiliate_attribute'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - agency
+      - offer_status
+      - affiliate_attribute
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      agency:
+      - felyrida
+      offer_status: 3
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-组合-pid_offer_id_bd
+  description: 'basicFields 组合: pid, offer_id, bd'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - pid
+      - offer_id
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      pid:
+      - socialmed62_int
+      offer_id:
+      - '1017926'
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-click
+  description: 'statisticsFields 仅包含: click'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-af_click
+  description: 'statisticsFields 仅包含: af_click'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - af_click
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-impression
+  description: 'statisticsFields 仅包含: impression'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - impression
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-af_impression
+  description: 'statisticsFields 仅包含: af_impression'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - af_impression
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-hope_click
+  description: 'statisticsFields 仅包含: hope_click'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - hope_click
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-conversion
+  description: 'statisticsFields 仅包含: conversion'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - conversion
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-reject_num
+  description: 'statisticsFields 仅包含: reject_num'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - reject_num
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-cr
+  description: 'statisticsFields 仅包含: cr'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - cr
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-af_cr
+  description: 'statisticsFields 仅包含: af_cr'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - af_cr
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-event_num
+  description: 'statisticsFields 仅包含: event_num'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - event_num
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-revenue
+  description: 'statisticsFields 仅包含: revenue'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - revenue
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-cost
+  description: 'statisticsFields 仅包含: cost'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - cost
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-profit
+  description: 'statisticsFields 仅包含: profit'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - profit
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-roi
+  description: 'statisticsFields 仅包含: roi'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - roi
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-reject_rate
+  description: 'statisticsFields 仅包含: reject_rate'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - reject_rate
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-af_conversion
+  description: 'statisticsFields 仅包含: af_conversion'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - af_conversion
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-单条件-gap_rate
+  description: 'statisticsFields 仅包含: gap_rate'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - gap_rate
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-组合-af_click_profit
+  description: 'statisticsFields 组合: af_click, profit'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - af_click
+      - profit
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-组合-hope_click_conversion_profit
+  description: 'statisticsFields 组合: hope_click, conversion, profit'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - hope_click
+      - conversion
+      - profit
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-statisticsFields-组合-impression_af_cr_revenue
+  description: 'statisticsFields 组合: impression, af_cr, revenue'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - impression
+      - af_cr
+      - revenue
+    filters:
+      offer_id:
+      - '1017926'
+      offer_name: 20260204_Adakami
+      affiliate:
+      - 1634-1634-Private EMU-XY
+      advertiser:
+      - 1014-Justdo-LL
+      am:
+      - romy
+      pm:
+      - lorna
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+      third_party:
+      - Appsflyer
+      country:
+      - ID
+      pid:
+      - socialmed62_int
+      platform:
+      - android
+      agency:
+      - felyrida
+      dept_name:
+      - 西安运营一组
+      attribution_type:
+      - CTA
+      offer_status: 3
+      affiliate_private:
+      - 0
+      - 1
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-offer_id
+  description: 'filter 仅包含: offer_id'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - offer_id
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_id: &id017
+      - '1017926'
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-offer_name
+  description: 'filter 仅包含: offer_name'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - offer_name
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_name: 20260204_Adakami
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-affiliate
+  description: 'filter 仅包含: affiliate'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      affiliate:
+      - 1634-1634-Private EMU-XY
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-advertiser
+  description: 'filter 仅包含: advertiser'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - advertiser
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      advertiser: &id020
+      - 1014-Justdo-LL
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-am
+  description: 'filter 仅包含: am'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - am
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      am:
+      - romy
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-pm
+  description: 'filter 仅包含: pm'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - pm
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      pm:
+      - lorna
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-package_name
+  description: 'filter 仅包含: package_name'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - package_name
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      package_name:
+      - com.adakami.dana.kredit.pinjaman
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-third_party
+  description: 'filter 仅包含: third_party'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - third_party
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      third_party: &id018
+      - Appsflyer
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-country
+  description: 'filter 仅包含: country'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - country
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      country:
+      - ID
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-pid
+  description: 'filter 仅包含: pid'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - pid
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      pid:
+      - socialmed62_int
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-platform
+  description: 'filter 仅包含: platform'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - platform
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      platform: &id021
+      - android
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-agency
+  description: 'filter 仅包含: agency'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - agency
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      agency:
+      - felyrida
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-dept_name
+  description: 'filter 仅包含: dept_name'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - dept_name
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      dept_name: &id016
+      - 西安运营一组
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-attribution_type
+  description: 'filter 仅包含: attribution_type'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - attribution_type
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      attribution_type: &id022
+      - CTA
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-offer_status
+  description: 'filter 仅包含: offer_status'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - offer_status
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_status: 3
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-affiliate_private
+  description: 'filter 仅包含: affiliate_private'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate_private
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      affiliate_private: &id019
+      - 0
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-单条件-affiliate_attribute
+  description: 'filter 仅包含: affiliate_attribute'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate_attribute
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      affiliate_attribute:
+      - 1
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-组合-offer_name_dept_name_offer_status
+  description: 'filter 组合: offer_name, dept_name, offer_status'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - offer_name
+      - offer_status
+      - dept_name
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_name: 20260204_Adakami
+      dept_name: *id016
+      offer_status: 3
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-组合-offer_id_third_party_affiliate_private
+  description: 'filter 组合: offer_id, third_party, affiliate_private'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - offer_id
+      - third_party
+      - affiliate_private
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      offer_id: *id017
+      third_party: *id018
+      affiliate_private: *id019
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filter-组合-advertiser_platform_attribution_type
+  description: 'filter 组合: advertiser, platform, attribution_type'
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - advertiser
+      - attribution_type
+      - platform
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters:
+      advertiser: *id020
+      platform: *id021
+      attribution_type: *id022
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-filters-空
+  description: filters 为空字典
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields:
+      - affiliate
+      - advertiser
+      - package_name
+      - pid
+      - agency
+      - offer_id
+      - offer_name
+      - attribution_type
+      - third_party
+      - offer_status
+      - country
+      - affiliate_private
+      - affiliate_attribute
+      - platform
+      - dept_name
+      - am
+      - pm
+      - bd
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200
+- name: get_offer_report_list-basicFields-空
+  description: basicFields 和 filters 均为空
+  priority: p1
+  tags:
+  - daily
+  - regression
+  - query
+  - auto-generated
+  method: POST
+  url: /prod-api/api/report/offer/query
+  headers:
+    Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
+  body:
+    granularity: DAY
+    startTime: '2026022400'
+    endTime: '2026022423'
+    timeZone: UTC-0
+    options:
+      basicFields: []
+      statisticsFields:
+      - click
+      - af_click
+      - impression
+      - af_impression
+      - hope_click
+      - conversion
+      - reject_num
+      - cr
+      - af_cr
+      - event_num
+      - revenue
+      - cost
+      - profit
+      - roi
+      - reject_rate
+      - af_conversion
+      - gap_rate
+    filters: {}
+    orderDescFields: []
+    orderAscFields: []
+    pagination:
+      pageNum: 1
+      pageSize: 25
+  validate:
+  - type: status_code
+    expected: 200

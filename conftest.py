@@ -5,11 +5,14 @@ pytest配置文件
 """
 import os
 import sys
+import json
 import pytest
 import allure
-from src.utils.yaml_loader import load_yaml_dict
+import subprocess
+import shutil
 from pathlib import Path
 from loguru import logger
+from src.utils.yaml_loader import load_yaml_dict
 from src.utils.logger import init_logger, get_logger
 
 # 添加项目根目录到路径
@@ -225,7 +228,19 @@ def attach_request_response(test_context):
                         请求体: {request.get('body', 'N/A')}
                         """
             allure.attach(request_text, name="请求信息", attachment_type=allure.attachment_type.TEXT)
-            
+
+            # 附加请求JSON（如果请求体是JSON格式）
+            request_body = request.get('body')
+            if request_body is not None and isinstance(request_body, (dict, list)):
+                try:
+                    allure.attach(
+                        json.dumps(request_body, ensure_ascii=False, indent=2),
+                        name="请求JSON",
+                        attachment_type=allure.attachment_type.JSON
+                    )
+                except Exception as e:
+                    logger.warning(f"序列化请求JSON失败: {e}")
+
             # 附加响应信息
             headers = response.get('headers') or {}
             body = response.get('body')
@@ -240,7 +255,6 @@ def attach_request_response(test_context):
             
             # 附加JSON响应
             if body is not None and isinstance(body, (dict, list)):
-                import json
                 try:
                     allure.attach(
                         json.dumps(body, ensure_ascii=False, indent=2),
@@ -294,6 +308,178 @@ def pytest_configure(config):
         config.addinivalue_line("markers", "tag: 通用标记")
     except Exception as e:
         print(f"pytest_configure 出错: {e}")
+
+
+def pytest_sessionfinish(session, exitstatus):
+    """
+    测试会话结束后自动生成 Allure 报告
+
+    Args:
+        session: pytest 会话对象
+        exitstatus: 测试退出状态码
+    """
+    logger = get_logger()
+
+    # 配置路径
+    project_root = Path(__file__).parent
+    results_dir = project_root / "reports" / "allure"
+    report_dir = project_root / "reports" / "allure-report"
+
+    # 检查 allure 结果目录是否存在
+    if not results_dir.exists():
+        logger.warning(f"Allure 结果目录不存在: {results_dir}")
+        return
+
+    # 检查是否有测试结果
+    result_files = list(results_dir.glob("*.json"))
+    if not result_files:
+        logger.warning("Allure 结果目录中没有测试结果文件")
+        return
+
+    logger.info("=" * 60)
+    logger.info("开始生成 Allure 测试报告...")
+    logger.info(f"结果目录: {results_dir}")
+    logger.info(f"报告目录: {report_dir}")
+
+    # 检查 allure 命令是否可用
+    allure_cmd = _find_allure_command()
+
+    if allure_cmd:
+        # 使用 allure generate 命令生成报告
+        _generate_allure_report_with_command(allure_cmd, results_dir, report_dir, logger)
+    else:
+        # 使用 Python 方式生成报告
+        _generate_allure_report_with_python(results_dir, report_dir, logger)
+
+    logger.info("=" * 60)
+
+
+def _find_allure_command() -> str:
+    """
+    查找 allure 命令路径
+
+    Returns:
+        str: allure 命令路径，未找到返回空字符串
+    """
+    # Windows 下优先检查常见安装路径
+    if sys.platform == "win32":
+        # 检查 npm 全局安装路径
+        npm_paths = [
+            Path(os.environ.get("APPDATA", "")) / "npm" / "allure.cmd",
+            Path(os.environ.get("LOCALAPPDATA", "")) / "npm" / "allure.cmd",
+        ]
+        for path in npm_paths:
+            if path.exists():
+                return str(path)
+
+    # 检查 PATH 环境变量
+    allure_cmd = shutil.which("allure")
+    if allure_cmd:
+        return allure_cmd
+
+    return ""
+
+
+def _generate_allure_report_with_command(allure_cmd: str, results_dir: Path, report_dir: Path, logger):
+    """
+    使用 allure 命令行工具生成报告
+
+    Args:
+        allure_cmd: allure 命令路径
+        results_dir: 结果目录
+        report_dir: 报告目录
+        logger: 日志记录器
+    """
+    try:
+        # 清理旧报告目录
+        if report_dir.exists():
+            shutil.rmtree(report_dir)
+
+        # 构建命令：禁用 Google Analytics
+        cmd = [
+            allure_cmd,
+            "generate",
+            str(results_dir),
+            "-o", str(report_dir),
+            "--clean"
+        ]
+
+        # 设置环境变量禁用统计
+        env = os.environ.copy()
+        env["ALLURE_NO_ANALYTICS"] = "1"
+
+        logger.info(f"执行命令: {' '.join(cmd)}")
+
+        # 执行命令
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            env=env,
+            timeout=300  # 5分钟超时
+        )
+
+        if result.returncode == 0:
+            logger.info(f"✅ Allure 报告生成成功: {report_dir}")
+            logger.info(f"   打开报告: {report_dir / 'index.html'}")
+        else:
+            logger.error(f"❌ Allure 报告生成失败: {result.stderr}")
+            # 回退到 Python 方式
+            _generate_allure_report_with_python(results_dir, report_dir, logger)
+
+    except subprocess.TimeoutExpired:
+        logger.error("❌ Allure 报告生成超时")
+        _generate_allure_report_with_python(results_dir, report_dir, logger)
+    except Exception as e:
+        logger.error(f"❌ Allure 报告生成异常: {e}")
+        _generate_allure_report_with_python(results_dir, report_dir, logger)
+
+
+def _generate_allure_report_with_python(results_dir: Path, report_dir: Path, logger):
+    """
+    使用 Python 方式生成报告（作为 allure 命令不可用时的备选方案）
+
+    Args:
+        results_dir: 结果目录
+        report_dir: 报告目录
+        logger: 日志记录器
+    """
+    try:
+        # 尝试安装并使用 allure-combine
+        try:
+            import allure_combine
+        except ImportError:
+            logger.info("正在安装 allure-combine...")
+            subprocess.run(
+                [sys.executable, "-m", "pip", "install", "allure-combine", "-q"],
+                capture_output=True
+            )
+            import allure_combine
+
+        # 清理旧报告目录
+        if report_dir.exists():
+            shutil.rmtree(report_dir)
+        report_dir.mkdir(parents=True, exist_ok=True)
+
+        # 生成合并的 HTML 报告
+        output_file = report_dir / "allure-report.html"
+        allure_combine.combine(
+            str(results_dir),
+            output_file=str(output_file),
+            ignore_errors=True
+        )
+
+        logger.info(f"✅ Allure 报告生成成功（Python 方式）: {output_file}")
+
+    except ImportError:
+        logger.warning("⚠️ allure-combine 安装失败")
+        logger.info(f"💡 请手动安装 allure 命令行工具或 allure-combine:")
+        logger.info("   - npm install -g allure-commandline")
+        logger.info("   - pip install allure-combine")
+        logger.info(f"   或手动执行: allure generate {results_dir} -o {report_dir} --clean")
+    except Exception as e:
+        logger.error(f"❌ Python 方式生成报告失败: {e}")
+        logger.info(f"💡 请手动执行: allure generate {results_dir} -o {report_dir} --clean")
 
 
 def pytest_collection_modifyitems(config, items):

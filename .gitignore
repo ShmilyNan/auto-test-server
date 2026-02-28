@@ -42,6 +42,7 @@ htmlcov/
 
 # Allure
 reports/allure/
+reports/allure-report/
 reports/html/
 
 # Logs
