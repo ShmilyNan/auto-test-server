@@ -3,39 +3,30 @@
 """
 接口自动化测试平台 - 运行入口
 """
-
 import sys
 import os
 import argparse
 import time
-from pathlib import Path
-
-# 添加项目根目录到Python路径
-project_root = Path(__file__).parent
-sys.path.insert(0, str(project_root))
-
 import pytest
+from config import CONFIG_FILE, ALLURE_RESULTS_DIR, get_env_config_file
 from src.utils.yaml_loader import load_yaml
 from src.utils.logger import init_logger, logger
 from src.utils.notifier import NotificationManager
 
 
-def load_config(config_path: str = "config/config.yaml") -> dict:
+def load_config() -> dict:
     """
     加载配置文件
-    Args:
-        config_path: 配置文件路径
     Returns:
         dict: 配置字典
     """
-    config_file = Path(config_path)
-    if not config_file.exists():
-        logger.warning(f"配置文件不存在: {config_path}，使用默认配置")
+    if not CONFIG_FILE.exists():
+        logger.warning(f"配置文件不存在: {CONFIG_FILE}，使用默认配置")
         return {}
     
-    config = load_yaml(config_file)
+    config = load_yaml(CONFIG_FILE)
     
-    logger.info(f"加载配置文件: {config_path}")
+    logger.info(f"加载配置文件: {CONFIG_FILE}")
     return config
 
 
@@ -47,7 +38,7 @@ def load_env_config(env: str = "test") -> dict:
     Returns:
         dict: 环境配置字典
     """
-    env_file = Path(f"config/env/{env}.yaml")
+    env_file = get_env_config_file(env)
     if not env_file.exists():
         logger.warning(f"环境配置文件不存在: {env_file}")
         return {}
@@ -119,7 +110,7 @@ def run_tests(
     
     # Allure报告
     if report:
-        pytest_args.extend(['--alluredir=reports/allure', '--clean-alluredir'])
+        pytest_args.extend([f'--alluredir={ALLURE_RESULTS_DIR}', '--clean-alluredir'])
     
     # 其他pytest参数
     pytest_args.extend([
@@ -143,7 +134,7 @@ def run_tests(
         
         # 生成测试报告
         if report:
-            logger.info("Allure报告已生成到: reports/allure")
+            logger.info(f"Allure报告已生成到: {ALLURE_RESULTS_DIR}")
             logger.info("查看报告: allure serve reports/allure")
         
         # 发送通知
@@ -220,8 +211,6 @@ def main():
         help='不生成报告'
     )
     
-
-
     parser.add_argument(
         '--report-only',
         action='store_true',
@@ -232,7 +221,7 @@ def main():
     
     # 仅生成报告
     if args.report_only:
-        os.system('allure generate reports/allure -o reports/html --clean')
+        os.system(f'allure generate {ALLURE_RESULTS_DIR} -o reports/html --clean')
         logger.info("HTML报告已生成到: reports/html")
         return 0
     

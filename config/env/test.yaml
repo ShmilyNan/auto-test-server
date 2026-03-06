@@ -1,7 +1,17 @@
 # 测试环境配置
 
 # 基础URL
+# NOTE: 用于构建完整的请求URL，作为默认 base_url
 base_url: "https://dev-aly-us-ad-web.cdcicd.com"
+
+# 多个 base_url 配置
+# NOTE: 同一环境中不同接口可能需要不同的 base_url
+# 用法: 测试用例中指定 base_url 别名，如 base_url: "admin"
+base_urls:
+  # 默认 API 服务
+  default: "https://dev-aly-us-ad-web.cdcicd.com"
+  # siteId API
+  siteId: "http://test-api.chongdaads.com"
 
 # 代理配置
 proxy:

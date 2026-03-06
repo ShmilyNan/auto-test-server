@@ -7,7 +7,7 @@ import shlex
 from typing import Dict, List, Any
 from urllib.parse import urlparse, parse_qs
 from dataclasses import dataclass
-from loguru import logger
+from src.utils.logger import logger
 
 
 @dataclass

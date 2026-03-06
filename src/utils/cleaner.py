@@ -2,18 +2,17 @@
 数据清洗管理器
 支持通过 API 和 SQL 删除测试数据
 """
-
 from typing import Dict, Any, Optional, List
-from loguru import logger
-
+from config import CONFIG_FILE, get_env_config_file
+from src.utils.logger import logger
 from src.core.client import create_client
 from src.core.context import get_context
+from src.utils.yaml_loader import load_yaml_dict
 
 
 class DataCleaner:
     """
     数据清洗管理器
-
     支持两种清洗方式：
     1. API 清洗：调用删除接口删除数据
     2. SQL 清洗：执行 SQL 语句删除数据
@@ -116,10 +115,9 @@ class DataCleaner:
         # 构建 URL
         if not url.startswith(('http://', 'https://')):
             # 需要拼接 base_url
-            from src.utils.yaml_loader import load_yaml_dict
-            config = load_yaml_dict("config/config.yaml", default={})
+            config = load_yaml_dict(CONFIG_FILE, default={})
             default_env = config.get('default_env', 'test')
-            env_config = load_yaml_dict(f"config/env/{default_env}.yaml", default={})
+            env_config = load_yaml_dict(get_env_config_file(default_env), default={})
             base_url = env_config.get('base_url', '')
             if base_url:
                 if not url.startswith('/'):
@@ -239,7 +237,7 @@ class DataCleaner:
         """
         try:
             from src.utils.yaml_loader import load_yaml_dict
-            config = load_yaml_dict("config/config.yaml", default={})
+            config = load_yaml_dict(CONFIG_FILE, default={})
             db_config = config.get('database', {})
 
             # 检查必要配置

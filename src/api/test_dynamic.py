@@ -3,16 +3,10 @@
 动态测试用例文件
 从 test_data 目录的 YAML/JSON 文件自动生成 pytest 测试用例
 """
-import sys
 import time
-from pathlib import Path
-from typing import List, Dict, Any
 import pytest
-
-# 添加项目根目录到路径
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
-
+from typing import List, Dict, Any
+from config import CONFIG_FILE, get_env_config_file, TEST_DATA_DIR
 from src.core.parser import CaseDataParser, CaseDataStructure
 from src.utils.yaml_loader import load_yaml_dict
 from src.utils.logger import logger
@@ -21,14 +15,11 @@ from src.utils.logger import logger
 class CaseGenerator:
     """测试用例生成器"""
 
-    def __init__(self, test_data_dir: str = "test_data"):
+    def __init__(self):
         """
         初始化生成器
-        Args:
-            test_data_dir: 测试数据目录
         """
-        self.test_data_dir = Path(test_data_dir)
-        self.parser = CaseDataParser(test_data_dir)
+        self.parser = CaseDataParser(TEST_DATA_DIR)
         self.test_cases: Dict[str, List[CaseDataStructure]] = {}
 
     def load_test_data(self) -> Dict[str, List[CaseDataStructure]]:
@@ -37,7 +28,7 @@ class CaseGenerator:
         Returns:
             Dict[str, List[CaseDataStructure]]: {模块名: 测试用例列表}
         """
-        logger.info(f"开始加载测试数据: {self.test_data_dir}")
+        logger.info(f"开始加载测试数据: {TEST_DATA_DIR}")
 
         self.test_cases = self.parser.parse_dir()
 
@@ -105,31 +96,63 @@ def _generate_function_name(test_case: CaseDataStructure, module: str, idx: int)
     return function_name
 
 
-def _build_url(url: str, test_context) -> str:
+def _build_url(url: str, test_context, base_url_alias: str = None) -> str:
     """
     构建完整URL
+    支持三种方式指定 base_url：
+    1. base_url_alias 为完整 URL（以 http:// 或 https:// 开头）：直接使用
+    2. base_url_alias 为别名（如 "admin"、"report"）：从环境配置的 base_urls 中查找
+    3. base_url_alias 为空：使用环境配置的默认 base_url
     Args:
         url: URL路径
         test_context: 测试上下文
+        base_url_alias: 基础URL别名或完整URL（可选）
     Returns:
         str: 完整URL
     """
     # 替换URL中的变量
     url = test_context.replace_vars(url)
 
-    # 获取基础URL
-    config = load_yaml_dict("config/config.yaml", default={})
+    # 如果 url 已经是完整 URL，直接返回
+    if url.startswith(('http://', 'https://')):
+        return url
+
+    # 获取环境配置
+    config = load_yaml_dict(CONFIG_FILE, default={})
     default_env = config.get('default_env', 'test')
 
-    env_config = load_yaml_dict(f"config/env/{default_env}.yaml", default={})
-    base_url = env_config.get('base_url', '')
+    env_config = load_yaml_dict(get_env_config_file(default_env), default={})
 
-    # 拼接完整URL
-    if base_url and not url.startswith(('http://', 'https://')):
+    # 确定 base_url
+    base_url = ""
+    if base_url_alias:
+        # 替换 base_url_alias 中的变量
+        base_url_alias = test_context.replace_vars(base_url_alias)
+
+        if base_url_alias.startswith(('http://', 'https://')):
+            # 情况1：base_url_alias 是完整 URL
+            base_url = base_url_alias
+        else:
+            # 情况2：base_url_alias 是别名
+            base_urls = env_config.get('base_urls', {})
+            if base_urls and base_url_alias in base_urls:
+                base_url = base_urls[base_url_alias]
+                logger.debug(f"使用 base_url 别名 '{base_url_alias}': {base_url}")
+            else:
+                logger.warning(f"未找到 base_url 别名 '{base_url_alias}'，使用默认 base_url")
+                base_url = env_config.get('base_url', '')
+    else:
+        # 情况3：使用默认 base_url
+        base_url = env_config.get('base_url', '')
+
+        # 拼接完整URL
+    if base_url:
+        # 确保 base_url 不以 / 结尾
+        base_url = base_url.rstrip('/')
+        # 确保 url 以 / 开头
         if not url.startswith('/'):
             url = f'/{url}'
         url = f'{base_url}{url}'
-
     return url
 
 
@@ -281,12 +304,13 @@ for test_data in _test_data_list:
                 # 准备请求参数
                 request_data = _prepare_request_data(tc, test_context, http_client)
 
-                # 构建完整URL
-                url = _build_url(tc.url, test_context)
+                # 构建完整URL（支持多 base_url）
+                url = _build_url(tc.url, test_context, tc.base_url)
 
                 # 发送请求
                 logger.info(f"执行测试用例: {tc.name}")
                 logger.debug(f"请求: {tc.method} {url}")
+                logger.debug(f"请求参数: {request_data}")
 
                 response = http_client.request(
                     method=tc.method,

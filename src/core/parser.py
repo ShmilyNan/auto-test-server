@@ -6,6 +6,7 @@ import json
 from typing import Dict, Any, List, Optional, Union
 from pathlib import Path
 from dataclasses import dataclass
+from config import TEST_DATA_DIR
 from src.utils.logger import logger
 from src.utils.yaml_loader import load_yaml
 
@@ -22,7 +23,8 @@ class CaseDataStructure:
 
     # 请求信息
     method: str = "GET"                # 请求方法
-    url: str = ""                      # 请求URL
+    url: str = ""                      # 请求URL（路径或完整URL）
+    base_url: Optional[str] = None     # 基础URL别名或完整URL（可选）
     default_headers: Dict[str, str] = None  # 默认请求头
     headers: Dict[str, str] = None     # 请求头
     params: Dict[str, Any] = None      # URL参数
@@ -89,6 +91,7 @@ class CaseDataStructure:
             'tags': self.tags,
             'method': self.method,
             'url': self.url,
+            'base_url': self.base_url,
             'headers': self.headers,
             'params': self.params,
             'body': self.body,
@@ -112,13 +115,13 @@ class CaseDataStructure:
 class CaseDataParser:
     """测试数据解析器"""
 
-    def __init__(self, data_dir: str = "test_data"):
+    def __init__(self, data_dir: str = TEST_DATA_DIR):
         """
         初始化解析器
         Args:
             data_dir: 测试数据目录
         """
-        self.data_dir = Path(data_dir)
+        self.data_dir = data_dir
         self._test_cases: Dict[str, List[CaseDataStructure]] = {}
 
     def parse_file(self, file_path: Union[str, Path]) -> List[CaseDataStructure]:
@@ -277,6 +280,7 @@ class CaseDataParser:
             tags=case_data.get('tags', []),
             method=case_data.get('method', 'GET').upper(),
             url=case_data.get('url', case_data.get('path', '')),
+            base_url=case_data.get('base_url'), # 基础URL别名或完整URL
             headers=merged_headers, #合并后的请求头
             default_headers=default_headers, #默认请求头
             params=case_data.get('params', {}),

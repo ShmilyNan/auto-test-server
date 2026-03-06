@@ -3,33 +3,14 @@
 cURL 转 YAML 工具（重构版）
 支持自动扫描、场景生成和智能追加
 """
-
 import sys
 import argparse
-from pathlib import Path
-
-# 智能查找项目根目录
-script_path = Path(__file__).resolve()
-current = script_path
-project_root = None
-
-for _ in range(5):
-    if (current / 'src').exists():
-        project_root = current
-        break
-    if current.parent == current:
-        break
-    current = current.parent
-if project_root is None:
-    project_root = script_path.parent.parent
-sys.path.insert(0, str(project_root))
-
+from config.paths import get_test_data_file
 from src.utils.logger import logger
-from src.utils.curl_scanner import CurlScanner, CurlFileInfo
+from src.utils.curl_scanner import CurlScanner
 from src.utils.curl_parser import CurlParser
 from src.utils.scenario_generator import ScenarioGenerator
 from src.utils.yaml_generator import YamlGenerator
-
 
 
 def parse_args():
@@ -198,7 +179,8 @@ def scan_and_convert(args):
         logger.info("-" * 40)
 
         # 获取对应的 YAML 文件路径
-        yaml_file = scanner.get_yaml_file_path(module_name, args.yaml_dir)
+        # yaml_file = scanner.get_yaml_file_path(module_name, args.yaml_dir)
+        yaml_file = get_test_data_file(module_name)
         logger.info(f"目标文件: {yaml_file}")
 
         module_added = 0

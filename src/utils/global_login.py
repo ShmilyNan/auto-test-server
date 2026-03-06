@@ -6,6 +6,7 @@ Token 过期时自动重新登录
 """
 import time
 from typing import Dict, Any, Optional
+from config import CONFIG_FILE
 from src.utils.logger import logger
 from src.core.client import BaseHTTPClient
 from src.utils.yaml_loader import load_yaml_dict
@@ -35,7 +36,7 @@ class GlobalLogin:
             Dict[str, Any]: 配置字典
         """
         if cls._config is None:
-            config = load_yaml_dict("config/config.yaml", default={})
+            config = load_yaml_dict(CONFIG_FILE, default={})
             cls._config = config.get('global_login', {})
         return cls._config
 

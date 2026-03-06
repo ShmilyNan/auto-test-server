@@ -9,22 +9,21 @@ import time
 from pathlib import Path
 from typing import Dict, Any, Optional
 from urllib.parse import unquote
+from config.paths import DOWNLOADS_DIR
 from src.utils.logger import logger
 
 
 class FileDownloader:
     """文件下载器"""
 
-    def __init__(self, download_dir: str = "docs/downloads"):
+    def __init__(self, download_dir: Path = DOWNLOADS_DIR):
         """
         初始化文件下载器
-
         Args:
             download_dir: 下载目录，默认为 docs/downloads
         """
-        self.download_dir = Path(download_dir)
-        self.download_dir.mkdir(parents=True, exist_ok=True)
-        logger.info(f"文件下载器初始化完成，下载目录: {self.download_dir.absolute()}")
+        self.download_dir = download_dir
+        logger.info(f"文件下载器初始化完成，下载目录: {self.download_dir}")
 
     def save_response_file(
         self,
@@ -229,13 +228,11 @@ class FileDownloader:
 _downloader = None
 
 
-def get_downloader(download_dir: str = "docs/downloads") -> FileDownloader:
+def get_downloader(download_dir: Path = DOWNLOADS_DIR) -> FileDownloader:
     """
     获取全局文件下载器实例
-
     Args:
         download_dir: 下载目录
-
     Returns:
         FileDownloader: 文件下载器实例
     """
@@ -251,17 +248,15 @@ def save_response_file(
     response: Dict[str, Any],
     filename: Optional[str] = None,
     sub_dir: Optional[str] = None,
-    download_dir: str = "docs/downloads"
+    download_dir: Path = DOWNLOADS_DIR
 ) -> str:
     """
     便捷函数：保存响应文件
-
     Args:
         response: HTTP 响应字典
         filename: 文件名（可选）
         sub_dir: 子目录（可选）
         download_dir: 下载目录
-
     Returns:
         str: 保存的文件路径
     """

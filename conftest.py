@@ -12,13 +12,10 @@ import subprocess
 import shutil
 from pathlib import Path
 from loguru import logger
+from config import ALLURE_RESULTS_DIR, ALLURE_REPORT_DIR, CONFIG_FILE, TEST_DATA_DIR, \
+    get_env_config_file
 from src.utils.yaml_loader import load_yaml_dict
 from src.utils.logger import init_logger, get_logger
-
-# 添加项目根目录到路径
-project_root = Path(__file__).parent
-sys.path.insert(0, str(project_root))
-
 from src.core.client import create_client
 from src.core.context import get_context
 from src.core.parser import CaseDataParser
@@ -30,15 +27,15 @@ from src.utils.global_login import get_global_login
 # ========================================
 # 全局Fixtures
 # ========================================
-
 @pytest.fixture(scope="session", autouse=True)
-def setup_session(http_client, env_config, default_headers):
+def setup_session(http_client, env_config, default_headers, config):
     """
     会话级fixture，在整个测试会话开始前执行一次
     """
     logger = get_logger()
     logger.info("=" * 60)
     logger.info("测试会话开始")
+    logger.info(f"当前环境：{config.get('default_env', 'N/A')}")
     logger.info(f"当前环境: {env_config.get('base_url', 'N/A')}")
     logger.info("=" * 60)
 
@@ -91,8 +88,7 @@ def config():
     """
     配置fixture
     """
-    config_file = Path("config/config.yaml")
-    return load_yaml_dict(config_file, default={})
+    return load_yaml_dict(CONFIG_FILE, default={})
 
 
 @pytest.fixture(scope="session")
@@ -101,7 +97,7 @@ def env_config(config):
     环境配置fixture
     """
     env = os.environ.get('TEST_ENV', config.get('default_env', 'test'))
-    env_file = Path(f"config/env/{env}.yaml")
+    env_file = get_env_config_file(env)
     return load_yaml_dict(env_file, default={})
 
 
@@ -293,6 +289,7 @@ def pytest_configure(config):
         config.addinivalue_line("markers", "smoke: 冒烟测试")
         config.addinivalue_line("markers", "regression: 回归测试")
         config.addinivalue_line("markers", "daily: 每日巡检")
+        config.addinivalue_line("markers", "single: 单例测试")
         config.addinivalue_line("markers", "p0: P0级用例")
         config.addinivalue_line("markers", "p1: P1级用例")
         config.addinivalue_line("markers", "p2: P2级用例")
@@ -313,43 +310,37 @@ def pytest_configure(config):
 def pytest_sessionfinish(session, exitstatus):
     """
     测试会话结束后自动生成 Allure 报告
-
     Args:
         session: pytest 会话对象
         exitstatus: 测试退出状态码
     """
     logger = get_logger()
 
-    # 配置路径
-    project_root = Path(__file__).parent
-    results_dir = project_root / "reports" / "allure"
-    report_dir = project_root / "reports" / "allure-report"
-
     # 检查 allure 结果目录是否存在
-    if not results_dir.exists():
-        logger.warning(f"Allure 结果目录不存在: {results_dir}")
+    if not ALLURE_RESULTS_DIR.exists():
+        logger.warning(f"Allure 结果目录不存在: {ALLURE_RESULTS_DIR}")
         return
 
     # 检查是否有测试结果
-    result_files = list(results_dir.glob("*.json"))
+    result_files = list(ALLURE_RESULTS_DIR.glob("*.json"))
     if not result_files:
         logger.warning("Allure 结果目录中没有测试结果文件")
         return
 
     logger.info("=" * 60)
     logger.info("开始生成 Allure 测试报告...")
-    logger.info(f"结果目录: {results_dir}")
-    logger.info(f"报告目录: {report_dir}")
+    logger.info(f"结果目录: {ALLURE_RESULTS_DIR}")
+    logger.info(f"报告目录: {ALLURE_REPORT_DIR}")
 
     # 检查 allure 命令是否可用
     allure_cmd = _find_allure_command()
 
     if allure_cmd:
         # 使用 allure generate 命令生成报告
-        _generate_allure_report_with_command(allure_cmd, results_dir, report_dir, logger)
+        _generate_allure_report_with_command(allure_cmd, ALLURE_RESULTS_DIR, ALLURE_REPORT_DIR, logger)
     else:
         # 使用 Python 方式生成报告
-        _generate_allure_report_with_python(results_dir, report_dir, logger)
+        _generate_allure_report_with_python(ALLURE_RESULTS_DIR, ALLURE_REPORT_DIR, logger)
 
     logger.info("=" * 60)
 
@@ -357,7 +348,6 @@ def pytest_sessionfinish(session, exitstatus):
 def _find_allure_command() -> str:
     """
     查找 allure 命令路径
-
     Returns:
         str: allure 命令路径，未找到返回空字符串
     """
@@ -376,14 +366,12 @@ def _find_allure_command() -> str:
     allure_cmd = shutil.which("allure")
     if allure_cmd:
         return allure_cmd
-
     return ""
 
 
 def _generate_allure_report_with_command(allure_cmd: str, results_dir: Path, report_dir: Path, logger):
     """
     使用 allure 命令行工具生成报告
-
     Args:
         allure_cmd: allure 命令路径
         results_dir: 结果目录
@@ -438,7 +426,6 @@ def _generate_allure_report_with_command(allure_cmd: str, results_dir: Path, rep
 def _generate_allure_report_with_python(results_dir: Path, report_dir: Path, logger):
     """
     使用 Python 方式生成报告（作为 allure 命令不可用时的备选方案）
-
     Args:
         results_dir: 结果目录
         report_dir: 报告目录
@@ -509,9 +496,8 @@ def generate_test_data_from_yaml():
     这是一个可选的动态测试生成器
     """
     parser = CaseDataParser()
-    test_data_dir = Path("test_data")
-    
-    if not test_data_dir.exists():
+
+    if not TEST_DATA_DIR.exists():
         return
     
     all_cases = parser.parse_dir()
@@ -525,7 +511,6 @@ def generate_test_data_from_yaml():
 # ========================================
 # 示例测试用例
 # ========================================
-
 class TestExample:
     """示例测试类"""
     

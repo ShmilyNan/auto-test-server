@@ -2,7 +2,7 @@
 上下文管理器
 管理全局变量、局部变量、缓存变量、关联变量
 """
-
+import string
 import time
 import random
 import uuid
@@ -69,7 +69,6 @@ class TestContext:
     def set_cache(self, key: str, value: Any, ttl: int = 3600):
         """
         设置缓存变量
-        
         Args:
             key: 键
             value: 值
@@ -82,11 +81,9 @@ class TestContext:
     def get_cache(self, key: str, default: Any = None) -> Any:
         """
         获取缓存变量
-        
         Args:
             key: 键
             default: 默认值
-            
         Returns:
             Any: 缓存值，如果过期则返回默认值
         """
@@ -201,7 +198,6 @@ class TestContext:
     def replace_vars(self, text: str) -> str:
         """
         替换字符串中的变量占位符
-        
         支持的变量格式:
         - ${global_var} - 全局变量
         - ${local_var} - 局部变量
@@ -211,6 +207,12 @@ class TestContext:
         - ${random()} - 生成 0 到 1 之间的随机小数
         - ${random(min, max)} - 生成 min 到 max 之间的随机整数
         - ${random_int(min, max)} - 同 random
+        - ${random_mixed()
+        - ${random_mixed(digital: bool = True,
+                         upper: bool = True,
+                         lower: bool = True,
+                         special: bool = False,
+                         length: int = 10)} - 按条件生成指定长度的随机字符串，不传参则使用默认值
         - ${uuid()} - 生成 UUID
         - ${timestamp()} - 生成当前时间戳（秒）
         - ${timestamp_ms()} - 生成当前时间戳（毫秒）
@@ -292,6 +294,58 @@ class TestContext:
                         logger.warning(f"随机数生成失败: {var_expr}, 错误: {e}")
                         text = text.replace(full_match, full_match, 1)
 
+                # ${random_mixed()}
+                # 在变量替换循环中，处理 ${site_id_generate(...)} 表达式
+                elif var_expr.startswith('random_mixed('):
+                    try:
+                        inner = var_expr[var_expr.index('(') + 1:var_expr.rindex(')')]
+                        # 默认参数值
+                        params = {
+                            'digital': True,
+                            'upper': True,
+                            'lower': True,
+                            'special': False,
+                            'length': 10
+                        }
+                        if inner.strip() == '':
+                            # 无参数：全部使用默认值
+                            result = self._random_string_generator(**params)
+                            text = text.replace(full_match, result, 1)
+                        else:
+                            need_continue = False
+                            # 分割多个参数项（key=value）
+                            items = [item.strip() for item in inner.split(',') if item.strip()]
+                            for item in items:
+                                if '=' not in item:
+                                    raise ValueError(f"参数格式错误，缺少等号: {item}")
+                                key, val = [x.strip() for x in item.split('=', 1)]
+                                if key not in params:
+                                    raise ValueError(f"未知参数: {key}")
+                                # 如果值是未解析的变量（如 ${var}），则跳过本次替换，等待下次迭代
+                                if val.startswith('${') and val.endswith('}'):
+                                    need_continue = True
+                                    break
+                                # 解析具体值
+                                if key == 'length':
+                                    params[key] = int(val)  # length 为整数
+                                else:
+                                    # digital/upper/lower/special 为布尔值
+                                    val_low = val.lower()
+                                    if val_low == 'true':
+                                        params[key] = True
+                                    elif val_low == 'false':
+                                        params[key] = False
+                                    else:
+                                        raise ValueError(f"布尔参数值必须为 true/false: {val}")
+                            if need_continue:
+                                continue  # 等待变量解析后下次再处理
+                            # 所有参数解析成功，生成结果并替换
+                            result = self._random_string_generator(**params)
+                            text = text.replace(full_match, result, 1)
+                    except (ValueError, IndexError) as e:
+                        logger.warning(f"随机字符串生成失败: {var_expr}, 错误: {e}")
+                        text = text.replace(full_match, full_match, 1)
+
                 # ${uuid()}
                 elif var_expr == 'uuid()' or var_expr == 'uuid':
                     text = text.replace(full_match, str(uuid.uuid4()), 1)
@@ -345,7 +399,6 @@ class TestContext:
                     # 都找不到，记录警告但保留原值
                     logger.warning(f"变量未找到: {var_expr}")
                     text = text.replace(full_match, full_match, 1)
-
         return text
 
     def _find_variables(self, text: str) -> list:
@@ -374,7 +427,43 @@ class TestContext:
         result = [var[2] for var in variables]
         logger.debug(f"找到变量（最内层优先）: {result}")
         return result
-    
+
+    def _random_string_generator(self,
+                         digital: bool = True,
+                         upper: bool = True,
+                         lower: bool = True,
+                         special: bool = False,
+                         length: int = 10) -> str:
+        """
+        生成包含指定类型字符的随机字符串。
+        参数:
+            digital (bool): 是否包含数字 0-9，默认 True
+            upper (bool): 是否包含大写字母 A-Z，默认 True
+            lower (bool): 是否包含小写字母 a-z，默认 True
+            special (bool): 是否包含特殊字符，默认 False
+            length (int): 生成的字符串长度，默认 10
+        返回:
+            str: 随机生成的字符串
+        异常:
+            ValueError: 当所有字符类型都被禁用时抛出
+        """
+        # 构建字符集
+        chars = ""
+        if digital:
+            chars += string.digits  # '0123456789'
+        if upper:
+            chars += string.ascii_uppercase  # 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        if lower:
+            chars += string.ascii_lowercase  # 'abcdefghijklmnopqrstuvwxyz'
+        if special:
+            chars += string.punctuation  # '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
+
+        if not chars:
+            raise ValueError("至少需要选择一种字符类型（digital/upper/lower/special）")
+
+        # 从字符集中随机选取 length 个字符（可重复）
+        return ''.join(random.choices(chars, k=length))
+
     def replace_vars_dict(self, data: Any) -> Any:
         """
         递归替换字典/列表中的变量
@@ -415,7 +504,6 @@ _context_lock = Lock()
 def get_context() -> TestContext:
     """
     获取全局上下文实例
-    
     Returns:
         TestContext: 上下文实例
     """

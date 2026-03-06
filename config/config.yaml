@@ -7,7 +7,8 @@ default_env: test
 # 全局登录配置
 global_login:
   # 是否启用全局登录
-  enable: true
+#  enable: true
+  enable: false
   # 登录接口路径（相对于 base_url，或绝对URL）
   # 如果是相对路径，会自动拼接 env 配置中的 base_url
   login_url: "/prod-api/login"
@@ -51,7 +52,7 @@ http_client:
   # 可选: requests 或 httpx
   type: httpx
   # 默认超时时间（秒）
-  timeout: 30
+  timeout: 60
   # 连接池大小
   max_connections: 100
   # 最大保持连接数
@@ -62,6 +63,8 @@ http_client:
   max_retries: 3
   # 重试间隔（秒）
   retry_interval: 1
+  # 忽略ssl验证
+  verify_ssl: false
 
 # 日志配置
 logging:
@@ -165,7 +168,10 @@ test_data:
   # 是否自动发现测试文件
   auto_discovery: true
   # 支持的文件后缀
-  extensions: [".yaml", ".yml", ".json"]
+  extensions: 
+    - .yaml
+    - .yml
+    - .json
   # 是否进行数据校验
   validate: true
 

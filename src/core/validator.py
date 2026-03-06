@@ -64,7 +64,6 @@ class Validator:
             response: HTTP响应数据
             assertions: 断言规则列表
             context: 上下文变量（用于SQL断言等）
-            
         Returns:
             List[AssertionResult]: 断言结果列表
         """
@@ -489,7 +488,6 @@ class Validator:
     def _assert_sql(self, assertion: Dict, context: Optional[Dict]) -> AssertionResult:
         """
         SQL断言
-        
         Args:
             assertion: 断言配置 {sql: "SELECT COUNT(*) FROM users", expected: 10}
             context: 上下文（包含数据库连接）
@@ -650,7 +648,6 @@ class Validator:
     def get_summary(self) -> Dict[str, Any]:
         """
         获取断言汇总信息
-        
         Returns:
             Dict: 汇总信息
         """

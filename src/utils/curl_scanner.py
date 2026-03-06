@@ -5,6 +5,7 @@ cURL 文件扫描器
 from ruamel.yaml import YAML
 from pathlib import Path
 from typing import Dict, List, Tuple
+from config.paths import get_test_data_file
 from src.utils.logger import logger
 from dataclasses import dataclass
 
@@ -95,16 +96,15 @@ class CurlScanner:
 
         return result
 
-    def get_yaml_file_path(self, module_name: str, yaml_dir: str = "test_data") -> Path:
+    def get_yaml_file_path(self, module_name: str) -> Path:
         """
         获取对应的 YAML 文件路径
         Args:
             module_name: 模块名称
-            yaml_dir: YAML 文件目录，默认为 test_data
         Returns:
             Path: YAML 文件路径
         """
-        yaml_file = Path(yaml_dir) / f"{module_name}.yaml"
+        yaml_file = get_test_data_file(module_name)
         return yaml_file
 
     def should_convert(
@@ -125,7 +125,8 @@ class CurlScanner:
         if scenarios is None:
             scenarios = ["正常流程"]
 
-        yaml_file = self.get_yaml_file_path(curl_info.module_name, yaml_dir)
+        # yaml_file = self.get_yaml_file_path(curl_info.module_name, yaml_dir)
+        yaml_file = get_test_data_file(curl_info.module_name)
 
         if not yaml_file.exists():
             # YAML 文件不存在，需要转换

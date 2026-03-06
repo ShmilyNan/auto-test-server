@@ -5,7 +5,6 @@ YAML 生成器
 1. 普通查询接口：GET 请求，必传 pageNum/pageSize，其他参数选填
 2. 报表类查询接口：POST 请求，包含 options.basicFields/statisticsFields 等特殊字段
 """
-import re
 import random
 from ruamel.yaml import YAML
 from ruamel.yaml.comments import CommentedMap
