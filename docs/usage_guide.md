@@ -18,7 +18,7 @@
 
 ```bash
 # 克隆或下载项目
-cd auto-test-platform
+cd auto-test-server
 
 # 创建虚拟环境
 python -m venv venv
@@ -517,7 +517,7 @@ def pytest_collection_modifyitems(config, items):
 **解决**：
 ```bash
 # 确保在项目根目录
-cd /path/to/auto-test-platform
+cd /path/to/auto-test-server
 
 # 确保虚拟环境激活
 source venv/bin/activate  # Windows: venv\Scripts\activate

@@ -2,7 +2,6 @@
 多元化断言验证器
 支持JSON断言、SQL断言、JSON-Schema断言、正则断言、Python assert断言
 """
-
 import re
 from typing import Dict, Any, List, Optional, Union
 from dataclasses import dataclass

@@ -416,7 +416,7 @@ test_cases:
 ### 1. 运行 cleanup 测试
 
 ```bash
-cd auto-test-platform
+cd auto-test-server
 python -m pytest src/api/test_dynamic.py -k "cleanup" -v
 ```
 

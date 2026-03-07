@@ -210,7 +210,7 @@ def clear_local_all(self):
 ### 1. 运行验证脚本
 
 ```bash
-cd auto-test-platform
+cd auto-test-server
 python test_continuous_extract.py
 ```
 
@@ -250,7 +250,7 @@ python test_continuous_extract.py
 ### 2. 运行单元测试
 
 ```bash
-cd auto-test-platform
+cd auto-test-server
 python -m pytest tests/test_extract_data_flow.py -v
 ```
 
@@ -263,7 +263,7 @@ python -m pytest tests/test_extract_data_flow.py -v
 ### 3. 运行 Extract 模块测试
 
 ```bash
-cd auto-test-platform
+cd auto-test-server
 python -m pytest src/api/test_dynamic.py -k "extract" -v
 ```
 

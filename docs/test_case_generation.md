@@ -41,7 +41,7 @@
 ### 运行所有测试
 
 ```bash
-cd auto-test-platform
+cd auto-test-server
 python -m pytest src/api/test_dynamic.py
 ```
 

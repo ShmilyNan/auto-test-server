@@ -124,7 +124,7 @@ test_cases:
 ### 1. 运行验证脚本
 
 ```bash
-cd auto-test-platform
+cd auto-test-server
 python test_default_headers.py
 ```
 
@@ -142,7 +142,7 @@ python test_default_headers.py
 ### 2. 运行单元测试
 
 ```bash
-cd auto-test-platform
+cd auto-test-server
 python -m pytest tests/test_default_headers.py -v
 ```
 

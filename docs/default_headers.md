@@ -203,7 +203,7 @@ for module_name, cases in cases_dict.items():
 ### 方法2：运行测试脚本
 
 ```bash
-cd auto-test-platform
+cd auto-test-server
 python test_default_headers.py
 ```
 

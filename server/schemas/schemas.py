@@ -5,7 +5,7 @@ Pydantic模型 - 用于API数据验证和序列化
 
 from datetime import datetime
 from typing import List, Optional, Dict, Any
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
 # ==================== 基础模型 ====================
@@ -225,7 +225,8 @@ class TestCaseBase(BaseModel):
     priority: Optional[int] = Field(default=3, ge=1, le=5, description="优先级")
     description: Optional[str] = Field(None, description="用例描述")
 
-    @validator('method')
+    @field_validator('method')
+    @classmethod
     def validate_method(cls, v):
         allowed = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS']
         if v.upper() not in allowed:

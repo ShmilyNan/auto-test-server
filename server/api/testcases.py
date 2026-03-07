@@ -2,7 +2,6 @@
 """
 测试用例管理API路由
 """
-
 import json
 from ruamel.yaml import YAML, YAMLError
 from typing import Optional
@@ -437,25 +436,31 @@ async def import_from_curl(
     """
     从CURL命令导入测试用例
     需要权限：testcase:import
+    注意：由于CURL命令可能包含特殊字符，建议使用POST body方式传递：
+    {
+        "project_id": 1,
+        "curl_command": "curl -X GET 'https://example.com/api'",
+        "name": "测试用例名称"
+    }
     """
     # 检查项目权限
     check_project_access(project_id, current_user, db)
 
     try:
         # 解析CURL命令
-        from src.utils.curl_parser import parse_curl
+        from src.utils.curl_parser import parse_curl_command
 
-        parsed = parse_curl(curl_command)
+        parsed = parse_curl_command(curl_command)
 
         # 创建测试用例
         test_case = TestCase(
-            name=name or f"CURL导入_{parsed.get('url', '')[:50]}",
+            name=name or f"CURL导入_{parsed.url[:50]}",
             project_id=project_id,
             creator_id=current_user.id,
-            method=parsed.get('method', 'GET'),
-            url=parsed.get('url', ''),
-            headers=json.dumps(parsed.get('headers')),
-            body=json.dumps(parsed.get('data')),
+            method=parsed.method,
+            url=parsed.url,
+            headers=json.dumps(parsed.headers),
+            body=json.dumps(parsed.data),
             timeout=30,
             source='curl'
         )

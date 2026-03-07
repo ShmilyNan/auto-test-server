@@ -291,7 +291,6 @@ for test_data in _test_data_list:
             # 检查是否跳过
             if tc.skip:
                 pytest.skip(tc.skip_reason or "测试用例被标记为跳过")
-                return
 
             # 设置用例开始时间
             start_time = time.time()

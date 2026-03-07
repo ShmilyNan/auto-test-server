@@ -21,7 +21,7 @@
 ### 1. 安装依赖
 
 ```bash
-cd auto-test-platform
+cd auto-test-server
 pip install -r requirements.txt
 ```
 
