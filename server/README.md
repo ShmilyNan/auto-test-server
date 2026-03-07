@@ -32,15 +32,15 @@ pip install -r requirements.txt
 python server/start_server.py
 
 # 方式2：使用uvicorn
-uvicorn server.main:app --host 0.0.0.0 --port 5000 --reload
+uvicorn server.main:app --host 0.0.0.0 --port 8899 --reload
 ```
 
 ### 3. 访问API文档
 
 服务启动后，访问以下地址查看API文档：
 
-- **Swagger UI**: http://localhost:5000/docs
-- **ReDoc**: http://localhost:5000/redoc
+- **Swagger UI**: http://localhost:8899/docs
+- **ReDoc**: http://localhost:8899/redoc
 
 ### 4. 默认账号
 
@@ -109,7 +109,7 @@ ACCESS_TOKEN_EXPIRE_HOURS = 24
 ### 1. 登录获取Token
 
 ```bash
-curl -X POST "http://localhost:5000/api/auth/login" \
+curl -X POST "http://localhost:8899/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 ```
@@ -117,7 +117,7 @@ curl -X POST "http://localhost:5000/api/auth/login" \
 ### 2. 创建项目
 
 ```bash
-curl -X POST "http://localhost:5000/api/projects" \
+curl -X POST "http://localhost:8899/api/projects" \
   -H "Authorization: Bearer <your_token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -131,7 +131,7 @@ curl -X POST "http://localhost:5000/api/projects" \
 ### 3. 创建测试用例
 
 ```bash
-curl -X POST "http://localhost:5000/api/testcases" \
+curl -X POST "http://localhost:8899/api/testcases" \
   -H "Authorization: Bearer <your_token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -148,7 +148,7 @@ curl -X POST "http://localhost:5000/api/testcases" \
 ### 4. 从CURL导入
 
 ```bash
-curl -X POST "http://localhost:5000/api/testcases/import/curl?project_id=1&curl_command=curl%20-X%20GET%20https://api.example.com/test" \
+curl -X POST "http://localhost:8899/api/testcases/import/curl?project_id=1&curl_command=curl%20-X%20GET%20https://api.example.com/test" \
   -H "Authorization: Bearer <your_token>"
 ```
 
@@ -220,7 +220,7 @@ alembic upgrade head
 
 ### 1. 端口被占用
 
-如果5000端口被占用，可以修改启动命令：
+如果8899端口被占用，可以修改启动命令：
 
 ```bash
 uvicorn server.main:app --host 0.0.0.0 --port 8000

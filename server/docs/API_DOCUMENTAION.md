@@ -21,7 +21,7 @@
 ### 1. 安装依赖
 
 ```bash
-cd auto-test-server
+cd auto-test-platform
 pip install -r requirements.txt
 ```
 
@@ -32,15 +32,15 @@ pip install -r requirements.txt
 python server/start_server.py
 
 # 方式2：使用uvicorn
-uvicorn server.main:app --host 0.0.0.0 --port 5000 --reload
+uvicorn server.main:app --host 0.0.0.0 --port 8899 --reload
 ```
 
 ### 3. 访问API文档
 
 服务启动后，可以访问以下地址查看API文档：
 
-- **Swagger UI**: http://localhost:5000/docs
-- **ReDoc**: http://localhost:5000/redoc
+- **Swagger UI**: http://localhost:8899/docs
+- **ReDoc**: http://localhost:8899/redoc
 
 ### 4. 默认账号
 
@@ -553,7 +553,7 @@ Authorization: Bearer <token>
 
 通过登录接口获取：
 ```bash
-curl -X POST "http://localhost:5000/api/auth/login" \
+curl -X POST "http://localhost:8899/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 ```
@@ -562,7 +562,7 @@ curl -X POST "http://localhost:5000/api/auth/login" \
 
 在请求头中添加Token：
 ```bash
-curl -X GET "http://localhost:5000/api/users" \
+curl -X GET "http://localhost:8899/api/users" \
   -H "Authorization: Bearer your_token_here"
 ```
 
@@ -591,6 +591,6 @@ DATABASE_URL=mysql+pymysql://user:password@localhost/dbname
 ## 📞 技术支持
 
 如有问题，请查看：
-- API文档: http://localhost:5000/docs
+- API文档: http://localhost:8899/docs
 - 项目日志: logs/app_*.log
 - 错误日志: logs/error_*.log

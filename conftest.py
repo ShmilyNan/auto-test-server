@@ -518,7 +518,7 @@ class TestExample:
     @pytest.mark.p0
     def test_example_smoke(self, http_client, env_config):
         """冒烟测试示例"""
-        base_url = env_config.get('base_url', 'http://localhost:5000')
+        base_url = env_config.get('base_url', 'http://localhost:8899')
         
         response = http_client.request(
             method='GET',
@@ -532,7 +532,7 @@ class TestExample:
     @pytest.mark.p1
     def test_example_with_assertions(self, http_client, validator, env_config):
         """使用断言验证器的测试"""
-        base_url = env_config.get('base_url', 'http://localhost:5000')
+        base_url = env_config.get('base_url', 'http://localhost:8899')
         
         response = http_client.request(
             method='GET',

@@ -2,6 +2,7 @@
 """
 认证模块 - JWT Token生成和验证
 """
+import os
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from jose import JWTError, jwt
@@ -9,14 +10,15 @@ from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-
 from server.models.database import get_db
 from server.models.models import User
 
 # 配置
-SECRET_KEY = "your-secret-key-here-change-in-production"  # 生产环境需要修改
+# SECRET_KEY = "your-secret-key-here-change-in-production"  # 生产环境需要修改
+SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-here-change-in-production")   # 生产环境需要修改
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_HOURS = 24
+# ACCESS_TOKEN_EXPIRE_HOURS = 24
+ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS", 24))
 
 # 密码加密 - 使用Argon2 更安全且无长度限制
 pwd_context = CryptContext(

@@ -5,9 +5,9 @@ FastAPI主应用
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from server.models.database import init_db
-from server.models.init_db import init_database
+from sqlalchemy import text
 from server.api import auth, users, roles, projects, testcases
+from server.models.database import engine
 
 
 @asynccontextmanager
@@ -15,42 +15,40 @@ async def lifespan(app: FastAPI):
     """应用生命周期管理"""
     # 启动时执行
     print("\n" + "=" * 60)
-    print("🚀 启动测试平台API服务...")
+    print("🚀 启动自动化测试平台...")
     print("=" * 60)
 
-    # 初始化数据库
-    print("\n📦 初始化数据库...")
-    init_db()
+    # 测试数据库连接
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        print("✅ 数据库连接成功")
+    except Exception as e:
+        print(f"❌ 数据库连接失败: {e}")
+        raise
 
-    # 初始化默认数据
-    print("\n🔧 初始化默认数据...")
-    init_database()
-
-    print("\n" + "=" * 60)
-    print("✅ API服务启动成功")
-    print("=" * 60)
     print("\n📚 API文档地址:")
-    print("   - Swagger UI: http://localhost:5000/docs")
-    print("   - ReDoc: http://localhost:5000/redoc")
+    print("   - Swagger UI: http://localhost:8899/docs")
+    print("   - ReDoc: http://localhost:8899/redoc")
     print("=" * 60 + "\n")
 
     yield
 
     # 关闭时执行
-    print("\n👋 关闭API服务...")
+    print("\n👋 关闭服务...")
 
 
 # 创建FastAPI应用
 app = FastAPI(
     title="接口自动化测试平台API",
-    description="提供测试用例管理、项目管理、用户权限管理等功能的RESTful API",
+    description="测试用例管理、项目管理、用户权限管理",
     version="1.0.0",
     lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc"
 )
 
-# 配置CORS（允许前端跨域访问）
+# 配置CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # 生产环境应该限制具体域名
@@ -92,7 +90,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=5000,
+        port=8899,
         reload=True,
         log_level="info"
     )
