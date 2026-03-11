@@ -32,7 +32,10 @@ router = APIRouter(prefix="/api", tags=["角色权限管理"])
 def list_roles(
         page: int = Query(default=1, ge=1, description="页码"),
         page_size: int = Query(default=20, ge=1, le=100, description="每页大小"),
+        role_id: Optional[int] = Query(None, description="角色ID"),
         name: Optional[str] = Query(None, description="角色名称（模糊搜索）"),
+        code: Optional[str] = Query(None, description="角色代码"),
+        description: Optional[str] = Query(None, description="角色描述（模糊搜索）"),
         is_active: Optional[bool] = Query(None, description="是否激活"),
         current_user: User = Depends(require_permission("role:list")),
         db: Session = Depends(get_db)
@@ -44,8 +47,14 @@ def list_roles(
     query = db.query(Role)
 
     # 过滤条件
+    if role_id:
+        query = query.filter(Role.id == role_id)
     if name:
         query = query.filter(Role.name.like(f"%{name}%"))
+    if code:
+        query = query.filter(Role.code.like(f"%{code}%"))
+    if description:
+        query = query.filter(Role.description.like(f"%{description}%"))
     if is_active is not None:
         query = query.filter(Role.is_active == is_active)
 
@@ -66,13 +75,21 @@ def list_roles(
 
 @router.get("/roles/all", response_model=List[RoleListResponse], summary="获取所有角色（不分页）")
 def list_all_roles(
+        name: Optional[str] = Query(None, description="角色名称（模糊搜索）"),
+        code: Optional[str] = Query(None, description="角色代码"),
         current_user: User = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
     """
     获取所有角色（用于下拉选择等场景）
     """
-    roles = db.query(Role).filter(Role.is_active == True).all()
+    # roles = db.query(Role).filter(Role.is_active == True).all()
+    query = db.query(Role).filter(Role.is_active == True)
+    if name:
+        query = query.filter(Role.name.like(f"%{name}%"))
+    if code:
+        query = query.filter(Role.code == code)
+    roles = query.order_by(Role.created_at.desc()).all()
     return [RoleListResponse.model_validate(r) for r in roles]
 
 
@@ -251,7 +268,11 @@ def delete_role(
 
 @router.get("/permissions", response_model=List[PermissionResponse], summary="获取权限列表")
 def list_permissions(
+        permission_id: Optional[int] = Query(None, description="权限ID"),
         resource: Optional[str] = Query(None, description="资源类型"),
+        action: Optional[str] = Query(None, description="操作类型"),
+        code: Optional[str] = Query(None, description="权限代码"),
+        name: Optional[str] = Query(None, description="权限名称（模糊搜索）"),
         current_user: User = Depends(require_permission("permission:list")),
         db: Session = Depends(get_db)
 ):
@@ -261,9 +282,16 @@ def list_permissions(
     """
     query = db.query(Permission)
 
+    if permission_id is not None:
+        query = query.filter(Permission.id == permission_id)
     if resource:
         query = query.filter(Permission.resource == resource)
-
+    if action:
+        query = query.filter(Permission.action == action)
+    if code:
+        query = query.filter(Permission.code == code)
+    if name:
+        query = query.filter(Permission.name.like(f"%{name}%"))
     permissions = query.order_by(Permission.resource, Permission.action).all()
 
     return [PermissionResponse.model_validate(p) for p in permissions]

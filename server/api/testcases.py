@@ -86,11 +86,17 @@ def check_project_access(project_id: int, current_user: User, db: Session) -> Pr
 def list_testcases(
         page: int = Query(default=1, ge=1, description="页码"),
         page_size: int = Query(default=20, ge=1, le=100, description="每页大小"),
+        testcase_id: Optional[int] = Query(None, description="测试用例ID"),
         project_id: Optional[int] = Query(None, description="项目ID"),
+        creator_id: Optional[int] = Query(None, description="创建者ID"),
         name: Optional[str] = Query(None, description="用例名称（模糊搜索）"),
         method: Optional[str] = Query(None, description="请求方法"),
+        url: Optional[str] = Query(None, description="请求URL（模糊搜索）"),
+        tags: Optional[str] = Query(None, description="标签（模糊搜索）"),
+        source: Optional[str] = Query(None, description="来源"),
         category: Optional[str] = Query(None, description="分类"),
         priority: Optional[int] = Query(None, ge=1, le=5, description="优先级"),
+        last_run_status: Optional[str] = Query(None, description="最近一次运行状态"),
         is_active: Optional[bool] = Query(None, description="是否激活"),
         current_user: User = Depends(require_permission("testcase:list")),
         db: Session = Depends(get_db)
@@ -111,16 +117,28 @@ def list_testcases(
         query = query.filter(TestCase.project_id.in_(user_project_ids))
 
     # 过滤条件
-    if project_id:
+    if testcase_id is not None:
+        query = query.filter(TestCase.id == testcase_id)
+    if project_id is not None:
         query = query.filter(TestCase.project_id == project_id)
+    if creator_id is not None:
+        query = query.filter(TestCase.creator_id == creator_id)
     if name:
         query = query.filter(TestCase.name.like(f"%{name}%"))
     if method:
         query = query.filter(TestCase.method == method.upper())
+    if url:
+        query = query.filter(TestCase.url.like(f"%{url}%"))
+    if tags:
+        query = query.filter(TestCase.tags.like(f"%{tags}%"))
+    if source:
+        query = query.filter(TestCase.source == source)
     if category:
         query = query.filter(TestCase.category == category)
-    if priority:
+    if priority is not None:
         query = query.filter(TestCase.priority == priority)
+    if last_run_status:
+        query = query.filter(TestCase.last_run_status == last_run_status)
     if is_active is not None:
         query = query.filter(TestCase.is_active == is_active)
 

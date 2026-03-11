@@ -27,9 +27,13 @@ router = APIRouter(prefix="/api/users", tags=["用户管理"])
 def list_users(
         page: int = Query(default=1, ge=1, description="页码"),
         page_size: int = Query(default=20, ge=1, le=100, description="每页大小"),
+        user_id: Optional[int] = Query(None, description="用户ID"),
         username: Optional[str] = Query(None, description="用户名（模糊搜索）"),
         email: Optional[str] = Query(None, description="邮箱（模糊搜索）"),
+        full_name: Optional[str] = Query(None, description="全名（模糊搜索）"),
         is_active: Optional[bool] = Query(None, description="是否激活"),
+        is_superuser: Optional[bool] = Query(None, description="是否超管"),
+        role_id: Optional[int] = Query(None, description="角色ID"),
         current_user: User = Depends(require_permission("user:list")),
         db: Session = Depends(get_db)
 ):
@@ -40,12 +44,20 @@ def list_users(
     query = db.query(User)
 
     # 过滤条件
+    if user_id is not None:
+        query = query.filter(User.id == user_id)
     if username:
         query = query.filter(User.username.like(f"%{username}%"))
     if email:
         query = query.filter(User.email.like(f"%{email}%"))
+    if full_name:
+        query = query.filter(User.full_name.like(f"%{full_name}%"))
     if is_active is not None:
         query = query.filter(User.is_active == is_active)
+    if is_superuser is not None:
+        query = query.filter(User.is_superuser == is_superuser)
+    if role_id is not None:
+        query = query.join(User.roles).filter(Role.id == role_id)
 
     # 统计总数
     total = query.count()

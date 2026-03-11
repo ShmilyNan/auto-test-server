@@ -3,6 +3,8 @@
 项目管理API路由
 """
 from typing import List, Optional
+
+from dns.e164 import query
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 
@@ -29,8 +31,12 @@ router = APIRouter(prefix="/api/projects", tags=["项目管理"])
 def list_projects(
         page: int = Query(default=1, ge=1, description="页码"),
         page_size: int = Query(default=20, ge=1, le=100, description="每页大小"),
+        project_id: Optional[int] = Query(None, description="项目ID"),
         name: Optional[str] = Query(None, description="项目名称（模糊搜索）"),
         code: Optional[str] = Query(None, description="项目代码"),
+        description: Optional[str] = Query(None, description="项目描述（模糊搜索）"),
+        base_url: Optional[str] = Query(None, description="项目基础URL（模糊搜索）"),
+        owner_id: Optional[int] = Query(None, description="项目拥有者ID"),
         is_active: Optional[bool] = Query(None, description="是否激活"),
         current_user: User = Depends(require_permission("project:list")),
         db: Session = Depends(get_db)
@@ -46,10 +52,18 @@ def list_projects(
         query = query.filter(Project.owner_id == current_user.id)
 
     # 过滤条件
+    if project_id:
+        query = query.filter(Project.id == project_id)
     if name:
         query = query.filter(Project.name.like(f"%{name}%"))
     if code:
         query = query.filter(Project.code == code)
+    if description:
+        query = query.filter(Project.description.like(f"%{description}%"))
+    if base_url:
+        query = query.filter(Project.base_url.like(f"%{base_url}%"))
+    if owner_id:
+        query = query.filter(Project.owner_id == owner_id)
     if is_active is not None:
         query = query.filter(Project.is_active == is_active)
 
@@ -70,6 +84,8 @@ def list_projects(
 
 @router.get("/all", response_model=List[ProjectResponse], summary="获取所有项目（不分页）")
 def list_all_projects(
+        name: Optional[str] = Query(None, description="项目名称（模糊搜索）"),
+        code: Optional[str] = Query(None, description="项目代码"),
         current_user: User = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
@@ -82,7 +98,12 @@ def list_all_projects(
     if not current_user.is_superuser:
         query = query.filter(Project.owner_id == current_user.id)
 
-    projects = query.all()
+    # projects = query.all()
+    if name:
+        query = query.filter(Project.name.like(f"%{name}%"))
+    if code:
+        query = query.filter(Project.code == code)
+    projects = query.order_by(Project.created_at.desc()).all()
     return [ProjectResponse.model_validate(p) for p in projects]
 
 
@@ -222,6 +243,9 @@ def delete_project(
 @router.get("/{project_id}/environments", response_model=List[EnvironmentResponse], summary="获取项目环境列表")
 def list_environments(
         project_id: int,
+        name: Optional[str] = Query(None, description="环境名称（模糊搜索）"),
+        code: Optional[str] = Query(None, description="环境代码"),
+        is_active: Optional[bool] = Query(None, description="是否启用"),
         current_user: User = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
@@ -242,9 +266,20 @@ def list_environments(
             detail="无权访问该项目"
         )
 
-    environments = db.query(Environment).filter(
+    # environments = db.query(Environment).filter(
+    #     Environment.project_id == project_id
+    # ).all()
+    query = db.query(Environment).filter(
         Environment.project_id == project_id
-    ).all()
+    )
+    if name:
+        query = query.filter(Environment.name.like(f"%{name}%"))
+    if code:
+        query = query.filter(Environment.code == code)
+    if is_active is not None:
+        query = query.filter(Environment.is_active == is_active)
+
+    environments = query.order_by(Environment.id.desc()).all()
 
     return [EnvironmentResponse.model_validate(e) for e in environments]
 
