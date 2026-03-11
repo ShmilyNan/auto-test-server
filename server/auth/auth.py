@@ -15,7 +15,8 @@ from server.models.models import User
 
 # 配置
 # SECRET_KEY = "your-secret-key-here-change-in-production"  # 生产环境需要修改
-SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-here-change-in-production")   # 生产环境需要修改
+SECRET_KEY = os.getenv("SECRET_KEY", "$argon2id$v=19$m=65536,t=3,p=4$+J8zxrj3XgtBKIWwdq51Tg$YYRakdBUHQqPMOvV5P6C2gQ6nniYkMO1KZbT3/5YiRs").strip()
+DEFAULT_SECRET_KEY = "your-secret-key-here-change-in-production"
 ALGORITHM = "HS256"
 # ACCESS_TOKEN_EXPIRE_HOURS = 24
 ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS", 24))
@@ -32,6 +33,12 @@ pwd_context = CryptContext(
 # OAuth2
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
+def validate_secret_key() -> None:
+    """校验JWT密钥配置，避免使用不安全默认值"""
+    if not SECRET_KEY or SECRET_KEY == DEFAULT_SECRET_KEY:
+        raise RuntimeError(
+            "SECRET_KEY 未正确配置，请通过环境变量设置高强度密钥"
+        )
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """验证密码"""
@@ -113,6 +120,47 @@ def get_current_user(
         )
     return user
 
+
+def get_current_user_from_token(token: str) -> User:
+    """
+    从 Token 字符串获取用户（用于 WebSocket 等非 Depends 场景）
+    Args:
+        token: JWT token 字符串
+    Returns:
+        User: 用户对象
+    Raises:
+        HTTPException: Token 无效或用户不存在
+    """
+    from server.models.database import SessionLocal
+
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="无法验证凭据"
+    )
+
+    payload = decode_access_token(token)
+    if payload is None:
+        raise credentials_exception
+
+    username: str = payload.get("sub")
+    if username is None:
+        raise credentials_exception
+
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.username == username).first()
+        if user is None:
+            raise credentials_exception
+
+        if not user.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="用户已被禁用"
+            )
+
+        return user
+    finally:
+        db.close()
 
 def get_current_active_user(
         current_user: User = Depends(get_current_user)

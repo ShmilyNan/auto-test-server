@@ -2,7 +2,6 @@
 数据提取器
 从响应中提取数据，支持多种提取方式
 """
-
 import re
 from typing import Dict, Any, Optional
 from jsonpath_ng.ext import parse as jsonpath_parse
