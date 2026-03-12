@@ -2,7 +2,7 @@
 """
 认证模块 - JWT Token生成和验证
 """
-import os
+# import os
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from jose import JWTError, jwt
@@ -10,16 +10,20 @@ from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from server.models.database import get_db
-from server.models.models import User
+# from server.models.database import get_db
+# from server.models.models import User
+from server.infrastructure.persistence.database import get_db, SessionLocal
+from server.infrastructure.persistence.models import User
+from common.config import get_env_int, get_env_str
+
 
 # 配置
 # SECRET_KEY = "your-secret-key-here-change-in-production"  # 生产环境需要修改
-SECRET_KEY = os.getenv("SECRET_KEY", "$argon2id$v=19$m=65536,t=3,p=4$+J8zxrj3XgtBKIWwdq51Tg$YYRakdBUHQqPMOvV5P6C2gQ6nniYkMO1KZbT3/5YiRs").strip()
+SECRET_KEY = get_env_str("SECRET_KEY", "$argon2id$v=19$m=65536,t=3,p=4$+J8zxrj3XgtBKIWwdq51Tg$YYRakdBUHQqPMOvV5P6C2gQ6nniYkMO1KZbT3/5YiRs")
 DEFAULT_SECRET_KEY = "your-secret-key-here-change-in-production"
 ALGORITHM = "HS256"
 # ACCESS_TOKEN_EXPIRE_HOURS = 24
-ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS", 24))
+ACCESS_TOKEN_EXPIRE_HOURS = get_env_int("ACCESS_TOKEN_EXPIRE_HOURS", 24)
 
 # 密码加密 - 使用Argon2 更安全且无长度限制
 pwd_context = CryptContext(
@@ -131,7 +135,6 @@ def get_current_user_from_token(token: str) -> User:
     Raises:
         HTTPException: Token 无效或用户不存在
     """
-    from server.models.database import SessionLocal
 
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

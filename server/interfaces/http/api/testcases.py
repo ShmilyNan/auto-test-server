@@ -7,8 +7,8 @@ from ruamel.yaml import YAML, YAMLError
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Query, UploadFile, File
 from sqlalchemy.orm import Session
-from server.models.database import get_db
-from server.models.models import Project, TestCase, User
+from server.infrastructure.persistence.database import get_db
+from server.infrastructure.persistence.models import Project, TestCase, User
 from server.auth.auth import require_permission
 from server.schemas.schemas import (
     TestCaseCreate,

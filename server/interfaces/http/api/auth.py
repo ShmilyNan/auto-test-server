@@ -5,9 +5,8 @@
 from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-
-from server.models.database import get_db
-from server.models.models import User
+from server.infrastructure.persistence.database import get_db
+from server.infrastructure.persistence.models import User
 from server.auth.auth import (
     verify_password,
     get_password_hash,

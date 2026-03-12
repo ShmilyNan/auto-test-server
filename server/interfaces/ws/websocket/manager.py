@@ -3,15 +3,12 @@
 WebSocket 连接管理器
 用于实时推送消息到前端
 """
-
-import json
-import asyncio
-from typing import Dict, List, Set, Optional, Any
+from typing import Dict, List, Set
 from datetime import datetime
-from fastapi import WebSocket, WebSocketDisconnect
-import logging
+from fastapi import WebSocket
+from common.utils.logging import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class ConnectionManager:

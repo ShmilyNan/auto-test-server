@@ -2,21 +2,25 @@
 """
 FastAPI 主应用
 """
-import os
 import asyncio
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from sqlalchemy import text
-from server.models.database import engine
-from server.api import auth, users, roles, projects, testcases
-from server.websocket import ws_manager, send_heartbeat
+from server.infrastructure.persistence.database import engine
+from server.interfaces.http.api import auth, users, roles, projects, testcases
+from server.interfaces.ws.websocket import ws_manager, send_heartbeat
 from server.auth.auth import get_current_user_from_token, validate_secret_key
+from common.config import get_env_str
+from common.utils.logging import get_logger, init_logging
+
+init_logging()
+logger = get_logger(__name__)
 
 
 def get_cors_config() -> tuple[list[str], str | None, bool]:
     """根据环境变量生成CORS配置，避免通配符与凭据冲突"""
-    origins_raw = os.getenv("CORS_ORIGINS", "").strip()
+    origins_raw = get_env_str("CORS_ORIGINS", "")
 
     # 未配置时保持兼容性：允许全部来源，但不允许凭据
     if not origins_raw:
@@ -33,29 +37,29 @@ def get_cors_config() -> tuple[list[str], str | None, bool]:
 async def lifespan(app: FastAPI):
     """应用生命周期管理"""
     validate_secret_key()
-    print("\n" + "=" * 60)
-    print("🚀 启动接口自动化测试平台...")
-    print("=" * 60)
+    logger.info("=" * 60)
+    logger.info("🚀 启动接口自动化测试平台...")
+    logger.info("=" * 60)
 
     # 测试数据库连接
     try:
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
-        print("✅ 数据库连接成功")
+        logger.info("✅ 数据库连接成功")
     except Exception as e:
-        print(f"❌ 数据库连接失败: {e}")
+        logger.exception(f"❌ 数据库连接失败: {e}")
         raise
 
-    print("\n📚 API 文档:")
-    print("   - Swagger UI: http://localhost:8899/docs")
-    print("   - ReDoc:      http://localhost:8899/redoc")
-    print("\n🔌 WebSocket:")
-    print("   - ws://localhost:5000/ws")
-    print("=" * 60 + "\n")
+    logger.info("📚 API 文档:")
+    logger.info("   - Swagger UI: http://localhost:8899/docs")
+    logger.info("   - ReDoc:      http://localhost:8899/redoc")
+    logger.info("🔌 WebSocket:")
+    logger.info("   - ws://localhost:5000/ws")
+    logger.info("=" * 60 + "\n")
 
     yield
 
-    print("\n👋 关闭服务...")
+    logger.info("👋 关闭服务...")
 
 
 # 创建 FastAPI 应用
@@ -115,12 +119,12 @@ def get_websocket_url():
 
     返回前端需要连接的 WebSocket URL
     """
-    host = os.getenv("SERVER_HOST", "localhost")
-    port = os.getenv("SERVER_PORT", "5000")
+    host = get_env_str("SERVER_HOST", "localhost")
+    port = get_env_str("SERVER_PORT", "5000")
 
     return {
         "ws_url": f"ws://{host}:{port}/ws",
-        "ws_url_secure": f"wss://{host}:{port}/ws" if os.getenv("HTTPS") else None,
+        "ws_url_secure": f"wss://{host}:{port}/ws" if get_env_str("HTTPS") else None,
         "message_types": {
             "connected": "连接成功",
             "test_run_start": "测试开始执行",
@@ -193,7 +197,7 @@ async def websocket_endpoint(
     except WebSocketDisconnect:
         pass
     except Exception as e:
-        print(f"WebSocket 错误: {e}")
+        logger.exception(f"WebSocket 错误: {e}")
     finally:
         heartbeat_task.cancel()
         ws_manager.disconnect(websocket)

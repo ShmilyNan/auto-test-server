@@ -5,8 +5,8 @@
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from server.models.database import get_db
-from server.models.models import User, Role
+from server.infrastructure.persistence.database import get_db
+from server.infrastructure.persistence.models import User, Role
 from server.auth.auth import (
     get_password_hash,
     require_permission

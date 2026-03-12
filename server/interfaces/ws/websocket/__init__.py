@@ -3,7 +3,7 @@
 WebSocket 模块
 """
 
-from server.websocket.manager import (
+from server.interfaces.ws.websocket.manager import (
     ws_manager,
     ConnectionManager,
     MessageType,
