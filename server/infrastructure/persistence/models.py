@@ -202,8 +202,15 @@ class TestRun(Base):
     duration = Column(Integer, comment='执行时长(毫秒)')
 
     # 请求和响应
-    request_data = Column(Text, comment='请求数据(JSON)')
-    response_data = Column(Text, comment='响应数据(JSON)')
+    # request_data = Column(Text, comment='请求数据(JSON)')
+    request_url = Column(Text, comment='请求URL')
+    request_headers = Column(Text, comment='请求头(JSON)')
+    request_body = Column(Text, comment='请求体(JSON)')
+    request_method = Column(String(10), comment='请求方法')
+    # response_data = Column(Text, comment='响应数据(JSON)')
+    response_headers = Column(Text, comment='响应头(JSON)')
+    response_body = Column(Text, comment='响应体(JSON)')
+    response_status = Column(Integer, comment='响应状态码')
 
     # 错误信息
     error_message = Column(Text, comment='错误信息')
@@ -214,5 +221,32 @@ class TestRun(Base):
 
     created_at = Column(DateTime, default=datetime.now, comment='创建时间')
 
+    run_name = Column(String(200), comment='执行名称')
+    batch_id = Column(String(200), comment='执行批次ID')
     def __repr__(self):
         return f"<TestRun(id={self.id}, status={self.status})>"
+
+
+class TestReport(Base):
+    """测试报告模型"""
+    __tablename__ = 'test_reports'
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(200), nullable=False, comment='报告名称')
+    batch_id = Column(String(200), nullable=False, comment='执行批次ID')
+    project_id = Column(Integer, ForeignKey('projects.id', ondelete='CASCADE'), nullable=False, comment='项目ID')
+    creator_id = Column(Integer, ForeignKey('users.id', ondelete='SET NULL'), comment='创建者ID')
+
+    total = Column(Integer, comment='总用例数')
+    passed = Column(Integer, comment='通过数')
+    failed = Column(Integer, comment='失败数')
+    error = Column(Integer, comment='错误数')
+    pass_rate = Column(String(10), default='0.00%', comment='通过率')
+    status = Column(String(20), nullable=False, default='failed', comment='报告状态(passed/failed/error)')
+
+    allure_report_path = Column(String(500), comment='Allure报告路径')
+    summary = Column(Text, comment='报告摘要(JSON)')
+    creator_at  = Column(DateTime, default=datetime.now, comment='创建时间')
+
+    def __repr__(self):
+        return f"<TestReport(id={self.id}, batch_id={self.batch_id})>"

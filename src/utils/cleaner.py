@@ -5,7 +5,6 @@
 from typing import Dict, Any, Optional, List
 from config import CONFIG_FILE, get_env_config_file
 from src.utils.logger import logger
-from src.core.client import create_client
 from src.core.context import get_context
 from src.utils.yaml_loader import load_yaml_dict
 
@@ -97,6 +96,8 @@ class DataCleaner:
         Returns:
             bool: 删除是否成功
         """
+        from src.core.client import create_client
+
         logger.info("开始通过 API 清洗数据")
 
         # 获取上下文

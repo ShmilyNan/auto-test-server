@@ -340,7 +340,7 @@ class RunTestRequest(BaseModel):
     """执行测试请求"""
     test_case_ids: List[int] = Field(..., description="测试用例ID列表")
     environment: Optional[str] = Field(None, description="执行环境")
-
+    run_name: Optional[str] = Field(None, description="执行名称")
 
 class RunTestResponse(BaseModel):
     """执行测试响应"""
@@ -350,6 +350,75 @@ class RunTestResponse(BaseModel):
     error: int = Field(description="错误数")
     duration: int = Field(description="执行时长(毫秒)")
     results: List[Dict[str, Any]] = Field(description="执行结果")
+    batch_id: Optional[str] = Field(description="执行批次ID")
+    run_name: Optional[str] = Field(description="执行名称")
+
+
+class TrendItem(BaseModel):
+    """执行趋势项"""
+    date: str
+    total: int
+    passed: int
+    failed: int
+
+
+class ProjectPassRateItem(BaseModel):
+    """项目通过率"""
+    project_id: int
+    project_name: str
+    total: int
+    passed: int
+    pass_rate: float
+
+
+class RecentRunItem(BaseModel):
+    run_name: str
+    project_name: str
+    case_count: int
+    status: str
+    created_at: datetime
+    test_case_name: Optional[str] = None
+
+
+class DashboardStatsResponse(BaseModel):
+    total_cases: int
+    passed_cases: int
+    failed_cases: int
+    running_cases: int
+    execution_trend: List[TrendItem]
+    project_pass_rate: List[ProjectPassRateItem]
+    recent_runs: List[RecentRunItem]
+
+
+class ReportCreateRequest(BaseModel):
+    batch_id: str = Field(..., description="执行批次ID")
+    name: Optional[str] = Field(None, description="测试报告名称")
+
+
+class ReportListItem(BaseModel):
+    id: int
+    name: str
+    batch_id: str
+    project_id: int
+    total: int
+    passed: int
+    failed: int
+    error: int
+    pass_rate: str
+    status: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class ReportDetailResponse(ReportListItem):
+    creator_id: Optional[int] = None
+    allure_report_path: Optional[str] = None
+    summary: Optional[str] = None
+
+    class Config:
+        from_attributes = True
 
 
 # 更新forward references

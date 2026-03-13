@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from sqlalchemy import text
 from server.infrastructure.persistence.database import engine
-from server.interfaces.http.api import auth, users, roles, projects, testcases
+from server.interfaces.http.api import auth, users, roles, projects, testcases, executions, dashboard, reports
 from server.interfaces.ws.websocket import ws_manager, send_heartbeat
 from server.auth.auth import get_current_user_from_token, validate_secret_key
 from common.config import get_env_str
@@ -90,7 +90,9 @@ app.include_router(users.router, tags=["用户管理"])
 app.include_router(roles.router, tags=["角色权限管理"])
 app.include_router(projects.router, tags=["项目管理"])
 app.include_router(testcases.router, tags=["测试用例管理"])
-
+app.include_router(executions.router, tags=["测试执行"])
+app.include_router(dashboard.router, tags=["仪表盘"])
+app.include_router(reports.router, tags=["测试报告"])
 
 # ==================== 系统接口 ====================
 
