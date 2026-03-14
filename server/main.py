@@ -20,18 +20,18 @@ logger = get_logger(__name__)
 
 def get_cors_config() -> tuple[list[str], str | None, bool]:
     """根据环境变量生成CORS配置，避免通配符与凭据冲突"""
+    current_env = get_env_str("ENV", "dev")
     origins_raw = get_env_str("CORS_ORIGINS", "")
 
     # 未配置时保持兼容性：允许全部来源，但不允许凭据
-    if not origins_raw:
-        return [], r".*", True
+    if not origins_raw and current_env == "dev":
+        return [], r".*", False
+    elif not origins_raw:
+        return [], None, False
+    else:
+        origins = [origin.strip() for origin in origins_raw.split(",") if origin.strip()]
+        return origins, None, False
 
-    origins = [origin.strip() for origin in origins_raw.split(",") if origin.strip()]
-    if not origins:
-        return [], r".*", True
-
-    # 显式配置白名单来源时，允许凭据
-    return origins, None, True
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -118,7 +118,6 @@ def health_check():
 def get_websocket_url():
     """
     获取 WebSocket 连接地址
-
     返回前端需要连接的 WebSocket URL
     """
     host = get_env_str("SERVER_HOST", "localhost")
@@ -147,17 +146,14 @@ async def websocket_endpoint(
 ):
     """
     WebSocket 实时推送端点
-
     连接方式:
         ws://host:port/ws?token=YOUR_JWT_TOKEN
-
     消息格式:
         {
             "type": "message_type",
             "data": {...},
             "timestamp": "2024-01-01T12:00:00"
         }
-
     消息类型:
         - connected: 连接成功确认
         - test_run_start: 测试开始执行
@@ -176,6 +172,7 @@ async def websocket_endpoint(
 
     # 建立连接
     await ws_manager.connect(websocket, user_id)
+    heartbeat_task = None
 
     try:
         # 启动心跳任务
@@ -201,7 +198,12 @@ async def websocket_endpoint(
     except Exception as e:
         logger.exception(f"WebSocket 错误: {e}")
     finally:
-        heartbeat_task.cancel()
+        if heartbeat_task:
+            heartbeat_task.cancel()
+            try:
+                await heartbeat_task
+            except asyncio.CancelledError:
+                pass
         ws_manager.disconnect(websocket)
 
 
@@ -235,14 +237,13 @@ def get_websocket_status():
         }
     }
 
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(
-        "server.main:app",
-        host="0.0.0.0",
-        port=8899,
-        reload=True,
-        log_level="info"
-    )
+# if __name__ == "__main__":
+#     import uvicorn
+#
+#     uvicorn.run(
+#         "server.main:app",
+#         host=get_env_str('SERVER_BIND', '0.0.0.0'),
+#         port=get_env_int('SERVER_PORT', 8899),
+#         log_level=get_env_str('LOG_LEVEL', 'info'),
+#         reload=True
+#     )

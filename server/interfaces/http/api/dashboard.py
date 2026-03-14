@@ -2,10 +2,8 @@
 """仪表盘统计API"""
 from datetime import datetime, timedelta
 from collections import defaultdict
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-
 from server.auth.auth import get_current_user
 from server.infrastructure.persistence.database import get_db
 from server.infrastructure.persistence.models import Project, TestCase, TestRun, User

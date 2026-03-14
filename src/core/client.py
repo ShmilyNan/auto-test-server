@@ -20,6 +20,8 @@ class BaseHTTPClient(ABC):
         self.timeout = config.get('timeout', 30)
         self.max_retries = config.get('max_retries', 3)
         self.retry_interval = config.get('retry_interval', 1)
+        # 默认不读取环境变量代理，避免测试执行被宿主机代理劫持
+        self.trust_env = config.get('trust_env', False)
         
     @abstractmethod
     def request(
@@ -53,6 +55,7 @@ class RequestsClient(BaseHTTPClient):
 
         # 创建session
         self.session = requests.Session()
+        self.session.trust_env = self.trust_env
         
         # 配置重试策略
         retry_strategy = Retry(
@@ -183,7 +186,8 @@ class HTTPXClient(BaseHTTPClient):
         self.client = httpx.Client(
             timeout=self.timeout,
             limits=limits,
-            verify=True
+            verify=True,
+            trust_env=self.trust_env
         )
         
         logger.info("HTTPX客户端初始化成功")

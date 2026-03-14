@@ -8,7 +8,7 @@ default_env: test
 global_login:
   # 是否启用全局登录
 #  enable: true
-  enable: false
+  enable: true
   # 登录接口路径（相对于 base_url，或绝对URL）
   # 如果是相对路径，会自动拼接 env 配置中的 base_url
   login_url: "/prod-api/login"

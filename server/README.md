@@ -88,7 +88,7 @@ server/
 # MySQL
 export DATABASE_URL="mysql+pymysql://user:password@localhost/dbname"
 
-# PostgreSQL
+# postgresql
 export DATABASE_URL="postgresql://user:password@localhost/dbname"
 ```
 

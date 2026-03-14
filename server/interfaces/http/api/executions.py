@@ -7,10 +7,8 @@ import uuid
 import time
 from datetime import datetime
 from typing import Any, Dict, List
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-
 from server.auth.auth import get_current_user
 from server.infrastructure.persistence.database import get_db
 from server.infrastructure.persistence.models import Project, TestCase, TestRun, User

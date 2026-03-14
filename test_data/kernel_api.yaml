@@ -27,7 +27,7 @@ test_cases:
     description: "全量传参，正常创建site_id"
     order: 0
     priority: "p1"
-    tags: ["smoke", "daily", "single"]
+    tags: ["smoke", "daily"]
     
     method: "POST"
     base_url: "siteId"

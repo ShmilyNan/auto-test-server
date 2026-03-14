@@ -62,7 +62,7 @@ test_cases:
   - name: "获取用户信息-已登录"
     description: "获取已登录用户的详细信息"
     priority: "p1"
-    tags: ["regression"]
+    tags: ["regression", "single"]
     
     # 依赖登录用例
     depends_on: "用户登录-正常流程"
