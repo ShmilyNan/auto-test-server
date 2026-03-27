@@ -6,6 +6,8 @@ YAML 生成器
 2. 报表类查询接口：POST 请求，包含 options.basicFields/statisticsFields 等特殊字段
 """
 import random
+
+from blib2to3.pgen2.literals import simple_escapes
 from ruamel.yaml import YAML
 from ruamel.yaml.comments import CommentedMap
 from pathlib import Path
@@ -337,7 +339,8 @@ class YamlGenerator:
 
         # 随机选择部分组合
         if len(all_combinations) > self.max_query_combinations:
-            selected_combinations = random.sample(all_combinations, self.max_query_combinations)
+            simple_size = min(self.max_query_combinations, len(all_combinations))
+            selected_combinations = random.sample(all_combinations, simple_size) if simple_size > 0 else []
         else:
             selected_combinations = all_combinations
 
@@ -1439,7 +1442,6 @@ class YamlGenerator:
     ) -> str:
         """
         将测试用例追加到已有的 YAML 文件中
-
         Args:
             request: CurlRequest 对象
             file_path: 目标 YAML 文件路径
@@ -1447,10 +1449,8 @@ class YamlGenerator:
             test_case_description: 测试用例描述
             priority: 优先级
             tags: 标签列表
-
         Returns:
             str: 文件路径
-
         Raises:
             FileNotFoundError: 文件不存在
             ValueError: 文件格式错误
@@ -1525,13 +1525,11 @@ class YamlGenerator:
     ) -> Tuple[str, int, int]:
         """
         将多个场景追加到已有的 YAML 文件中（智能去重）
-
         Args:
             scenarios: 场景列表
             file_path: 目标 YAML 文件路径
             module_name: 模块名称（如果文件不存在）
             module_description: 模块描述
-
         Returns:
             Tuple[str, int, int]: (文件路径, 添加的场景数, 跳过的场景数)
         """
@@ -1656,7 +1654,6 @@ def convert_curl_to_yaml(
 ) -> str:
     """
     便捷函数：将 cURL 命令转换为 YAML 文件
-
     Args:
         curl_command: cURL 命令字符串
         output_dir: 输出目录
@@ -1667,7 +1664,6 @@ def convert_curl_to_yaml(
         test_case_description: 测试用例描述
         priority: 优先级
         tags: 标签列表
-
     Returns:
         str: 保存的文件路径
     """
@@ -1691,6 +1687,49 @@ def convert_curl_to_yaml(
 
     # 保存文件
     return generator.save_to_file(yaml_data, output_dir, filename)
+
+
+def append_curl_to_yaml(
+    curl_command: str,
+    target_file: str,
+    test_case_name: Optional[str] = None,
+    priority: str = "p2",
+    tags: Optional[List[str]] = None
+) -> str:
+    """
+    便捷函数：将 cURL 命令追加到已有的 YAML 文件
+    Args:
+        curl_command: cURL 命令字符串
+        target_file: 目标 YAML 文件路径
+        test_case_name: 测试用例名称
+        priority: 优先级
+        tags: 标签列表
+    Returns:
+        str: 保存的文件路径
+    """
+    from src.utils.curl_parser import CurlParser
+    from src.utils.scenario_generator import ScenarioGenerator
+
+    parser = CurlParser()
+    request = parser.parse(curl_command)
+
+    scenario_gen = ScenarioGenerator()
+    scenarios = scenario_gen.generate_scenarios(
+        request,
+        case_name=test_case_name or "imported_case",
+        method=request.method
+    )
+
+    generator = YamlGenerator()
+    file_path, added, skipped = generator.append_scenarios_to_file(
+        scenarios,
+        target_file,
+        module_name=None,
+        module_description=None
+    )
+
+    logger.info(f"追加完成: 添加 {added} 个场景，跳过 {skipped} 个")
+    return file_path
 
 
 if __name__ == "__main__":

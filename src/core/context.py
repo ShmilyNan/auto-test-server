@@ -56,15 +56,18 @@ class TestContext:
     
     def get_global(self, key: str, default: Any = None) -> Any:
         """获取全局变量"""
-        return self.global_vars.get(key, default)
+        with self._lock:
+            return self.global_vars.get(key, default)
     
     def set_local(self, key: str, value: Any):
         """设置局部变量"""
-        self.local_vars[key] = value
+        with self._lock:
+            self.local_vars[key] = value
     
     def get_local(self, key: str, default: Any = None) -> Any:
         """获取局部变量"""
-        return self.local_vars.get(key, default)
+        with self._lock:
+            return self.local_vars.get(key, default)
     
     def set_cache(self, key: str, value: Any, ttl: int = 3600):
         """

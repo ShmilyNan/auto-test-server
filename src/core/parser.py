@@ -3,6 +3,7 @@ YAML/JSON测试数据解析器
 支持自动解析、校验、错误定位
 """
 import json
+from idlelib.iomenu import errors
 from typing import Dict, Any, List, Optional, Union
 from pathlib import Path
 from dataclasses import dataclass
@@ -267,7 +268,7 @@ class CaseDataParser:
         # 合并默认请求头和用例自定义请求头（重复时，用例自定义优先）
         case_headers = case_data.get('headers', {})
         if default_headers:
-            merged_headers = {**default_headers, **case_headers}
+            merged_headers = {**(default_headers or {}), **case_headers}
         else:
             merged_headers = case_headers
 

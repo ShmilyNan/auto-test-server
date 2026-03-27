@@ -281,7 +281,6 @@ for test_data in _test_data_list:
         def test_function(http_client, validator, extractor, test_context):
             """
             动态生成的测试函数
-
             Args:
                 http_client: HTTP客户端fixture
                 validator: 验证器fixture

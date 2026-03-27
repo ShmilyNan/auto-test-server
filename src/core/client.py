@@ -166,7 +166,10 @@ class RequestsClient(BaseHTTPClient):
     
     def close(self):
         """关闭Session"""
-        self.session.close()
+        try:
+            self.session.close()
+        except Exception:
+            pass
         logger.info("Requests客户端已关闭")
 
 
@@ -287,7 +290,10 @@ class HTTPXClient(BaseHTTPClient):
     
     def close(self):
         """关闭客户端"""
-        self.client.close()
+        try:
+            self.client.close()
+        except Exception:
+            pass
         logger.info("HTTPX客户端已关闭")
 
 

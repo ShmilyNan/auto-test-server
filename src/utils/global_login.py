@@ -4,6 +4,7 @@
 支持全局前置登录、Token 管理
 Token 过期时自动重新登录
 """
+import threading
 import time
 from typing import Dict, Any, Optional
 from config import CONFIG_FILE
@@ -17,16 +18,25 @@ class GlobalLogin:
     """全局登录管理器"""
 
     _instance = None
-    _token = None
-    _token_expire_time = 0
     _config = None
     _env_config = None
+    _local = threading.local()
 
     def __new__(cls):
         """单例模式"""
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
+
+    @classmethod
+    def get_token(cls):
+        return getattr(cls._local, 'token', None)
+
+    @classmethod
+    def set_token(cls, token, ttl=None):
+        cls._local.token = token
+        if ttl:
+            cls._local.expire = time.time() + ttl
 
     @classmethod
     def get_config(cls) -> Dict[str, Any]:
@@ -69,27 +79,19 @@ class GlobalLogin:
         return config.get('enable', False)
 
     @classmethod
-    def get_token(cls) -> Optional[str]:
-        """
-        获取当前的 Token
-        Returns:
-            Optional[str]: Token 字符串
-        """
-        return cls._token
-
-    @classmethod
     def get_auth_header(cls) -> Optional[str]:
         """
         获取 Authorization header 值
         Returns:
             Optional[str]: Authorization header 值，如 "Bearer xxx"
         """
-        if cls._token is None:
+        token = getattr(cls._local, 'token', None)
+        if token is None:
             return None
 
         config = cls.get_config()
         token_type = config.get('token_type', 'Bearer')
-        return f"{token_type} {cls._token}"
+        return f"{token_type} {token}"
 
     @classmethod
     def is_token_expired(cls) -> bool:
@@ -98,17 +100,21 @@ class GlobalLogin:
         Returns:
             bool: 是否过期
         """
-        if cls._token is None:
+        token = getattr(cls._local, 'token', None)
+        if token is None:
             return True
 
         config = cls.get_config()
         token_ttl = config.get('token_ttl', 0)
 
         if token_ttl == 0:
-            # 永不过期
             return False
 
-        return time.time() > cls._token_expire_time
+        expire_time = getattr(cls._local, 'expire', None)
+        if expire_time is None:
+            return True
+
+        return time.time() > expire_time
 
     @classmethod
     def login(cls, client: BaseHTTPClient, env_config: Optional[Dict[str, Any]] =  None) -> bool:
@@ -199,8 +205,7 @@ class GlobalLogin:
                     return False
 
                 # 保存 Token
-                cls._token = token
-                cls._token_expire_time = time.time() + config.get('token_ttl', 0)
+                cls.set_token(token, config.get('token_ttl', 0))
 
                 logger.info(f"全局登录成功: Token 有效期 {config.get('token_ttl', 0)} 秒")
                 return True
@@ -227,7 +232,8 @@ class GlobalLogin:
             return True
 
         # 检查 Token 是否存在且未过期
-        if cls._token is not None and not cls.is_token_expired():
+        token = getattr(cls._local, 'token', None)
+        if token is not None and not cls.is_token_expired():
             return True
 
         # Token 不存在或已过期，重新登录
@@ -238,8 +244,8 @@ class GlobalLogin:
     def logout(cls):
         """登出（清除 Token）"""
         logger.info("执行全局登出")
-        cls._token = None
-        cls._token_expire_time = 0
+        cls._local.token = None
+        cls._local.expire = None
 
 
 def get_global_login() -> GlobalLogin:
