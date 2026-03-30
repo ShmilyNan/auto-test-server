@@ -96,7 +96,8 @@ class CurlScanner:
 
         return result
 
-    def get_yaml_file_path(self, module_name: str) -> Path:
+    @staticmethod
+    def get_yaml_file_path(module_name: str) -> Path:
         """
         获取对应的 YAML 文件路径
         Args:
@@ -107,8 +108,8 @@ class CurlScanner:
         yaml_file = get_test_data_file(module_name)
         return yaml_file
 
+    @staticmethod
     def should_convert(
-            self,
             curl_info: CurlFileInfo,
             yaml_dir: str = "test_data",
             scenarios: List[str] = None

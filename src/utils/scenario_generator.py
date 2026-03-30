@@ -91,7 +91,8 @@ class ScenarioGenerator:
 
         return scenarios
 
-    def _is_query_interface(self, request: CurlRequest, case_name: str = "") -> bool:
+    @staticmethod
+    def _is_query_interface(request: CurlRequest, case_name: str = "") -> bool:
         """
         判断是否为查询接口
 
@@ -168,11 +169,13 @@ class ScenarioGenerator:
 
         return scenarios
 
-    def _is_simple_query_interface(self, request: CurlRequest) -> bool:
+    @staticmethod
+    def _is_simple_query_interface(request: CurlRequest) -> bool:
         """判断是否为普通查询接口（GET 请求）"""
         return request.method.upper() == 'GET'
 
-    def _is_report_query_interface(self, request: CurlRequest) -> bool:
+    @staticmethod
+    def _is_report_query_interface(request: CurlRequest) -> bool:
         """判断是否为报表类查询接口（POST + options.basicFields/statisticsFields）"""
         if request.method.upper() != 'POST':
             return False
@@ -267,11 +270,11 @@ class ScenarioGenerator:
 
         return scenarios
 
+    @staticmethod
     def _create_simple_query_request_with_single_field(
-        self,
-        request: CurlRequest,
-        field_name: str,
-        field_value: Any
+            request: CurlRequest,
+            field_name: str,
+            field_value: Any
     ) -> CurlRequest:
         """创建普通查询接口的单字段请求（保留分页参数）"""
         from copy import deepcopy
@@ -284,12 +287,12 @@ class ScenarioGenerator:
         }
         return modified_request
 
+    @staticmethod
     def _generate_simple_query_combination_scenarios(
-        self,
-        request: CurlRequest,
-        case_name: str,
-        query_fields: Dict[str, Any],
-        tags: List[str]
+            request: CurlRequest,
+            case_name: str,
+            query_fields: Dict[str, Any],
+            tags: List[str]
     ) -> List[Scenario]:
         """生成普通查询接口的组合条件场景"""
         from copy import deepcopy
@@ -726,11 +729,11 @@ class ScenarioGenerator:
 
         return query_fields
 
+    @staticmethod
     def _create_request_with_single_field(
-        self,
-        request: CurlRequest,
-        field_name: str,
-        field_value: Any
+            request: CurlRequest,
+            field_name: str,
+            field_value: Any
     ) -> CurlRequest:
         """
         创建仅包含单个查询字段的请求
@@ -759,10 +762,10 @@ class ScenarioGenerator:
 
         return modified_request
 
+    @staticmethod
     def _create_request_with_fields(
-        self,
-        request: CurlRequest,
-        fields: Dict[str, Any]
+            request: CurlRequest,
+            fields: Dict[str, Any]
     ) -> CurlRequest:
         """
         创建包含多个查询字段的请求
@@ -887,11 +890,11 @@ class ScenarioGenerator:
 
         return scenarios
 
+    @staticmethod
     def _generate_get_scenarios(
-        self,
-        request: CurlRequest,
-        case_name: str,
-        tags: List[str]
+            request: CurlRequest,
+            case_name: str,
+            tags: List[str]
     ) -> List[Scenario]:
         """
         生成 GET 请求的测试场景
@@ -909,11 +912,11 @@ class ScenarioGenerator:
         # GET 请求已按查询接口处理，这里返回空
         return scenarios
 
+    @staticmethod
     def _generate_delete_scenarios(
-        self,
-        request: CurlRequest,
-        case_name: str,
-        tags: List[str]
+            request: CurlRequest,
+            case_name: str,
+            tags: List[str]
     ) -> List[Scenario]:
         """
         生成 DELETE 请求的测试场景
@@ -959,13 +962,12 @@ class ScenarioGenerator:
 
         return scenarios
 
-    def _find_key_fields(self, data: Dict[str, Any]) -> List[str]:
+    @staticmethod
+    def _find_key_fields(data: Dict[str, Any]) -> List[str]:
         """
         找出关键字段（用于生成测试场景）
-
         Args:
             data: 数据字典
-
         Returns:
             List[str]: 关键字段列表
         """

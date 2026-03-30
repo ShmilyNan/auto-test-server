@@ -102,7 +102,8 @@ class FileDownloader:
         logger.info(f"文件已保存: {file_path}")
         return str(file_path)
 
-    def _extract_filename(self, response: Dict[str, Any]) -> str:
+    @staticmethod
+    def _extract_filename(response: Dict[str, Any]) -> str:
         """
         从响应头中提取文件名
 
@@ -160,13 +161,12 @@ class FileDownloader:
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         return f"export_{timestamp}{extension}"
 
-    def get_file_size(self, file_path: str) -> int:
+    @staticmethod
+    def get_file_size(file_path: str) -> int:
         """
         获取文件大小
-
         Args:
             file_path: 文件路径
-
         Returns:
             int: 文件大小（字节）
         """

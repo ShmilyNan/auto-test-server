@@ -149,7 +149,8 @@ class TestContext:
             logger.error(f"获取数组长度失败: {path}, 错误: {str(e)}")
             return None
 
-    def _extract_value_by_path(self, data: Any, path: str) -> Any:
+    @staticmethod
+    def _extract_value_by_path(data: Any, path: str) -> Any:
         """
         根据路径提取值
         Args:
@@ -192,11 +193,12 @@ class TestContext:
     
     def clear_all(self):
         """清空所有变量"""
-        self.global_vars.clear()
-        self.local_vars.clear()
-        self.extract_vars.clear()
-        self.cached_vars.clear()
-        self.last_response = None
+        with self._lock:
+            self.global_vars.clear()
+            self.local_vars.clear()
+            self.extract_vars.clear()
+            self.cached_vars.clear()
+            self.last_response = None
     
     def replace_vars(self, text: str) -> str:
         """
@@ -404,7 +406,8 @@ class TestContext:
                     text = text.replace(full_match, full_match, 1)
         return text
 
-    def _find_variables(self, text: str) -> list:
+    @staticmethod
+    def _find_variables(text: str) -> list:
         """
         查找所有 ${...} 变量（返回最内层的变量优先）
         Args:
@@ -431,12 +434,13 @@ class TestContext:
         logger.debug(f"找到变量（最内层优先）: {result}")
         return result
 
-    def _random_string_generator(self,
-                         digital: bool = True,
-                         upper: bool = True,
-                         lower: bool = True,
-                         special: bool = False,
-                         length: int = 10) -> str:
+    @staticmethod
+    def _random_string_generator(
+            digital: bool = True,
+            upper: bool = True,
+            lower: bool = True,
+            special: bool = False,
+            length: int = 10) -> str:
         """
         生成包含指定类型字符的随机字符串。
         参数:
@@ -521,12 +525,13 @@ def get_context() -> TestContext:
 
 
 def reset_context():
-    """重置全局上下文"""
+    """重置全局上下文（重新创建实例）"""
     global _context
     
     with _context_lock:
         if _context is not None:
             _context.clear_all()
+        _context = TestContext()
 
 
 # 别名

@@ -230,7 +230,8 @@ class DataCleaner:
             logger.error(f"执行 SQL 异常: {str(e)}")
             return False
 
-    def _get_db_config(self) -> Optional[Dict]:
+    @staticmethod
+    def _get_db_config() -> Optional[Dict]:
         """
         获取数据库配置
         Returns:
@@ -250,7 +251,8 @@ class DataCleaner:
             logger.error(f"获取数据库配置失败: {str(e)}")
             return None
 
-    def _execute_with_sqlalchemy(self, statement: str, params: Optional[Dict], db_config: Dict) -> bool:
+    @staticmethod
+    def _execute_with_sqlalchemy(statement: str, params: Optional[Dict], db_config: Dict) -> bool:
         """
         使用 SQLAlchemy 执行 SQL
         Args:

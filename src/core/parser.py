@@ -3,7 +3,6 @@ YAML/JSON测试数据解析器
 支持自动解析、校验、错误定位
 """
 import json
-from idlelib.iomenu import errors
 from typing import Dict, Any, List, Optional, Union
 from pathlib import Path
 from dataclasses import dataclass
@@ -212,7 +211,8 @@ class CaseDataParser:
 
         return test_cases
 
-    def _assign_order(self, test_cases: List[CaseDataStructure], module: str) -> List[CaseDataStructure]:
+    @staticmethod
+    def _assign_order(test_cases: List[CaseDataStructure], module: str) -> List[CaseDataStructure]:
         """
         为未设置 order 的用例自动分配顺序
         规则:
@@ -247,7 +247,8 @@ class CaseDataParser:
 
         return test_cases
 
-    def _parse_case(self, case_data: Dict[str, Any], module: str, default_headers: Optional[Dict[str, str]] =  None) -> CaseDataStructure:
+    @staticmethod
+    def _parse_case(case_data: Dict[str, Any], module: str, default_headers: Optional[Dict[str, str]] =  None) -> CaseDataStructure:
         """
         解析单个测试用例
         Args:
@@ -367,7 +368,8 @@ class CaseDataParser:
             all_cases.extend(cases)
         return all_cases
 
-    def validate_schema(self, data: Dict[str, Any]) -> bool:
+    @staticmethod
+    def validate_schema(data: Dict[str, Any]) -> bool:
         """
         验证数据格式是否符合规范
         Args:

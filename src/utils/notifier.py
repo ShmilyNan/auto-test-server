@@ -31,7 +31,8 @@ class BaseNotifier(ABC):
         """
         pass
     
-    def _format_message(self, title: str, content: str) -> str:
+    @staticmethod
+    def _format_message(title: str, content: str) -> str:
         """格式化消息"""
         return f"【{title}】\n\n{content}"
 

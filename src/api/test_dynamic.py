@@ -265,11 +265,11 @@ def _execute_teardown(teardown_steps: List[Dict], test_context):
 # 为每个测试用例动态生成测试函数
 for test_data in _test_data_list:
     test_case = test_data['test_case']
-    idx = test_data['index']
+    index = test_data['index']
     module_name = test_data['module']
 
     # 生成函数名
-    func_name = _generate_function_name(test_case, module_name, idx)
+    func_name = _generate_function_name(test_case, module_name, index)
 
 
     # 创建测试函数

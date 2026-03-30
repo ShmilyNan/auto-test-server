@@ -78,8 +78,9 @@ class Extractor:
             return self._extract_xpath(response, expression)
         else:
             raise ValueError(f"不支持的提取类型: {extract_type}")
-    
-    def _extract_jsonpath(self, response: Dict[str, Any], expression: str) -> Any:
+
+    @staticmethod
+    def _extract_jsonpath(response: Dict[str, Any], expression: str) -> Any:
         """
         使用JSONPath提取数据
         Args:
@@ -91,28 +92,28 @@ class Extractor:
         try:
             # 默认从body中提取
             data = response.get('body', response)
-            
+
             jsonpath_expr = jsonpath_parse(expression)
             matches = jsonpath_expr.find(data)
-            
+
             if not matches:
                 logger.warning(f"JSONPath未匹配到数据: {expression}")
                 return None
-            
+
             # 如果有多个匹配，返回列表
             if len(matches) > 1:
                 return [match.value for match in matches]
-            
+
             # 单个匹配，返回值
             return matches[0].value
-            
+
         except Exception as e:
             logger.error(f"JSONPath提取失败: {expression}, 错误: {str(e)}")
             raise
-    
+
+    @staticmethod
     def _extract_regex(
-        self,
-        response: Dict[str, Any],
+            response: Dict[str, Any],
         pattern: str,
         group: int = 0
     ) -> Any:
@@ -149,7 +150,8 @@ class Extractor:
             logger.error(f"正则提取失败: {pattern}, 错误: {str(e)}")
             raise
     
-    def _extract_header(self, response: Dict[str, Any], header_name: str) -> Optional[str]:
+    @staticmethod
+    def _extract_header(response: Dict[str, Any], header_name: str) -> Optional[str]:
         """
         从响应头中提取数据
         Args:
@@ -161,7 +163,8 @@ class Extractor:
         headers = response.get('headers', {})
         return headers.get(header_name)
     
-    def _extract_cookie(self, response: Dict[str, Any], cookie_name: str) -> Optional[str]:
+    @staticmethod
+    def _extract_cookie(response: Dict[str, Any], cookie_name: str) -> Optional[str]:
         """
         从Cookie中提取数据
         Args:
@@ -173,7 +176,8 @@ class Extractor:
         cookies = response.get('cookies', {})
         return cookies.get(cookie_name)
     
-    def _extract_xpath(self, response: Dict[str, Any], xpath_expr: str) -> Any:
+    @staticmethod
+    def _extract_xpath(response: Dict[str, Any], xpath_expr: str) -> Any:
         """
         使用XPath提取数据（HTML/XML）
         Args:
@@ -210,7 +214,8 @@ class Extractor:
             logger.error(f"XPath提取失败: {xpath_expr}, 错误: {str(e)}")
             raise
     
-    def extract_by_path(self, data: Any, path: str) -> Any:
+    @staticmethod
+    def extract_by_path(data: Any, path: str) -> Any:
         """
         通过点号路径提取数据
         

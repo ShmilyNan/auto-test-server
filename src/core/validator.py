@@ -164,8 +164,9 @@ class Validator:
                 message=f"不支持的断言类型: {assert_type}",
                 assertion_type=assert_type
             )
-    
-    def _extract_value(self, data: Any, path: str) -> Any:
+
+    @staticmethod
+    def _extract_value(data: Any, path: str) -> Any:
         """
         从响应数据中提取值
         支持路径格式:
@@ -195,8 +196,9 @@ class Validator:
                 break
         
         return data
-    
-    def _assert_equal(self, actual: Any, expected: Any) -> AssertionResult:
+
+    @staticmethod
+    def _assert_equal(actual: Any, expected: Any) -> AssertionResult:
         """断言等于"""
         passed = actual == expected
         return AssertionResult(
@@ -206,8 +208,9 @@ class Validator:
             expected=expected,
             assertion_type='eq'
         )
-    
-    def _assert_not_equal(self, actual: Any, expected: Any) -> AssertionResult:
+
+    @staticmethod
+    def _assert_not_equal(actual: Any, expected: Any) -> AssertionResult:
         """断言不等于"""
         passed = actual != expected
         return AssertionResult(
@@ -217,8 +220,9 @@ class Validator:
             expected=expected,
             assertion_type='ne'
         )
-    
-    def _assert_greater(self, actual: Any, expected: Any) -> AssertionResult:
+
+    @staticmethod
+    def _assert_greater(actual: Any, expected: Any) -> AssertionResult:
         """断言大于"""
         passed = actual > expected
         return AssertionResult(
@@ -228,8 +232,9 @@ class Validator:
             expected=expected,
             assertion_type='gt'
         )
-    
-    def _assert_less(self, actual: Any, expected: Any) -> AssertionResult:
+
+    @staticmethod
+    def _assert_less(actual: Any, expected: Any) -> AssertionResult:
         """断言小于"""
         passed = actual < expected
         return AssertionResult(
@@ -239,8 +244,9 @@ class Validator:
             expected=expected,
             assertion_type='lt'
         )
-    
-    def _assert_greater_equal(self, actual: Any, expected: Any) -> AssertionResult:
+
+    @staticmethod
+    def _assert_greater_equal(actual: Any, expected: Any) -> AssertionResult:
         """断言大于等于"""
         passed = actual >= expected
         return AssertionResult(
@@ -250,8 +256,9 @@ class Validator:
             expected=expected,
             assertion_type='gte'
         )
-    
-    def _assert_less_equal(self, actual: Any, expected: Any) -> AssertionResult:
+
+    @staticmethod
+    def _assert_less_equal(actual: Any, expected: Any) -> AssertionResult:
         """断言小于等于"""
         passed = actual <= expected
         return AssertionResult(
@@ -261,8 +268,9 @@ class Validator:
             expected=expected,
             assertion_type='lte'
         )
-    
-    def _assert_in(self, actual: Any, expected: Any) -> AssertionResult:
+
+    @staticmethod
+    def _assert_in(actual: Any, expected: Any) -> AssertionResult:
         """断言包含"""
         if isinstance(expected, (list, tuple, str)):
             passed = actual in expected
@@ -282,8 +290,9 @@ class Validator:
                 expected=expected,
                 assertion_type='in'
             )
-    
-    def _assert_not_in(self, actual: Any, expected: Any) -> AssertionResult:
+
+    @staticmethod
+    def _assert_not_in(actual: Any, expected: Any) -> AssertionResult:
         """断言不包含"""
         if isinstance(expected, (list, tuple, str)):
             passed = actual not in expected
@@ -443,7 +452,8 @@ class Validator:
                 expected=expected
             )
 
-    def _assert_regex(self, actual: Any, pattern: str) -> AssertionResult:
+    @staticmethod
+    def _assert_regex(actual: Any, pattern: str) -> AssertionResult:
         """正则断言"""
         try:
             passed = bool(re.search(pattern, str(actual)))
@@ -462,8 +472,9 @@ class Validator:
                 expected=pattern,
                 assertion_type='regex'
             )
-    
-    def _assert_json_schema(self, actual: Any, schema: Dict) -> AssertionResult:
+
+    @staticmethod
+    def _assert_json_schema(actual: Any, schema: Dict) -> AssertionResult:
         """JSON Schema断言"""
         try:
             validate(instance=actual, schema=schema)
@@ -483,8 +494,9 @@ class Validator:
                 assertion_type='json_schema',
                 detail={'path': list(e.path), 'validator': e.validator}
             )
-    
-    def _assert_sql(self, assertion: Dict, context: Optional[Dict]) -> AssertionResult:
+
+    @staticmethod
+    def _assert_sql(assertion: Dict, context: Optional[Dict]) -> AssertionResult:
         """
         SQL断言
         Args:
@@ -511,8 +523,9 @@ class Validator:
             message=f"SQL断言: {sql} (待实现)",
             assertion_type='sql'
         )
-    
-    def _assert_type(self, actual: Any, expected: Union[type, str]) -> AssertionResult:
+
+    @staticmethod
+    def _assert_type(actual: Any, expected: Union[type, str]) -> AssertionResult:
         """类型断言"""
         type_mapping = {
             'str': str,
@@ -532,16 +545,17 @@ class Validator:
                 raise ValueError(f"不支持类型: {expected}")
         else:
             expected_type = expected
-            type_names = {
-                str: 'str',
-                int: 'int',
-                float: 'float',
-                bool: 'bool',
-                list: 'list',
-                dict: 'dict',
-                tuple: 'tuple'
-            }
-            expected_name = type_names.get(expected_type, str(expected_type))
+            # type_names = {
+            #     str: 'str',
+            #     int: 'int',
+            #     float: 'float',
+            #     bool: 'bool',
+            #     list: 'list',
+            #     dict: 'dict',
+            #     tuple: 'tuple'
+            # }
+            # expected_name = type_names.get(expected_type, str(expected_type))
+            expected_name = expected_type.__name__
 
         passed = isinstance(actual, expected_type)
         actual_type = type(actual).__name__
@@ -553,8 +567,9 @@ class Validator:
             expected=expected_name,
             assertion_type='type'
         )
-    
-    def _assert_length(self, actual: Any, min_len: Optional[int] = None, max_len: Optional[int] = None) -> AssertionResult:
+
+    @staticmethod
+    def _assert_length(actual: Any, min_len: Optional[int] = None, max_len: Optional[int] = None) -> AssertionResult:
         """长度断言"""
         if not hasattr(actual, '__len__'):
             return AssertionResult(
@@ -587,8 +602,9 @@ class Validator:
             expected={'min': min_len, 'max': max_len},
             assertion_type='length'
         )
-    
-    def _assert_is_none(self, actual: Any) -> AssertionResult:
+
+    @staticmethod
+    def _assert_is_none(actual: Any) -> AssertionResult:
         """断言为None"""
         passed = actual is None
         return AssertionResult(
@@ -598,8 +614,9 @@ class Validator:
             expected=None,
             assertion_type='is_none'
         )
-    
-    def _assert_is_not_none(self, actual: Any) -> AssertionResult:
+
+    @staticmethod
+    def _assert_is_not_none(actual: Any) -> AssertionResult:
         """断言不为None"""
         passed = actual is not None
         return AssertionResult(
@@ -609,8 +626,9 @@ class Validator:
             expected=None,
             assertion_type='is_not_none'
         )
-    
-    def _assert_is_true(self, actual: Any) -> AssertionResult:
+
+    @staticmethod
+    def _assert_is_true(actual: Any) -> AssertionResult:
         """断言为True"""
         passed = bool(actual) is True
         return AssertionResult(
@@ -620,8 +638,9 @@ class Validator:
             expected=True,
             assertion_type='is_true'
         )
-    
-    def _assert_is_false(self, actual: Any) -> AssertionResult:
+
+    @staticmethod
+    def _assert_is_false(actual: Any) -> AssertionResult:
         """断言为False"""
         passed = bool(actual) is False
         return AssertionResult(
@@ -631,8 +650,9 @@ class Validator:
             expected=False,
             assertion_type='is_false'
         )
-    
-    def _assert_status_code(self, response: Dict[str, Any], expected: int) -> AssertionResult:
+
+    @staticmethod
+    def _assert_status_code(response: Dict[str, Any], expected: int) -> AssertionResult:
         """断言状态码"""
         actual = response.get('status_code')
         passed = actual == expected
