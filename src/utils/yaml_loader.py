@@ -93,10 +93,10 @@ class YAMLLoader:
             logger.info(f"成功加载YAML文件: {file_path}")
             return data
 
-        except YAMLError as e:
+        except YAMLError:
             logger.error(f"YAML解析错误: {file_path}")
             raise
-        except IOError as e:
+        except IOError:
             logger.error(f"文件读取错误: {file_path}")
             raise
 
@@ -148,8 +148,8 @@ class YAMLLoader:
 
         return data
 
+    @staticmethod
     def load_from_string(
-            self,
             yaml_string: str,
             default: Optional[Any] = None
     ) -> Any:
@@ -272,8 +272,8 @@ class YAMLLoader:
 
         return results
 
+    @staticmethod
     def get_nested_value(
-            self,
             data: Dict[str, Any],
             path: str,
             default: Any = None,

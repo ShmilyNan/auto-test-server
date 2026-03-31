@@ -6,8 +6,6 @@ YAML 生成器
 2. 报表类查询接口：POST 请求，包含 options.basicFields/statisticsFields 等特殊字段
 """
 import random
-
-from blib2to3.pgen2.literals import simple_escapes
 from ruamel.yaml import YAML
 from ruamel.yaml.comments import CommentedMap
 from pathlib import Path
@@ -159,7 +157,8 @@ class YamlGenerator:
     # 查询接口类型识别方法
     # ========================================
 
-    def _is_simple_query_interface(self, request: CurlRequest) -> bool:
+    @staticmethod
+    def _is_simple_query_interface(request: CurlRequest) -> bool:
         """
         判断是否为普通查询接口
 
@@ -173,7 +172,8 @@ class YamlGenerator:
         """
         return request.method.upper() == 'GET'
 
-    def _is_report_query_interface(self, request: CurlRequest) -> bool:
+    @staticmethod
+    def _is_report_query_interface(request: CurlRequest) -> bool:
         """
         判断是否为报表类查询接口
         特征：POST 请求，body 中包含 options.basicFields 和 options.statisticsFields
@@ -280,11 +280,11 @@ class YamlGenerator:
 
         return test_cases
 
+    @staticmethod
     def _create_simple_query_request_with_single_field(
-        self,
-        request: CurlRequest,
-        field_name: str,
-        field_value: Any
+            request: CurlRequest,
+            field_name: str,
+            field_value: Any
     ) -> CurlRequest:
         """
         创建普通查询接口的单字段请求（保留分页参数）
@@ -359,8 +359,8 @@ class YamlGenerator:
 
         return test_cases
 
+    @staticmethod
     def _create_simple_query_request_with_fields(
-        self,
         request: CurlRequest,
         fields: Dict[str, Any]
     ) -> CurlRequest:
@@ -481,18 +481,15 @@ class YamlGenerator:
     ) -> List[CommentedMap]:
         """
         生成 granularity 单选用例
-
         granularity 与时间格式对应：
         - MONTH → yyyymm
         - DATE → yyyymmdd
         - HOUR → yyyymmddhh
-
         Args:
             request: CurlRequest 对象
             case_name: 用例名称
             priority: 优先级
             tags: 标签列表
-
         Returns:
             List[CommentedMap]: 测试用例列表
         """
@@ -522,8 +519,8 @@ class YamlGenerator:
 
         return test_cases
 
+    @staticmethod
     def _create_report_request_with_granularity(
-        self,
         request: CurlRequest,
         granularity: str,
         start_time: str,
@@ -615,8 +612,8 @@ class YamlGenerator:
 
         return test_cases
 
+    @staticmethod
     def _create_report_request_with_single_basic_field(
-        self,
         request: CurlRequest,
         field: str
     ) -> CurlRequest:
@@ -645,8 +642,8 @@ class YamlGenerator:
         modified_request.data = body
         return modified_request
 
+    @staticmethod
     def _create_report_request_with_basic_fields(
-        self,
         request: CurlRequest,
         fields: List[str]
     ) -> CurlRequest:
@@ -741,8 +738,8 @@ class YamlGenerator:
 
         return test_cases
 
+    @staticmethod
     def _create_report_request_with_single_statistics_field(
-        self,
         request: CurlRequest,
         field: str
     ) -> CurlRequest:
@@ -763,8 +760,8 @@ class YamlGenerator:
         modified_request.data = body
         return modified_request
 
+    @staticmethod
     def _create_report_request_with_statistics_fields(
-        self,
         request: CurlRequest,
         fields: List[str]
     ) -> CurlRequest:
@@ -851,8 +848,8 @@ class YamlGenerator:
 
         return test_cases
 
+    @staticmethod
     def _create_report_request_with_single_filter(
-        self,
         request: CurlRequest,
         field_name: str,
         field_value: Any
@@ -882,18 +879,13 @@ class YamlGenerator:
         modified_request.data = body
         return modified_request
 
-    def _create_report_request_with_filters(
-        self,
-        request: CurlRequest,
-        filters: Dict[str, Any]
-    ) -> CurlRequest:
+    @staticmethod
+    def _create_report_request_with_filters(request: CurlRequest, filters: Dict[str, Any]) -> CurlRequest:
         """
         创建包含指定 filters 的报表请求
-
         Args:
             request: 原始请求
             filters: 过滤条件字典
-
         Returns:
             CurlRequest: 修改后的请求
         """
@@ -966,7 +958,8 @@ class YamlGenerator:
     # 通用方法（保留向后兼容）
     # ========================================
 
-    def _extract_all_query_fields(self, request: CurlRequest) -> Dict[str, Any]:
+    @staticmethod
+    def _extract_all_query_fields(request: CurlRequest) -> Dict[str, Any]:
         """
         提取所有查询字段（不区分类型）
 
@@ -1013,7 +1006,6 @@ class YamlGenerator:
     ) -> CommentedMap:
         """
         生成单字段查询测试用例
-
         Args:
             request: CurlRequest 对象
             case_name: 用例名称
@@ -1021,7 +1013,6 @@ class YamlGenerator:
             field_value: 字段值
             priority: 优先级
             tags: 标签列表
-
         Returns:
             CommentedMap: 测试用例
         """
@@ -1089,8 +1080,8 @@ class YamlGenerator:
 
         return test_cases
 
+    @staticmethod
     def _create_request_with_single_field(
-        self,
         request: CurlRequest,
         field_name: str,
         field_value: Any
@@ -1128,18 +1119,13 @@ class YamlGenerator:
 
         return modified_request
 
-    def _create_request_with_fields(
-        self,
-        request: CurlRequest,
-        fields: Dict[str, Any]
-    ) -> CurlRequest:
+    @staticmethod
+    def _create_request_with_fields(request: CurlRequest, fields: Dict[str, Any]) -> CurlRequest:
         """
         创建包含多个查询字段的请求
-
         Args:
             request: 原始请求
             fields: 字段名和值的映射
-
         Returns:
             CurlRequest: 修改后的请求
         """
@@ -1176,18 +1162,14 @@ class YamlGenerator:
 
         return modified_request
 
-    def is_query_interface(self, request: CurlRequest, case_name: str = "") -> bool:
+    def is_query_interface(self, request: CurlRequest) -> bool:
         """
         判断是否为查询接口
-
         支持两类查询接口：
         1. 普通查询接口：GET 请求
         2. 报表类查询接口：POST 请求 + body 中包含 options.basicFields/statisticsFields
-
         Args:
             request: CurlRequest 对象
-            case_name: 用例名称（用于日志）
-
         Returns:
             bool: 是否为查询接口
         """
@@ -1201,13 +1183,12 @@ class YamlGenerator:
 
         return False
 
-    def _extract_module_name(self, url: str) -> str:
+    @staticmethod
+    def _extract_module_name(url: str) -> str:
         """
         从 URL 提取模块名称
-
         Args:
             url: URL 字符串
-
         Returns:
             str: 模块名称
         """
@@ -1220,13 +1201,12 @@ class YamlGenerator:
 
         return "test_module"
 
-    def _extract_endpoint(self, url: str) -> str:
+    @staticmethod
+    def _extract_endpoint(url: str) -> str:
         """
         从 URL 提取端点名称
-
         Args:
             url: URL 字符串
-
         Returns:
             str: 端点名称
         """
@@ -1240,7 +1220,8 @@ class YamlGenerator:
 
         return "endpoint"
 
-    def _generate_config(self, request: CurlRequest) -> CommentedMap:
+    @staticmethod
+    def _generate_config(request: CurlRequest) -> CommentedMap:
         """
         生成全局配置
 
@@ -1360,7 +1341,8 @@ class YamlGenerator:
 
         return test_case
 
-    def _is_browser_header(self, header_name: str) -> bool:
+    @staticmethod
+    def _is_browser_header(header_name: str) -> bool:
         """
         判断是否为浏览器相关的 header（通常不需要在测试中保留）
 
@@ -1386,8 +1368,8 @@ class YamlGenerator:
 
         return header_name.lower() in [h.lower() for h in browser_headers]
 
+    @staticmethod
     def save_to_file(
-        self,
         yaml_data: Dict[str, Any],
         output_dir: str = "test_data",
         filename: Optional[str] = None
@@ -1692,9 +1674,7 @@ def convert_curl_to_yaml(
 def append_curl_to_yaml(
     curl_command: str,
     target_file: str,
-    test_case_name: Optional[str] = None,
-    priority: str = "p2",
-    tags: Optional[List[str]] = None
+    test_case_name: Optional[str] = None
 ) -> str:
     """
     便捷函数：将 cURL 命令追加到已有的 YAML 文件
@@ -1702,8 +1682,6 @@ def append_curl_to_yaml(
         curl_command: cURL 命令字符串
         target_file: 目标 YAML 文件路径
         test_case_name: 测试用例名称
-        priority: 优先级
-        tags: 标签列表
     Returns:
         str: 保存的文件路径
     """

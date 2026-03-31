@@ -1,0 +1,88 @@
+# kernel_api测试用例示例
+# ========================================
+
+# 模块信息
+module:
+  name: "dsp_app_manage"
+  version: "1.0.0"
+  description: "dsp系统资产管理-应用管理相关接口测试用例"
+  author: "Lee"
+
+# 全局配置
+config:
+  # 默认请求头
+  headers:
+    Content-Type: "application/json"
+    Accept: "application/json"
+  
+  # 默认超时时间
+  timeout: 30
+
+# 测试用例列表
+test_cases:
+    # ========================================
+  # 用例1: app_manage_add_全量传参
+  # ========================================
+  - name: "gei_app_info"
+    description: "通过Download-URL获取应用基础信息"
+    order: 0
+    priority: "p1"
+    tags: ["smoke", "daily"]
+    
+    method: "POST"
+    base_url: "dsp"
+    url: "/prod-api/dspApplicationConf/linkExtract"
+
+    body:
+      landingUrl: "https://play.google.com/store/apps/details?id=com.deepseek.chat"
+
+    validate:
+      - type: "status_code"
+        expected: 200
+      
+      - type: "is_not_none"
+        path: "body.data.result.app.pkgName"
+
+  # ========================================
+  # 用例2: app_manage_add_全量传参
+  # ========================================
+  - name: "app_manage_add_全量传参"
+    description: "全量传参，正常新增应用管理"
+    order: 0
+    priority: "p1"
+    tags: [ "smoke", "daily" ]
+
+    method: "POST"
+    base_url: "dsp"
+    url: "/prod-api/dspApplicationConf/getDspApplicationConfList"
+
+    body:
+      offer_id: "1012447"
+      site_ids:
+        - "${random_mixed()}"
+        - "${random_mixed(length=20)}"
+      force_reinit: true
+
+    validate:
+      - type: "status_code"
+        expected: 200
+
+      - type: "is_not_none"
+        path: "body.data.intervals"
+
+# ========================================
+# 测试套件配置
+# ========================================
+test_suites:
+  - name: "正向测试"
+    cases:
+      - "全量传参"
+      - "只传必填参数"
+  
+  - name: "异常场景"
+    cases:
+      - "必填参数缺失-offer_id"
+
+  - name: "冒烟测试"
+    cases:
+      - "只传必填参数"

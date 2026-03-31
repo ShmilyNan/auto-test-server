@@ -83,7 +83,7 @@ def _generate_function_name(test_case: CaseDataStructure, module: str, idx: int)
         str: 函数名
     """
     import re
-    name = re.sub(r'[^\w]', '_', test_case.name)
+    name = re.sub(r'\W', '_', test_case.name)
     name = name.replace(' ', '_').strip('_')
 
     # 确保以 test_ 开头
@@ -124,7 +124,7 @@ def _build_url(url: str, test_context, base_url_alias: str = None) -> str:
     env_config = load_yaml_dict(get_env_config_file(default_env), default={})
 
     # 确定 base_url
-    base_url = ""
+    # base_url = ""
     if base_url_alias:
         # 替换 base_url_alias 中的变量
         base_url_alias = test_context.replace_vars(base_url_alias)
@@ -156,13 +156,12 @@ def _build_url(url: str, test_context, base_url_alias: str = None) -> str:
     return url
 
 
-def _prepare_request_data(test_case: CaseDataStructure, test_context, http_client= None):
+def _prepare_request_data(test_case: CaseDataStructure, test_context):
     """
     准备请求数据
     Args:
         test_case: 测试用例
         test_context: 测试上下文
-        http_client: HTTP客户端（可选，用于全局登录）
     Returns:
         Dict: 请求数据
     """
@@ -300,7 +299,7 @@ for test_data in _test_data_list:
                     _execute_setup(tc.setup, test_context)
 
                 # 准备请求参数
-                request_data = _prepare_request_data(tc, test_context, http_client)
+                request_data = _prepare_request_data(tc, test_context)
 
                 # 构建完整URL（支持多 base_url）
                 url = _build_url(tc.url, test_context, tc.base_url)

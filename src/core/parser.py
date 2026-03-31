@@ -202,7 +202,7 @@ class CaseDataParser:
                 raise
 
         # 自动为未设置 order 的用例分配顺序
-        test_cases = self._assign_order(test_cases, module_name)
+        test_cases = self._assign_order(test_cases)
 
         # 按 order 排序
         test_cases.sort(key=lambda x: x.order)
@@ -212,7 +212,7 @@ class CaseDataParser:
         return test_cases
 
     @staticmethod
-    def _assign_order(test_cases: List[CaseDataStructure], module: str) -> List[CaseDataStructure]:
+    def _assign_order(test_cases: List[CaseDataStructure]) -> List[CaseDataStructure]:
         """
         为未设置 order 的用例自动分配顺序
         规则:
@@ -222,7 +222,6 @@ class CaseDataParser:
            - 遇到已设置的 order 时跳过
         Args:
             test_cases: 测试用例列表（按文件顺序）
-            module: 模块名称
         Returns:
             List[CaseDataStructure]: 已分配顺序的测试用例列表
         """

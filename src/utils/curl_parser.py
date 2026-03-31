@@ -56,13 +56,10 @@ class CurlParser:
     def parse(self, curl_command: str) -> CurlRequest:
         """
         解析 cURL 命令
-
         Args:
             curl_command: cURL 命令字符串
-
         Returns:
             CurlRequest: 解析后的请求对象
-
         Raises:
             ValueError: 命令格式错误
         """
@@ -76,7 +73,7 @@ class CurlParser:
         try:
             # 使用 shlex.split 处理引号
             parts = shlex.split(curl_command)
-        except ValueError as e:
+        except ValueError:
             # 如果 shlex 失败，尝试简单分割
             parts = curl_command.split()
 
@@ -157,7 +154,7 @@ class CurlParser:
             elif option_name == 'data-raw':
                 # 请求体（raw）
                 if index + 1 < len(parts):
-                    self._parse_data(parts[index + 1], is_raw=True)
+                    self._parse_data(parts[index + 1])
             elif option_name == 'data-urlencode':
                 # 请求体（URL 编码）
                 if index + 1 < len(parts):
@@ -250,13 +247,11 @@ class CurlParser:
         if self.cookies:
             logger.debug(f"解析 Cookies: {len(self.cookies)} 个")
 
-    def _parse_data(self, data_str: str, is_raw: bool = False, is_urlencoded: bool = False):
+    def _parse_data(self, data_str: str, is_urlencoded: bool = False):
         """
         解析请求体
-
         Args:
             data_str: 数据字符串
-            is_raw: 是否为 raw 数据
             is_urlencoded: 是否为 URL 编码数据
         """
         # 尝试解析为 JSON

@@ -8,10 +8,13 @@ base_url: "https://dev-aly-us-ad-web.cdcicd.com"
 # NOTE: 同一环境中不同接口可能需要不同的 base_url
 # 用法: 测试用例中指定 base_url 别名，如 base_url: "admin"
 base_urls:
-  # 默认 API 服务
+  # 默认 API 服务-新运营系统
   default: "https://dev-aly-us-ad-web.cdcicd.com"
   # siteId API
   siteId: "http://test-api.chongdaads.com"
+  # dsp 测试环境
+  dsp: "http://test-huiinex-dsp-web.cdcicd.com"
+
 
 # 代理配置
 proxy:

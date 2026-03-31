@@ -514,15 +514,69 @@ class Validator:
                 message="SQL断言缺少sql字段",
                 assertion_type='sql'
             )
-        
-        # TODO: 实际执行SQL查询
-        # db_result = execute_sql(sql)
-        
-        return AssertionResult(
-            passed=True,
-            message=f"SQL断言: {sql} (待实现)",
-            assertion_type='sql'
-        )
+
+        # 从context获取数据库配置
+        db_config = context.get('db_config') if context else None
+
+        if not db_config:
+            return AssertionResult(
+                passed=False,
+                message="SQL断言缺少数据库配置，请在context中提供db_config",
+                assertion_type='sql'
+            )
+
+        try:
+            # 执行sql查询
+            actual = Validator._execute_sql_query(sql, db_config)
+
+            # 比较结果
+            passed = (expected == actual) if expected is not None else True
+
+            return AssertionResult(
+                passed=passed,
+                message=f"SQL断言: {sql}, 实际值: {actual}, 期望值: {expected}",
+                actual=actual,
+                expected=expected,
+                assertion_type='sql'
+            )
+        except Exception as e:
+            return AssertionResult(
+                passed=False,
+                message=f"SQL执行失败: {str(e)}",
+                assertion_type='sql'
+            )
+
+    @staticmethod
+    def _execute_sql_query(sql: str, db_config: Dict) -> Any:
+        """执行SQL查询并返回结果"""
+        from sqlalchemy import create_engine, text
+
+        db_type = db_config.get('type', 'mysql')
+        host = db_config.get('host')
+        port = db_config.get('port', 3306)
+        user = db_config.get('user')
+        password = db_config.get('password')
+        database = db_config.get('database')
+
+        if db_type == 'mysql':
+            url = f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}"
+        elif db_type == 'postgresql':
+            url = f"postgresql://{user}:{password}@{host}:{port}/{database}"
+        elif db_type == 'sqlite':
+            url = f"sqlite:///{database}"
+        else:
+            raise ValueError(f"不支持的数据库类型: {db_type}")
+
+        engine = create_engine(url)
+        with engine.connect() as conn:
+            result = conn.execute(text(sql))
+            # 如果是SELECT，返回第一行第一列；否则返回影响的行数
+            if sql.strip().upper().startswith('SELECT'):
+                row = result.fetchone()
+                return row[0] if row else None
+            else:
+                conn.commit()
+                return result.rowcount
 
     @staticmethod
     def _assert_type(actual: Any, expected: Union[type, str]) -> AssertionResult:

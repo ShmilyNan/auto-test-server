@@ -212,16 +212,9 @@ class DataCleaner:
             # 这里调用 exec_sql 工具执行 SQL
             # 注意：由于 SQL 集成服务可能需要在运行时调用，这里使用占位符
             # 实际实现需要根据项目中的数据库集成方式进行调用
-
-            # 方式1：使用 PostgreSQL 集成（如果已配置）
-            # from integration_postgre_database import execute_sql
-            # result = execute_sql(statement)
-
-            # 方式2：使用 SQLAlchemy 直接连接数据库
-            # 需要在 config.yaml 中配置数据库连接信息
             config = self._get_db_config()
             if config:
-                return self._execute_with_sqlalchemy(statement, params, config)
+                return self._execute_with_sqlalchemy(statement, params)
             else:
                 logger.warning("未配置数据库连接，SQL 清洗将跳过")
                 return False
@@ -252,12 +245,11 @@ class DataCleaner:
             return None
 
     @staticmethod
-    def _execute_with_sqlalchemy(statement: str, params: Optional[Dict], db_config: Dict) -> bool:
+    def _execute_with_sqlalchemy(statement: str, db_config: Dict) -> bool:
         """
         使用 SQLAlchemy 执行 SQL
         Args:
             statement: SQL 语句
-            params: 参数
             db_config: 数据库配置
         Returns:
             bool: 执行是否成功

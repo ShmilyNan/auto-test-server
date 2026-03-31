@@ -39,13 +39,11 @@ class ScenarioGenerator:
     ) -> List[Scenario]:
         """
         从 cURL 请求生成多个测试场景
-
         Args:
             request: cURL 请求对象
             case_name: 用例名称
             method: HTTP 方法
             is_new: 是否为新增类接口（决定是否添加 smoke 标签）
-
         Returns:
             List[Scenario]: 测试场景列表
         """

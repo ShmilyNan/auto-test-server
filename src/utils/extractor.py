@@ -231,7 +231,7 @@ class Extractor:
         
         for key in keys:
             # 处理数组索引: users[0]
-            match = re.match(r'(\w+)\[(\d+)\]', key)
+            match = re.match(r'(\w+)\[(\d+)]', key)
             if match:
                 attr_name = match.group(1)
                 index = int(match.group(2))
