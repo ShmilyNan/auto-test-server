@@ -167,49 +167,49 @@ test_cases:
 
 ```bash
 # 运行用户模块的所有测试
-python -m pytest src/api/test_dynamic.py -k "user_module" -v
+python -m pytest src/api/test_generator.py -k "user_module" -v
 
 # 运行商品模块的所有测试
-python -m pytest src/api/test_dynamic.py -k "product_module" -v
+python -m pytest src/api/test_generator.py -k "product_module" -v
 
 # 运行订单模块的所有测试
-python -m pytest src/api/test_dynamic.py -k "order_module" -v
+python -m pytest src/api/test_generator.py -k "order_module" -v
 ```
 
 ### 3.2 运行多个模块的测试用例
 
 ```bash
 # 运行用户模块或商品模块的测试
-python -m pytest src/api/test_dynamic.py -k "user_module or product_module" -v
+python -m pytest src/api/test_generator.py -k "user_module or product_module" -v
 
 # 运行用户模块、商品模块和订单模块的测试
-python -m pytest src/api/test_dynamic.py -k "user_module or product_module or order_module" -v
+python -m pytest src/api/test_generator.py -k "user_module or product_module or order_module" -v
 ```
 
 ### 3.3 组合筛选条件
 
 ```bash
 # 运行用户模块的 P0 级用例
-python -m pytest src/api/test_dynamic.py -k "user_module and p0" -v
+python -m pytest src/api/test_generator.py -k "user_module and p0" -v
 
 # 运行商品模块的正向测试
-python -m pytest src/api/test_dynamic.py -k "product_module and positive" -v
+python -m pytest src/api/test_generator.py -k "product_module and positive" -v
 
 # 运行订单模块的冒烟测试
-python -m pytest src/api/test_dynamic.py -k "order_module and smoke" -v
+python -m pytest src/api/test_generator.py -k "order_module and smoke" -v
 
 # 排除慢速测试
-python -m pytest src/api/test_dynamic.py -k "user_module and not slow" -v
+python -m pytest src/api/test_generator.py -k "user_module and not slow" -v
 ```
 
 ### 3.4 按模块名称模糊匹配
 
 ```bash
 # 运行所有包含 "user" 的模块
-python -m pytest src/api/test_dynamic.py -k "user" -v
+python -m pytest src/api/test_generator.py -k "user" -v
 
 # 运行所有包含 "module" 的模块
-python -m pytest src/api/test_dynamic.py -k "module" -v
+python -m pytest src/api/test_generator.py -k "module" -v
 ```
 
 ## 4. 使用 marker 运行特定类型的测试
@@ -270,13 +270,13 @@ python -m pytest -m negative -v
 
 ```bash
 # 运行用户模块的冒烟测试
-python -m pytest src/api/test_dynamic.py -k "user_module" -m smoke -v
+python -m pytest src/api/test_generator.py -k "user_module" -m smoke -v
 
 # 运行商品模块的 P0 级用例
-python -m pytest src/api/test_dynamic.py -k "product_module" -m p0 -v
+python -m pytest src/api/test_generator.py -k "product_module" -m p0 -v
 
 # 运行订单模块的正向测试
-python -m pytest src/api/test_dynamic.py -k "order_module" -m positive -v
+python -m pytest src/api/test_generator.py -k "order_module" -m positive -v
 ```
 
 ## 6. 实际使用场景
@@ -288,7 +288,7 @@ python -m pytest src/api/test_dynamic.py -k "order_module" -m positive -v
 python -m pytest -m smoke -v
 
 # 只运行核心模块的冒烟测试
-python -m pytest src/api/test_dynamic.py -k "user_module or product_module or order_module" -m smoke -v
+python -m pytest src/api/test_generator.py -k "user_module or product_module or order_module" -m smoke -v
 ```
 
 ### 场景 2：回归测试（完整验证）
@@ -305,17 +305,17 @@ python -m pytest -m "p0 or p1" -v
 
 ```bash
 # 开发用户模块时，只运行用户模块的测试
-python -m pytest src/api/test_dynamic.py -k "user_module" -v
+python -m pytest src/api/test_generator.py -k "user_module" -v
 
 # 开发商品模块时，只运行商品模块的测试
-python -m pytest src/api/test_dynamic.py -k "product_module" -v
+python -m pytest src/api/test_generator.py -k "product_module" -v
 ```
 
 ### 场景 4：Bug 修复验证
 
 ```bash
 # 修复某个 Bug 后，只运行相关的测试用例
-python -m pytest src/api/test_dynamic.py -k "user_login" -v
+python -m pytest src/api/test_generator.py -k "user_login" -v
 ```
 
 ### 场景 5：性能测试
@@ -355,7 +355,7 @@ def test_dynamic_test(test_data, request):
 
 ```bash
 # 生成 Allure 报告
-python -m pytest src/api/test_dynamic.py -k "user_module" --alluredir=reports/allure
+python -m pytest src/api/test_generator.py -k "user_module" --alluredir=reports/allure
 
 # 在 Allure 报告中按模块筛选
 allure serve reports/allure
@@ -381,7 +381,7 @@ allure generate reports/allure -o reports/allure-report --clean
 
 ```bash
 # 收集所有测试用例，查看模块信息
-python -m pytest src/api/test_dynamic.py --collect-only -v
+python -m pytest src/api/test_generator.py --collect-only -v
 ```
 
 ### Q2: 如何运行所有测试用例？
@@ -390,7 +390,7 @@ python -m pytest src/api/test_dynamic.py --collect-only -v
 
 ```bash
 # 运行所有测试用例
-python -m pytest src/api/test_dynamic.py -v
+python -m pytest src/api/test_generator.py -v
 
 # 或使用 marker 运行所有测试
 python -m pytest -v
@@ -402,10 +402,10 @@ python -m pytest -v
 
 ```bash
 # 跳过用户模块的测试
-python -m pytest src/api/test_dynamic.py -k "not user_module" -v
+python -m pytest src/api/test_generator.py -k "not user_module" -v
 
 # 跳过用户模块和商品模块的测试
-python -m pytest src/api/test_dynamic.py -k "not (user_module or product_module)" -v
+python -m pytest src/api/test_generator.py -k "not (user_module or product_module)" -v
 ```
 
 ### Q4: 如何按测试用例名称筛选？
@@ -414,10 +414,10 @@ python -m pytest src/api/test_dynamic.py -k "not (user_module or product_module)
 
 ```bash
 # 运行名称包含 "login" 的测试用例
-python -m pytest src/api/test_dynamic.py -k "login" -v
+python -m pytest src/api/test_generator.py -k "login" -v
 
 # 运行名称包含 "create" 的测试用例
-python -m pytest src/api/test_dynamic.py -k "create" -v
+python -m pytest src/api/test_generator.py -k "create" -v
 ```
 
 ## 总结

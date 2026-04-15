@@ -190,7 +190,7 @@ test_cases:
 ### 测试用例收集
 
 ```bash
-$ python -m pytest src/api/test_dynamic.py --collect-only
+$ python -m pytest src/api/test_generator.py --collect-only
 collected 28 items
         <Function test_测试用例_创建订单_0>
         <Function test_测试用例_查询订单_1>

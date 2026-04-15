@@ -1,31 +1,15 @@
 # 测试环境配置
 
-# 基础URL
-# NOTE: 用于构建完整的请求URL，作为默认 base_url
-base_url: "https://dev-aly-us-ad-web.cdcicd.com"
-
 # 多个 base_url 配置
 # NOTE: 同一环境中不同接口可能需要不同的 base_url
-# 用法: 测试用例中指定 base_url 别名，如 base_url: "admin"
+# 用法: 测试用例中必须指定 base_url 别名，如 base_url: "operation"
 base_urls:
-  # 默认 API 服务-新运营系统
-  default: "https://dev-aly-us-ad-web.cdcicd.com"
-  # siteId API
+  # 新运营系统
+  operation: "https://dev-aly-us-ad-web.cdcicd.com"
+  # siteId
   siteId: "http://test-api.chongdaads.com"
-  # dsp 测试环境
+  # DSP
   dsp: "http://test-huiinex-dsp-web.cdcicd.com"
-
-
-# 代理配置
-proxy:
-  enable: false
-  http: ""
-  https: ""
-
-# 认证配置
-auth:
-  username: "Lee"
-  password: "Working@1130"
 
 # 默认请求头
 headers:
@@ -34,8 +18,8 @@ headers:
   User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
 
 # 默认请求参数
-#params:
-#  debug: "false"
+params:
+  debug: "false"
 
 # 超时配置
 timeout:

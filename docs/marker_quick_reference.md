@@ -20,13 +20,13 @@ python -m pytest --help
 
 ```bash
 # 运行用户模块的所有测试
-python -m pytest src/api/test_dynamic.py -k "user_module" -v
+python -m pytest src/api/test_generator.py -k "user_module" -v
 
 # 运行商品模块的所有测试
-python -m pytest src/api/test_dynamic.py -k "product_module" -v
+python -m pytest src/api/test_generator.py -k "product_module" -v
 
 # 运行多个模块
-python -m pytest src/api/test_dynamic.py -k "user_module or product_module" -v
+python -m pytest src/api/test_generator.py -k "user_module or product_module" -v
 ```
 
 ### 2. 按 marker 筛选
@@ -49,13 +49,13 @@ python -m pytest -m positive -v
 
 ```bash
 # 用户模块 + P0 级用例
-python -m pytest src/api/test_dynamic.py -k "user_module and p0" -v
+python -m pytest src/api/test_generator.py -k "user_module and p0" -v
 
 # 用户模块 + 冒烟测试
-python -m pytest src/api/test_dynamic.py -k "user_module" -m smoke -v
+python -m pytest src/api/test_generator.py -k "user_module" -m smoke -v
 
 # 商品模块 + 正向测试
-python -m pytest src/api/test_dynamic.py -k "product_module and positive" -v
+python -m pytest src/api/test_generator.py -k "product_module and positive" -v
 
 # 排除慢速测试
 python -m pytest -m "not slow" -v
@@ -65,7 +65,7 @@ python -m pytest -m "not slow" -v
 
 ```bash
 # 运行所有测试
-python -m pytest src/api/test_dynamic.py -v
+python -m pytest src/api/test_generator.py -v
 
 # 或
 python -m pytest -v
@@ -182,14 +182,14 @@ python -m pytest -m p0 -v
 
 ```bash
 # 开发用户模块时，只运行用户模块的测试
-python -m pytest src/api/test_dynamic.py -k "user_module" -v
+python -m pytest src/api/test_generator.py -k "user_module" -v
 ```
 
 ### Bug 修复验证
 
 ```bash
 # 修复某个 Bug 后，只运行相关的测试用例
-python -m pytest src/api/test_dynamic.py -k "user_login" -v
+python -m pytest src/api/test_generator.py -k "user_login" -v
 ```
 
 ### 回归测试

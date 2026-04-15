@@ -1,27 +1,13 @@
 # 生产环境配置
 
-# 基础URL
-base_url: "https://aly-us-ad-web.cdcicd.com"
-
 # 多个 base_url 配置
 # NOTE: 同一环境中不同接口可能需要不同的 base_url
-# 用法: 测试用例中指定 base_url 别名，如 base_url: "admin"
+# 用法: 测试用例中必须指定 base_url 别名，如 base_url: "operation"
 base_urls:
-  # 默认 API 服务
-  default: "https://aly-us-ad-web.cdcicd.com"
+  # 运营系统
+  operation: "https://aly-us-ad-web.cdcicd.com"
   # siteId API
   siteId: "http://test-api.chongdaads.com"
-
-# 代理配置
-proxy:
-  enable: false
-  http: ""
-  https: ""
-
-# 认证配置
-auth:
-  username: ""
-  password: ""
 
 # 默认请求头
 headers:
@@ -29,9 +15,6 @@ headers:
   Accept: "application/json"
   User-Agent: "AutoTestPlatform/1.0"
   X-Env: "production"
-
-# 默认请求参数
-params: {}
 
 # 超时配置
 timeout:

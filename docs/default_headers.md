@@ -223,7 +223,7 @@ python test_default_headers.py
 运行测试时，日志会显示实际使用的请求头：
 
 ```bash
-python -m pytest src/api/test_dynamic.py -v
+python -m pytest src/api/test_generator.py -v
 ```
 
 日志输出：

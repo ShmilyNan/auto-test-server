@@ -71,7 +71,7 @@
 ### 测试用例收集
 
 ```bash
-$ python -m pytest src/api/test_dynamic.py --collect-only
+$ python -m pytest src/api/test_generator.py --collect-only
 ```
 
 **输出**：
@@ -109,16 +109,16 @@ $ python -m pytest src/api -k "test_用户注册_正常流程_0" -v
 
 ```bash
 # 运行所有自动生成的测试用例
-python -m pytest src/api/test_dynamic.py
+python -m pytest src/api/test_generator.py
 
 # 查看生成的测试用例列表
-python -m pytest src/api/test_dynamic.py --collect-only
+python -m pytest src/api/test_generator.py --collect-only
 
 # 运行特定测试用例
-python -m pytest src/api/test_dynamic.py::test_用户登录_正常流程_1
+python -m pytest src/api/test_generator.py::test_用户登录_正常流程_1
 
 # 按标记运行测试
-python -m pytest src/api/test_dynamic.py -m smoke
+python -m pytest src/api/test_generator.py -m smoke
 ```
 
 ### 添加新测试用例

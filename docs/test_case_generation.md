@@ -42,27 +42,27 @@
 
 ```bash
 cd auto-test-server
-python -m pytest src/api/test_dynamic.py
+python -m pytest src/api/test_generator.py
 ```
 
 ### 运行特定测试
 
 ```bash
 # 运行特定测试用例
-python -m pytest src/api/test_dynamic.py::test_用户登录_正常流程_1
+python -m pytest src/api/test_generator.py::test_用户登录_正常流程_1
 
 # 运行特定模块的所有测试
-python -m pytest src/api/test_dynamic.py -k "user_module"
+python -m pytest src/api/test_generator.py -k "user_module"
 
 # 运行特定优先级的测试
-python -m pytest src/api/test_dynamic.py -m p0
+python -m pytest src/api/test_generator.py -m p0
 ```
 
 ### 查看测试用例
 
 ```bash
 # 只收集测试用例，不执行
-python -m pytest src/api/test_dynamic.py --collect-only
+python -m pytest src/api/test_generator.py --collect-only
 ```
 
 ## 测试数据格式
@@ -201,7 +201,7 @@ url: /api/users/${extract.user_id}
 
 ```bash
 # 运行测试并生成 Allure 报告
-python -m pytest src/api/test_dynamic.py --alluredir=reports/allure
+python -m pytest src/api/test_generator.py --alluredir=reports/allure
 
 # 查看报告
 allure serve reports/allure
@@ -211,7 +211,7 @@ allure serve reports/allure
 
 ```bash
 # 生成 HTML 报告
-python -m pytest src/api/test_dynamic.py --html=reports/report.html
+python -m pytest src/api/test_generator.py --html=reports/report.html
 ```
 
 ## 配置文件
@@ -273,7 +273,7 @@ skip_reason: "接口暂未实现"
 A: 使用 `-m smoke` 标记：
 
 ```bash
-python -m pytest src/api/test_dynamic.py -m smoke
+python -m pytest src/api/test_generator.py -m smoke
 ```
 
 ## 最佳实践

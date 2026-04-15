@@ -4,50 +4,13 @@
 # 默认环境配置
 default_env: test
 
-# 全局登录配置
-global_login:
-  # 是否启用全局登录
-#  enable: true
-  enable: true
-  # 登录接口路径（相对于 base_url，或绝对URL）
-  # 如果是相对路径，会自动拼接 env 配置中的 base_url
-  login_url: "/prod-api/login"
-  # 登录方式: password, token, oauth, saml
-  login_type: "password"
-  # 用户名/账号（可选，如果 env 配置中有 auth.username 则优先使用）
-  username: "admin"
-  # 密码（可选，如果 env 配置中有 auth.password 则优先使用）
-  password: "admin123"
-  # 请求方式: POST, GET
-  request_method: "POST"
-  # 请求体格式: json, form
-  request_body_type: "json"
-  # 自定义请求头
-  headers:
-    Content-Type: "application/json"
-    Accept: "application/json"
-    User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
-  # 自定义请求体（支持 ${username} 和 ${password} 变量替换）
-  body_template: |
-    {
-      "username": "${username}",
-      "password": "${password}"
-    }
-  # Token 提取路径（JSONPath）
-  token_path: "$.token"
-  # Token 类型（用于 Authorization header）
-  token_type: "Bearer"
-  # Token 过期时间（秒），0 表示永不过期
-  # Token 过期后会自动重新登录
-  token_ttl: 7200
-
 # 项目信息
 project:
   name: 接口自动化测试平台
   version: 1.0.0
-  description: 基于pytest的接口自动化测试框架
+  description: 基于-pytest的接口自动化测试框架
 
-# HTTP客户端配置
+# HTTP-客户端配置
 http_client:
   # 可选: requests 或 httpx
   type: httpx
@@ -63,7 +26,7 @@ http_client:
   max_retries: 3
   # 重试间隔（秒）
   retry_interval: 1
-  # 忽略ssl验证
+  # 忽略-ssl-验证
   verify_ssl: false
 
 # 日志配置
@@ -83,18 +46,9 @@ logging:
   # 日志格式
   format: "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
 
-# 变量管理
-variables:
-  # 全局变量文件
-  global_file: config/global_vars.yaml
-  # 是否启用变量缓存
-  enable_cache: true
-  # 缓存过期时间（秒）
-  cache_ttl: 3600
-
 # 断言配置
 assertion:
-  # 是否启用SQL断言
+  # 是否启用-SQL断言
   enable_sql: true
   # 是否启用JSON Schema断言
   enable_schema: true
@@ -102,15 +56,6 @@ assertion:
   enable_regex: true
   # 断言失败时是否继续执行
   continue_on_fail: false
-
-# 钩子配置
-hooks:
-  # 自定义钩子目录
-  dir: hooks
-  # 是否启用钩子
-  enable: true
-  # 钩子顺序文件
-  order_file: hooks/hooks_order.yaml
 
 # 通知配置
 notification:
@@ -174,32 +119,3 @@ test_data:
     - .json
   # 是否进行数据校验
   validate: true
-
-# 数据库配置（用于SQL断言）
-database:
-  # 数据库类型: mysql, postgres
-  type: mysql
-  host: ""
-  port: 3306
-  user: ""
-  password: ""
-  database: ""
-  charset: utf8mb4
-  # 连接池配置
-  pool_size: 5
-  max_overflow: 10
-  pool_timeout: 30
-  pool_recycle: 3600
-
-# 其他配置
-misc:
-  # 是否显示详细堆栈
-  verbose_traceback: false
-  # 是否启用性能分析
-  enable_profiling: false
-  # 并发执行数（pytest-xdist）
-  workers: auto
-  # 是否启用重试
-  enable_rerun: false
-  # 重试次数
-  reruns: 2

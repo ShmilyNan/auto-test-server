@@ -100,16 +100,16 @@ markers = [
 
 ```bash
 # 运行用户模块的所有测试
-python -m pytest src/api/test_dynamic.py -k "user_module" -v
+python -m pytest src/api/test_generator.py -k "user_module" -v
 
 # 运行商品模块的所有测试
-python -m pytest src/api/test_dynamic.py -k "product_module" -v
+python -m pytest src/api/test_generator.py -k "product_module" -v
 
 # 运行多个模块的测试
-python -m pytest src/api/test_dynamic.py -k "user_module or product_module" -v
+python -m pytest src/api/test_generator.py -k "user_module or product_module" -v
 
 # 组合筛选
-python -m pytest src/api/test_dynamic.py -k "user_module and p0" -v
+python -m pytest src/api/test_generator.py -k "user_module and p0" -v
 ```
 
 ### 3. 在 YAML 配置中定义模块信息
@@ -218,7 +218,7 @@ mv pytest.ini pytest.ini.bak
 python -m pytest --markers -p no:asyncio
 
 # 运行测试
-python -m pytest src/api/test_dynamic.py -v
+python -m pytest src/api/test_generator.py -v
 ```
 
 **验证结果**：
@@ -290,26 +290,26 @@ python -m pytest src/api/test_dynamic.py -v
 
 ```bash
 # 运行用户模块的所有测试
-python -m pytest src/api/test_dynamic.py -k "user_module" -v
+python -m pytest src/api/test_generator.py -k "user_module" -v
 
 # 运行商品模块的所有测试
-python -m pytest src/api/test_dynamic.py -k "product_module" -v
+python -m pytest src/api/test_generator.py -k "product_module" -v
 
 # 运行多个模块的测试
-python -m pytest src/api/test_dynamic.py -k "user_module or product_module" -v
+python -m pytest src/api/test_generator.py -k "user_module or product_module" -v
 ```
 
 ### 2. 组合筛选条件
 
 ```bash
 # 运行用户模块的 P0 级用例
-python -m pytest src/api/test_dynamic.py -k "user_module and p0" -v
+python -m pytest src/api/test_generator.py -k "user_module and p0" -v
 
 # 运行商品模块的正向测试
-python -m pytest src/api/test_dynamic.py -k "product_module and positive" -v
+python -m pytest src/api/test_generator.py -k "product_module and positive" -v
 
 # 排除慢速测试
-python -m pytest src/api/test_dynamic.py -k "user_module and not slow" -v
+python -m pytest src/api/test_generator.py -k "user_module and not slow" -v
 ```
 
 ### 3. 使用 marker 筛选
@@ -329,10 +329,10 @@ python -m pytest -m api -v
 
 ```bash
 # 运行用户模块的冒烟测试
-python -m pytest src/api/test_dynamic.py -k "user_module" -m smoke -v
+python -m pytest src/api/test_generator.py -k "user_module" -m smoke -v
 
 # 运行商品模块的 P0 级用例
-python -m pytest src/api/test_dynamic.py -k "product_module" -m p0 -v
+python -m pytest src/api/test_generator.py -k "product_module" -m p0 -v
 ```
 
 ## 文件变更

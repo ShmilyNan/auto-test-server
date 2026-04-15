@@ -28,7 +28,8 @@ test_cases:
     order: 0
     priority: "p0"
     tags: ["smoke", "daily", "skip"]
-    
+
+    base_url: "operation"
     method: "POST"
     url: "/prod-api/login"
 
@@ -36,7 +37,7 @@ test_cases:
       username: "Lee"
       password: "Working@1130"
 
-    validate:
+    assertions:
       - type: "status_code"
         expected: 200
       
@@ -47,7 +48,7 @@ test_cases:
       - type: "is_not_none"
         path: "body.token"
     
-    extract:
+    extractions:
       access_token:
         type: "jsonpath"
         expression: "$.token"
@@ -66,14 +67,16 @@ test_cases:
     
     # 依赖登录用例
     depends_on: "用户登录-正常流程"
-    
+    require_login: true
+
+    base_url: "operation"
     method: "GET"
     url: "/prod-api/getInfo"
     
 #    headers:
 #      Authorization: "Bearer ${$extract.access_token}"
     
-    validate:
+    assertions:
       - type: "status_code"
         expected: 200
       
@@ -110,14 +113,15 @@ test_cases:
     description: "获取用户权限列表"
     priority: "p2"
     tags: ["regression"]
-    
+
+    base_url: "operation"
     method: "GET"
     url: "/prod-api/getRouters"
     
 #    headers:
 #      Authorization: "Bearer ${$extract.access_token}"
     
-    validate:
+    assertions:
       - type: "status_code"
         expected: 200
       
@@ -136,14 +140,15 @@ test_cases:
     description: "用户正常登出"
     priority: "p1"
     tags: ["regression","skip"]
-    
+
+    base_url: "operation"
     method: "POST"
     url: "/prod-api/logout"
     
 #    headers:
 #      Authorization: "Bearer ${$extract.access_token}"
     
-    validate:
+    assertions:
       - type: "status_code"
         expected: 200
 
@@ -154,7 +159,8 @@ test_cases:
     description: "测试登录时输入错误密码"
     priority: "p2"
     tags: ["regression", "negative", "skip"]
-    
+
+    base_url: "operation"
     method: "POST"
     url: "/prod-api/login"
 
@@ -162,7 +168,7 @@ test_cases:
       username: "Lee"
       password: "Working@0610"
 
-    validate:
+    assertions:
       - type: "status_code"
         expected: 200
       
@@ -182,13 +188,14 @@ test_cases:
     priority: "p3"
     tags: ["performance","skip"]
 
+    base_url: "operation"
     method: "GET"
     url: "/user/info"
 
 #    headers:
 #      Authorization: "Bearer ${$extract.access_token}"
 
-    validate:
+    assertions:
       - type: "status_code"
         expected: 200
 
@@ -204,6 +211,7 @@ test_cases:
     priority: "p1"
     tags: ["database","skip"]
 
+    base_url: "operation"
     method: "POST"
     url: "/user/register"
 
@@ -212,7 +220,7 @@ test_cases:
       password: "Test@123456"
       email: "sql_test_${timestamp()}@example.com"
 
-    validate:
+    assertions:
       - type: "status_code"
         expected: 200
 
@@ -233,6 +241,7 @@ test_cases:
     priority: "p2"
     tags: ["file","skip"]
 
+    base_url: "operation"
     method: "POST"
     url: "/user/avatar"
 
@@ -246,7 +255,7 @@ test_cases:
     params:
       type: "avatar"
 
-    validate:
+    assertions:
       - type: "status_code"
         expected: 200
 

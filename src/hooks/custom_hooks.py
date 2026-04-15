@@ -24,11 +24,11 @@ def after_login(response: Dict[str, Any]):
     自动保存token到缓存
     """
     context = get_context()
-    
+
     if response.get('status_code') == 200:
         data = response.get('body', {}).get('data', {})
         token = data.get('token')
-        
+
         if token:
             # 缓存token，有效期24小时
             context.set_cache('access_token', token, ttl=86400)
@@ -50,7 +50,7 @@ def after_request(response: Dict[str, Any]):
     记录响应时间
     """
     context = get_context()
-    
+
     start_time = context.get_local('request_start_time')
     if start_time:
         elapsed = time.time() - start_time
@@ -131,6 +131,5 @@ def after_database_query(result: Any):
     数据库查询后钩子
     """
     print(f"SQL查询结果: {result}")
-
 
 # 更多自定义钩子可以根据需要添加

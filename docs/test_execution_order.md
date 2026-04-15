@@ -222,7 +222,7 @@ test_cases:
 
 ```bash
 # 查看所有测试用例及其顺序
-python -m pytest src/api/test_dynamic.py --collect-only -v
+python -m pytest src/api/test_generator.py --collect-only -v
 ```
 
 ### 方法2：使用日志
@@ -231,7 +231,7 @@ python -m pytest src/api/test_dynamic.py --collect-only -v
 
 ```bash
 # 运行测试并查看日志
-python -m pytest src/api/test_dynamic.py -v
+python -m pytest src/api/test_generator.py -v
 ```
 
 日志输出示例：

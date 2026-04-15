@@ -173,7 +173,7 @@ cleanup:
 ### 测试结果
 
 ```bash
-$ python -m pytest src/api/test_dynamic.py -k "cleanup" -v
+$ python -m pytest src/api/test_generator.py -k "cleanup" -v
 ================= 5 passed, 33 deselected, 3 warnings in 3.26s =================
 ```
 

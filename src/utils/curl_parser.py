@@ -92,6 +92,7 @@ class CurlParser:
             # 处理 URL（非选项参数）
             elif self.url is None and (part.startswith('http://') or part.startswith('https://')):
                 self.url = part
+
                 i += 1
             else:
                 i += 1

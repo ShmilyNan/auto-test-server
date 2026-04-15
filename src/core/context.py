@@ -15,7 +15,9 @@ from src.utils.logger import logger
 @dataclass
 class TestContext:
     """测试上下文"""
-    
+
+    __test__ = False
+
     # 全局变量（整个测试会话共享）
     global_vars: Dict[str, Any] = field(default_factory=dict)
     

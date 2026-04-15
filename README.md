@@ -139,7 +139,7 @@ cases:
 
 ```bash
 # 运行所有测试（自动从 test_data 生成测试用例）
-python -m pytest src/api/test_dynamic.py
+python -m pytest src/api/test_generator.py
 
 # 使用运行入口
 python run.py
@@ -158,7 +158,7 @@ allure serve reports/allure
 
 ```bash
 # 收集但不执行测试，查看生成的测试用例
-python -m pytest src/api/test_dynamic.py --collect-only
+python -m pytest src/api/test_generator.py --collect-only
 ```
 
 ## 📖 核心功能说明
@@ -311,7 +311,7 @@ markers = [
 **使用方式**：
 ```bash
 # 运行特定模块的测试用例
-python -m pytest src/api/test_dynamic.py -k "user_module" -v
+python -m pytest src/api/test_generator.py -k "user_module" -v
 
 # 运行特定类型的测试
 python -m pytest -m "smoke and p0" -v

@@ -96,6 +96,145 @@ def _generate_function_name(test_case: CaseDataStructure, module: str, idx: int)
     return function_name
 
 
+def _infer_service_type(tc: CaseDataStructure, env_config: Dict) -> str:
+    """
+    从测试用例的 base_url 中推断服务类型
+
+    Args:
+        tc: 测试用例
+        env_config: 环境配置
+
+    Returns:
+        str: 服务类型（如 operation、dsp），如果无法推断则返回 None
+    """
+    if not tc.base_url:
+        return None
+
+    base_urls = env_config.get('base_urls', {})
+
+    # 优先按别名匹配
+    if tc.base_url in base_urls:
+        return tc.base_url
+
+    # 如果不是别名，按 URL 匹配
+    for st, url in base_urls.items():
+        if url in tc.base_url or tc.base_url in url:
+            return st
+
+    return None
+
+
+def _execute_test_logic(tc: CaseDataStructure, http_client, validator, extractor, test_context, selected_headers, start_time: float):
+    """
+    执行测试用例的核心逻辑
+
+    Args:
+        tc: 测试用例
+        http_client: HTTP客户端
+        validator: 验证器
+        extractor: 提取器
+        test_context: 测试上下文
+        selected_headers: 选定的请求头
+        start_time: 开始时间
+    """
+    try:
+        # 执行前置处理
+        if tc.setup:
+            _execute_setup(tc.setup, test_context)
+
+        # 准备请求参数
+        request_data = _prepare_request_data(tc, test_context, selected_headers)
+
+        # 构建完整URL（支持多 base_url）
+        url = _build_url(tc.url, test_context, tc.base_url)
+
+        # 发送请求
+        logger.info(f"执行测试用例: {tc.name}")
+        logger.debug(f"请求: {tc.method} {url}")
+        logger.debug(f"请求参数: {request_data}")
+
+        response = http_client.request(
+            method=tc.method,
+            url=url,
+            **request_data
+        )
+
+        # 保存响应到上下文
+        test_context.set_last_response(response)
+
+        # 提取数据
+        if tc.extract:
+            # 对提取规则进行变量替换（支持随机数等函数）
+            extract_rules = test_context.replace_vars_dict(tc.extract)
+            extracted_data = extractor.extract(response, extract_rules)
+            for key, value in extracted_data.items():
+                test_context.set_extract(key, value)
+                logger.debug(f"提取变量: {key} = {value}")
+
+        # 执行断言
+        if tc.validate:
+            # 对断言规则进行变量替换（特别是 expected 字段）
+            assertions = test_context.replace_vars_dict(tc.validate)
+            results = validator.validate(response, assertions)
+            failed_results = [r for r in results if not r.passed]
+
+            if failed_results:
+                error_messages = [r.message for r in failed_results]
+                pytest.fail(f"断言失败: {'; '.join(error_messages)}")
+
+        # 保存文件（如果有配置）
+        if tc.save_to_file and response.get('content'):
+            try:
+                from src.utils.file_downloader import FileDownloader
+                downloader = FileDownloader()
+
+                filename = tc.save_to_file.get('filename')
+                sub_dir = tc.save_to_file.get('sub_dir')
+
+                if filename:
+                    saved_path = downloader.save_response_file(
+                        response=response,
+                        filename=filename,
+                        sub_dir=sub_dir
+                    )
+                    if saved_path:
+                        logger.info(f"文件已保存: {saved_path}")
+                        # 将保存的文件路径存入上下文，供后续用例使用
+                        test_context.set_local('saved_file_path', saved_path)
+            except Exception as e:
+                logger.warning(f"文件保存失败: {str(e)}")
+                # 文件保存失败不影响测试用例结果
+
+        # 执行后置处理
+        if tc.teardown:
+            _execute_teardown(tc.teardown, test_context)
+
+        # 执行数据清洗
+        if tc.cleanup:
+            try:
+                from src.utils.cleaner import get_cleaner
+                cleaner = get_cleaner()
+                success = cleaner.cleanup(tc.cleanup)
+                if success:
+                    logger.debug(f"数据清洗成功: {tc.name}")
+                else:
+                    logger.warning(f"数据清洗失败: {tc.name}")
+            except Exception as e:
+                logger.error(f"数据清洗异常: {tc.name}, 错误: {str(e)}")
+                # 数据清洗失败不影响测试用例结果
+
+        # 记录执行时间
+        elapsed = time.time() - start_time
+        logger.info(f"测试用例执行成功: {tc.name}, 耗时: {elapsed:.3f}s")
+
+    except AssertionError as e:
+        logger.error(f"测试用例断言失败: {tc.name}, 错误: {str(e)}")
+        raise
+    except Exception as e:
+        logger.error(f"测试用例执行失败: {tc.name}, 错误: {str(e)}")
+        raise
+
+
 def _build_url(url: str, test_context, base_url_alias: str = None) -> str:
     """
     构建完整URL
@@ -113,7 +252,7 @@ def _build_url(url: str, test_context, base_url_alias: str = None) -> str:
     # 替换URL中的变量
     url = test_context.replace_vars(url)
 
-    # 如果 url 已经是完整 URL，直接返回
+    # 如果  url 已经是完整 URL，直接返回
     if url.startswith(('http://', 'https://')):
         return url
 
@@ -124,7 +263,6 @@ def _build_url(url: str, test_context, base_url_alias: str = None) -> str:
     env_config = load_yaml_dict(get_env_config_file(default_env), default={})
 
     # 确定 base_url
-    # base_url = ""
     if base_url_alias:
         # 替换 base_url_alias 中的变量
         base_url_alias = test_context.replace_vars(base_url_alias)
@@ -139,13 +277,16 @@ def _build_url(url: str, test_context, base_url_alias: str = None) -> str:
                 base_url = base_urls[base_url_alias]
                 logger.debug(f"使用 base_url 别名 '{base_url_alias}': {base_url}")
             else:
-                logger.warning(f"未找到 base_url 别名 '{base_url_alias}'，使用默认 base_url")
-                base_url = env_config.get('base_url', '')
+                logger.error(f"未找到 base_url 别名 '{base_url_alias}'")
+                logger.error(f"可用的 base_url 别名: {list(base_urls.keys()) if base_urls else '无'}")
+                raise ValueError(f"无效的 base_url 别名: '{base_url_alias}'，请检查用例中的 base_url 配置")
     else:
-        # 情况3：使用默认 base_url
-        base_url = env_config.get('base_url', '')
+        # 情况3：未指定 base_url，报错
+        logger.error("测试用例未指定 base_url")
+        logger.error(f"可用的 base_url 别名: {list(env_config.get('base_urls', {}).keys())}")
+        raise ValueError("测试用例必须指定 base_url 字段（如: base_url: 'operation'）")
 
-        # 拼接完整URL
+    # 拼接完整URL
     if base_url:
         # 确保 base_url 不以 / 结尾
         base_url = base_url.rstrip('/')
@@ -156,18 +297,19 @@ def _build_url(url: str, test_context, base_url_alias: str = None) -> str:
     return url
 
 
-def _prepare_request_data(test_case: CaseDataStructure, test_context):
+def _prepare_request_data(test_case: CaseDataStructure, test_context, service_headers=None):
     """
     准备请求数据
     Args:
         test_case: 测试用例
         test_context: 测试上下文
+        service_headers: 服务级别的 headers（可选），如果提供则合并到请求头中
     Returns:
         Dict: 请求数据
     """
     request_data = {}
 
-    # 获取默认请求头（包括 Content-Type、Accept、User-Agent、Authorization）
+    # 获取默认请求头（包括 Content-Type、Accept、User-Agent）
     default_headers = test_context.get_default_headers()
 
     # 合并请求头：默认请求头 + 测试用例请求头
@@ -177,6 +319,12 @@ def _prepare_request_data(test_case: CaseDataStructure, test_context):
     if test_case.headers:
         case_headers = test_context.replace_vars_dict(test_case.headers)
         merged_headers.update(case_headers)
+
+    # 如果提供了 service_headers，合并到请求头中（优先级最高）
+    # 注意：service_headers 会覆盖测试用例的 headers
+    if service_headers:
+        merged_headers.update(service_headers)
+        logger.debug(f"使用服务 headers: {service_headers}")
 
     request_data['headers'] = merged_headers
 
@@ -277,118 +425,69 @@ for test_data in _test_data_list:
         动态生成的测试函数
         """
 
-        def test_function(http_client, validator, extractor, test_context):
-            """
-            动态生成的测试函数
-            Args:
-                http_client: HTTP客户端fixture
-                validator: 验证器fixture
-                extractor: 提取器fixture
-                test_context: 测试上下文fixture
-            """
-            # 检查是否跳过
-            if tc.skip:
+        # 检查是否跳过
+        if tc.skip:
+            def test_function(**kwargs):
                 pytest.skip(tc.skip_reason or "测试用例被标记为跳过")
+        elif tc.require_login:
+            # 使用懒加载登录模式（统一版本）
+            def test_function(http_client, validator, extractor, test_context, env_config, auth_headers):
+                """
+                动态生成的测试函数（需要登录 - 懒加载模式）
+                Args:
+                    http_client: HTTP客户端fixture
+                    validator: 验证器fixture
+                    extractor: 提取器fixture
+                    test_context: 测试上下文fixture
+                    env_config: 环境配置fixture
+                    auth_headers: 懒加载请求头fixture（已经根据 base_url 自动选择）
+                """
+                # 在懒加载模式下，auth_headers 已经是根据 base_url 自动选择的 headers
+                selected_headers = auth_headers
 
-            # 设置用例开始时间
-            start_time = time.time()
+                # 推断 service_type（用于日志）
+                service_type = _infer_service_type(tc, env_config)
+                if service_type:
+                    logger.info(f"服务类型: {service_type}")
+                logger.info(f"使用懒加载 headers: {selected_headers}")
 
-            try:
-                # 执行前置处理
-                if tc.setup:
-                    _execute_setup(tc.setup, test_context)
+                # 检查 headers 是否有效
+                if not selected_headers:
+                    pytest.fail(f"测试用例需要登录，但无法获取有效的 headers")
 
-                # 准备请求参数
-                request_data = _prepare_request_data(tc, test_context)
-
-                # 构建完整URL（支持多 base_url）
-                url = _build_url(tc.url, test_context, tc.base_url)
-
-                # 发送请求
-                logger.info(f"执行测试用例: {tc.name}")
-                logger.debug(f"请求: {tc.method} {url}")
-                logger.debug(f"请求参数: {request_data}")
-
-                response = http_client.request(
-                    method=tc.method,
-                    url=url,
-                    **request_data
+                # 继续执行测试逻辑
+                _execute_test_logic(
+                    tc=tc,
+                    http_client=http_client,
+                    validator=validator,
+                    extractor=extractor,
+                    test_context=test_context,
+                    selected_headers=selected_headers,
+                    start_time=time.time()
                 )
+        else:
+            def test_function(http_client, validator, extractor, test_context):
+                """
+                动态生成的测试函数（不需要登录）
+                Args:
+                    http_client: HTTP客户端fixture
+                    validator: 验证器fixture
+                    extractor: 提取器fixture
+                    test_context: 测试上下文fixture
+                """
+                # 不需要登录，使用空 headers
+                selected_headers = None
 
-                # 保存响应到上下文
-                test_context.set_last_response(response)
-
-                # 提取数据
-                if tc.extract:
-                    # 对提取规则进行变量替换（支持随机数等函数）
-                    extract_rules = test_context.replace_vars_dict(tc.extract)
-                    extracted_data = extractor.extract(response, extract_rules)
-                    for key, value in extracted_data.items():
-                        test_context.set_extract(key, value)
-                        logger.debug(f"提取变量: {key} = {value}")
-
-                # 执行断言
-                if tc.validate:
-                    # 对断言规则进行变量替换（特别是 expected 字段）
-                    assertions = test_context.replace_vars_dict(tc.validate)
-                    results = validator.validate(response, assertions)
-                    failed_results = [r for r in results if not r.passed]
-
-                    if failed_results:
-                        error_messages = [r.message for r in failed_results]
-                        pytest.fail(f"断言失败: {'; '.join(error_messages)}")
-
-                # 保存文件（如果有配置）
-                if tc.save_to_file and response.get('content'):
-                    try:
-                        from src.utils.file_downloader import FileDownloader
-                        downloader = FileDownloader()
-
-                        filename = tc.save_to_file.get('filename')
-                        sub_dir = tc.save_to_file.get('sub_dir')
-
-                        if filename:
-                            saved_path = downloader.save_response_file(
-                                response=response,
-                                filename=filename,
-                                sub_dir=sub_dir
-                            )
-                            if saved_path:
-                                logger.info(f"文件已保存: {saved_path}")
-                                # 将保存的文件路径存入上下文，供后续用例使用
-                                test_context.set_local('saved_file_path', saved_path)
-                    except Exception as e:
-                        logger.warning(f"文件保存失败: {str(e)}")
-                        # 文件保存失败不影响测试用例结果
-
-                # 执行后置处理
-                if tc.teardown:
-                    _execute_teardown(tc.teardown, test_context)
-
-                # 执行数据清洗
-                if tc.cleanup:
-                    try:
-                        from src.utils.cleaner import get_cleaner
-                        cleaner = get_cleaner()
-                        success = cleaner.cleanup(tc.cleanup)
-                        if success:
-                            logger.debug(f"数据清洗成功: {tc.name}")
-                        else:
-                            logger.warning(f"数据清洗失败: {tc.name}")
-                    except Exception as e:
-                        logger.error(f"数据清洗异常: {tc.name}, 错误: {str(e)}")
-                        # 数据清洗失败不影响测试用例结果
-
-                # 记录执行时间
-                elapsed = time.time() - start_time
-                logger.info(f"测试用例执行成功: {tc.name}, 耗时: {elapsed:.3f}s")
-
-            except AssertionError as e:
-                logger.error(f"测试用例断言失败: {tc.name}, 错误: {str(e)}")
-                raise
-            except Exception as e:
-                logger.error(f"测试用例执行失败: {tc.name}, 错误: {str(e)}")
-                raise
+                # 继续执行测试逻辑
+                _execute_test_logic(
+                    tc=tc,
+                    http_client=http_client,
+                    validator=validator,
+                    extractor=extractor,
+                    test_context=test_context,
+                    selected_headers=selected_headers,
+                    start_time=time.time()
+                )
 
         return test_function
 
@@ -431,6 +530,16 @@ for test_data in _test_data_list:
     # 函数名格式：test_用例名_模块名_索引
     # 例如：test_用户登录_正常流程_user_module_0
     # 可以通过 -k "user_module" 筛选所有用户模块的测试用例
+
+    # 将测试用例数据设置为函数属性（供 lazy_auth_headers fixture 使用）
+    test_func._test_case = {
+        'name': test_case.name,
+        'base_url': test_case.base_url,
+        'require_login': test_case.require_login,
+        'method': test_case.method,
+        'url': test_case.url,
+        'description': test_case.description
+    }
 
     # 将函数添加到模块的命名空间
     globals()[func_name] = test_func

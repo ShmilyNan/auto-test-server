@@ -401,8 +401,8 @@ class ScenarioGenerator:
 
         return scenarios
 
+    @staticmethod
     def _generate_granularity_scenarios(
-        self,
         request: CurlRequest,
         case_name: str,
         tags: List[str]
@@ -439,8 +439,8 @@ class ScenarioGenerator:
 
         return scenarios
 
+    @staticmethod
     def _generate_basic_fields_scenarios(
-        self,
         request: CurlRequest,
         case_name: str,
         tags: List[str]
@@ -515,8 +515,8 @@ class ScenarioGenerator:
 
         return scenarios
 
+    @staticmethod
     def _generate_statistics_fields_scenarios(
-        self,
         request: CurlRequest,
         case_name: str,
         tags: List[str]
@@ -579,8 +579,8 @@ class ScenarioGenerator:
 
         return scenarios
 
+    @staticmethod
     def _generate_filter_scenarios(
-        self,
         request: CurlRequest,
         case_name: str,
         tags: List[str]
@@ -654,8 +654,8 @@ class ScenarioGenerator:
 
         return scenarios
 
+    @staticmethod
     def _generate_empty_filters_scenarios(
-        self,
         request: CurlRequest,
         case_name: str,
         tags: List[str]
@@ -700,7 +700,8 @@ class ScenarioGenerator:
 
         return scenarios
 
-    def _extract_all_query_fields(self, request: CurlRequest) -> Dict[str, Any]:
+    @staticmethod
+    def _extract_all_query_fields(request: CurlRequest) -> Dict[str, Any]:
         """
         提取所有查询字段
 

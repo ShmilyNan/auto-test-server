@@ -47,7 +47,6 @@ ALLURE_REPORT_DIR = REPORTS_DIR / "allure-report"
 # 配置文件路径
 # ========================================
 CONFIG_FILE = CONFIG_DIR / "config.yaml"
-GLOBAL_VARS_FILE = CONFIG_DIR / "global_vars.yaml"
 
 # ========================================
 # 环境配置目录

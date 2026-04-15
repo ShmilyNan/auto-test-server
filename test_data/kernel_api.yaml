@@ -40,7 +40,7 @@ test_cases:
         - "${random_mixed(length=20)}"
       force_reinit: true
 
-    validate:
+    assertions:
       - type: "status_code"
         expected: 200
       

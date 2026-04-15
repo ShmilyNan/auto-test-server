@@ -264,7 +264,7 @@ python -m pytest tests/test_extract_data_flow.py -v
 
 ```bash
 cd auto-test-server
-python -m pytest src/api/test_dynamic.py -k "extract" -v
+python -m pytest src/api/test_generator.py -k "extract" -v
 ```
 
 所有 5 个 extract 测试用例应该通过：

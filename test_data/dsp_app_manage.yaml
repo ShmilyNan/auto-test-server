@@ -1,4 +1,4 @@
-# kernel_api测试用例示例
+# dsp 系统测试用例示例
 # ========================================
 
 # 模块信息
@@ -21,22 +21,23 @@ config:
 # 测试用例列表
 test_cases:
     # ========================================
-  # 用例1: app_manage_add_全量传参
+  # 用例1: app_manage_拉取应用基础信息
   # ========================================
-  - name: "gei_app_info"
+  - name: "get_app_info"
     description: "通过Download-URL获取应用基础信息"
     order: 0
     priority: "p1"
     tags: ["smoke", "daily"]
-    
+
     method: "POST"
     base_url: "dsp"
     url: "/prod-api/dspApplicationConf/linkExtract"
+    require_login: true
 
     body:
       landingUrl: "https://play.google.com/store/apps/details?id=com.deepseek.chat"
 
-    validate:
+    assertions:
       - type: "status_code"
         expected: 200
       
@@ -50,25 +51,27 @@ test_cases:
     description: "全量传参，正常新增应用管理"
     order: 0
     priority: "p1"
-    tags: [ "smoke", "daily" ]
+    tags: [ "smoke", "daily", "single"]
 
-    method: "POST"
+    method: "GET"
     base_url: "dsp"
     url: "/prod-api/dspApplicationConf/getDspApplicationConfList"
+    require_login: true
 
-    body:
-      offer_id: "1012447"
-      site_ids:
-        - "${random_mixed()}"
-        - "${random_mixed(length=20)}"
-      force_reinit: true
+    params:
+      pageNum: 1
+      pageSize: 10
+      keyword: "Secure"
+      platform: 1
+      startTime: "2026-04-01"
+      endTime: "2026-04-01"
 
-    validate:
+    assertions:
       - type: "status_code"
         expected: 200
 
       - type: "is_not_none"
-        path: "body.data.intervals"
+        path: "body.data.list"
 
 # ========================================
 # 测试套件配置

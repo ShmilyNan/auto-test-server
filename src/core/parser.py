@@ -57,6 +57,7 @@ class CaseDataStructure:
     retry: int = 0                     # 重试次数
     metadata: Dict[str, Any] = None    # 元数据
     save_to_file: Optional[Dict[str, str]] = None   # 保存结果到文件（filename, sub_dir）
+    require_login: bool = False        # 是否需要登录 token（默认不需要）
 
     def __post_init__(self):
         """初始化后处理"""
@@ -301,7 +302,8 @@ class CaseDataParser:
             skip_reason=case_data.get('skip_reason'),
             retry=case_data.get('retry', 0),
             metadata=case_data.get('metadata', {}),
-            save_to_file=case_data.get('save_to_file')
+            save_to_file=case_data.get('save_to_file'),
+            require_login=case_data.get('require_login', False)  # 默认不需要登录
         )
 
         return case

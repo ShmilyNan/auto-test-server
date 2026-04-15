@@ -118,29 +118,29 @@ request.node.add_marker(pytest.mark.module(module_name))
 
 ```bash
 # 运行用户模块的所有测试
-python -m pytest src/api/test_dynamic.py -k "user_module" -v
+python -m pytest src/api/test_generator.py -k "user_module" -v
 
 # 运行商品模块的所有测试
-python -m pytest src/api/test_dynamic.py -k "product_module" -v
+python -m pytest src/api/test_generator.py -k "product_module" -v
 
 # 运行数据清洗模块的所有测试
-python -m pytest src/api/test_dynamic.py -k "cleanup_module" -v
+python -m pytest src/api/test_generator.py -k "cleanup_module" -v
 ```
 
 ### 4. 组合筛选条件
 
 ```bash
 # 运行用户模块的 P0 级用例
-python -m pytest src/api/test_dynamic.py -k "user_module and p0" -v
+python -m pytest src/api/test_generator.py -k "user_module and p0" -v
 
 # 运行冒烟测试中的 API 测试
-python -m pytest src/api/test_dynamic.py -k "smoke and api" -v
+python -m pytest src/api/test_generator.py -k "smoke and api" -v
 
 # 排除慢速测试
-python -m pytest src/api/test_dynamic.py -k "not slow" -v
+python -m pytest src/api/test_generator.py -k "not slow" -v
 
 # 运行正向测试
-python -m pytest src/api/test_dynamic.py -k "positive" -v
+python -m pytest src/api/test_generator.py -k "positive" -v
 ```
 
 ### 5. 使用 marker 运行特定类型的测试
@@ -193,7 +193,7 @@ python -m pytest -m "tag(critical)" -v
 ### 2. 在代码中添加自定义标记
 
 ```python
-# test_dynamic.py
+# test_generator.py
 
 @pytest.mark.tag("custom-tag")
 def test_example():

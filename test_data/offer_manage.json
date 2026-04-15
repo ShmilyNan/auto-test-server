@@ -16,13 +16,15 @@
       "name": "get advertiser list",
       "description": "get advertiser list data",
       "priority": "p2",
+      "base_url": "operation",
       "tags": ["regression"],
       "method": "GET",
       "url": "/prod-api/offer/advertiser/list",
+      "require_login": true,
       "params": {
         "filterByPermission": true
       },
-      "validate": [
+      "assertions": [
         {
           "type": "status_code",
           "expected": 200
@@ -44,7 +46,7 @@
           "max": 2000
         }
       ],
-      "extract": {
+      "extractions": {
         "advertiserId": {
           "type": "jsonpath",
           "expression": "$.data[${random(0, 700)}].id"
@@ -55,10 +57,12 @@
       "name": "get country list",
       "description": "get country list data",
       "priority": "p2",
+      "base_url": "operation",
       "tags": ["regression"],
       "method": "GET",
 	  "url": "/prod-api/offer/country/list",
-      "validate": [
+      "require_login": true,
+      "assertions": [
         {
           "type": "status_code",
           "expected": 200
@@ -75,7 +79,7 @@
           "max": 300
         }
       ],
-	  "extract": {
+	  "extractions": {
         "countryId": {
           "type": "jsonpath",
           "expression": "$.data[${random(0, 250)}].id"
@@ -91,10 +95,12 @@
       "name": "get timezone list",
       "description": "get timezone list data",
       "priority": "p2",
+      "base_url": "operation",
       "tags": ["regression"],
       "method": "GET",
       "url": "/prod-api/offer/timezone/list",
-      "validate": [
+      "require_login": true,
+      "assertions": [
         {
           "type": "status_code",
           "expected": 200
@@ -111,7 +117,7 @@
           "max": 25
         }
       ],
-	  "extract": {
+	  "extractions": {
         "timeZoneId": {
           "type": "jsonpath",
           "expression": "$.data[12].id"
@@ -122,10 +128,12 @@
       "name": "get affiliate list",
       "description": "get affiliate list data",
       "priority": "p2",
+      "base_url": "operation",
       "tags": ["regression"],
       "method": "GET",
       "url": "/prod-api/offer/affiliate/list",
-      "validate": [
+      "require_login": true,
+      "assertions": [
         {
           "type": "status_code",
           "expected": 200
@@ -141,7 +149,7 @@
           "expected": "list"
         }
       ],
-	  "extract": {
+	  "extractions": {
         "affiliateAttribute": {
           "type": "jsonpath",
           "expression": "$.data[?(@.id==1634)].affiliateAttribute"
@@ -196,9 +204,11 @@
       "name": "validat offer info",
       "description": "Verify whether the offer information is correct",
       "priority": "p0",
+      "base_url": "operation",
       "tags": ["smoke","positive","daily","skip"],
       "method": "POST",
       "url": "/prod-api/offer/validatOfferinfo",
+      "require_login": true,
 	  "body": {
         "advertiserId": "${$extract.advertiserId}",
         "os": "ios",
@@ -289,7 +299,7 @@
         ],
         "isCreate": 1
       },
-      "validate": [
+      "assertions": [
         {
           "type": "status_code",
           "expected": 200
@@ -310,9 +320,11 @@
       "name": "create offer",
       "description": "create offer info",
       "priority": "p0",
+      "base_url": "operation",
       "tags": ["smoke","positive","daily"],
       "method": "POST",
       "url": "/prod-api/offer/create",
+      "require_login": true,
 	  "body": {
         "advertiserId": "${$extract.advertiserId}",
         "os": "ios",
@@ -403,7 +415,7 @@
         ],
         "isCreate": 1
       },
-      "validate": [
+      "assertions": [
         {
           "type": "status_code",
           "expected": 200
@@ -438,7 +450,7 @@
           }
         }
       },
-	  "extract": {
+	  "extractions": {
         "offerId": {
           "type": "jsonpath",
           "expression": "$.data"
@@ -449,14 +461,16 @@
       "name": "get offer list",
       "description": "get offer list data",
       "priority": "p2",
+      "base_url": "operation",
       "tags": ["regression"],
       "method": "GET",
 	  "url": "/prod-api/offer/getList",
+      "require_login": true,
       "params": {
         "pageNum": 1,
 		"pageSize": 100
       },
-      "validate": [
+      "assertions": [
         {
           "type": "status_code",
           "expected": 200

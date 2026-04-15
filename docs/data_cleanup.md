@@ -417,7 +417,7 @@ test_cases:
 
 ```bash
 cd auto-test-server
-python -m pytest src/api/test_dynamic.py -k "cleanup" -v
+python -m pytest src/api/test_generator.py -k "cleanup" -v
 ```
 
 ### 2. 查看日志

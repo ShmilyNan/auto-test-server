@@ -58,7 +58,6 @@ class Validator:
     ) -> List[AssertionResult]:
         """
         执行断言验证
-        
         Args:
             response: HTTP响应数据
             assertions: 断言规则列表

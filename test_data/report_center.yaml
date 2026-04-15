@@ -31,6 +31,7 @@ test_cases:
 - name: get_offer_report_list-正常流程
   description: 测试 GET get_offer_report_list 正常流程
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -40,12 +41,13 @@ test_cases:
     Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
   params:
     templateType: '1'
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-参数错误
   description: 测试 get_offer_report_list 参数错误时的处理
   priority: p2
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -55,12 +57,13 @@ test_cases:
     Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6
   params:
     templateType: invalid_value
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-正常流程
   description: 测试 POST export_offer_report_list 正常流程
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -98,12 +101,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-完整条件查询
   description: 使用所有查询条件的完整查询
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -195,12 +199,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-offer_id
   description: 仅使用 offer_id 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -260,12 +265,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-offer_name
   description: 仅使用 offer_name 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -325,12 +331,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-affiliate
   description: 仅使用 affiliate 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -390,12 +397,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-advertiser
   description: 仅使用 advertiser 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -455,12 +463,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-am
   description: 仅使用 am 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -520,12 +529,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-pm
   description: 仅使用 pm 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -585,12 +595,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-package_name
   description: 仅使用 package_name 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -650,12 +661,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-third_party
   description: 仅使用 third_party 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -715,12 +727,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-country
   description: 仅使用 country 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -780,12 +793,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-pid
   description: 仅使用 pid 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -845,12 +859,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-platform
   description: 仅使用 platform 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -910,12 +925,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-agency
   description: 仅使用 agency 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -975,12 +991,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-dept_name
   description: 仅使用 dept_name 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1040,12 +1057,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-attribution_type
   description: 仅使用 attribution_type 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1105,12 +1123,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-offer_status
   description: 仅使用 offer_status 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1170,12 +1189,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-affiliate_private
   description: 仅使用 affiliate_private 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1235,12 +1255,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-单条件查询-affiliate_attribute
   description: 仅使用 affiliate_attribute 作为查询条件
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1300,7 +1321,7 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: 
@@ -1308,6 +1329,7 @@ test_cases:
   description: '组合查询条件: offer_name, affiliate, package_name, pid, platform, dept_name,
     attribution_type, offer_status, affiliate_private, affiliate_attribute'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1376,7 +1398,7 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: 
@@ -1385,6 +1407,7 @@ test_cases:
     country, platform, agency, attribution_type, offer_status, affiliate_private,
     affiliate_attribute'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1457,7 +1480,7 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: 
@@ -1465,6 +1488,7 @@ test_cases:
   description: '组合查询条件: offer_id, affiliate, package_name, third_party, country, pid,
     platform, dept_name, attribution_type, offer_status, affiliate_private'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1534,7 +1558,7 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: 
@@ -1542,6 +1566,7 @@ test_cases:
   description: '组合查询条件: offer_id, offer_name, am, third_party, country, pid, agency,
     attribution_type, affiliate_private, affiliate_attribute'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1610,13 +1635,14 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: 
     get_offer_report_list-组合查询-offer_name_advertiser_am_package_name_third_party_attribution_type
   description: '组合查询条件: offer_name, advertiser, am, package_name, third_party, attribution_type'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1681,12 +1707,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-完整条件查询
   description: 使用所有查询条件的完整查询
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1726,12 +1753,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-granularity-MONTH
   description: '时间粒度: MONTH, 时间格式: 202602'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1771,12 +1799,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-granularity-DATE
   description: '时间粒度: DATE, 时间格式: 20260227'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1816,12 +1845,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-granularity-HOUR
   description: '时间粒度: HOUR, 时间格式: 2026022700'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1861,12 +1891,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-basicFields-单条件-affiliate
   description: 'basicFields 仅包含: affiliate'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1902,12 +1933,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-basicFields-单条件-advertiser
   description: 'basicFields 仅包含: advertiser'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1943,12 +1975,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-basicFields-单条件-package_name
   description: 'basicFields 仅包含: package_name'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -1984,12 +2017,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-basicFields-单条件-pid
   description: 'basicFields 仅包含: pid'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2025,12 +2059,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-basicFields-单条件-agency
   description: 'basicFields 仅包含: agency'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2066,12 +2101,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-basicFields-组合-advertiser_package_name_pid
   description: 'basicFields 组合: advertiser, package_name, pid'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2109,12 +2145,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-basicFields-组合-affiliate_package_name_agency
   description: 'basicFields 组合: affiliate, package_name, agency'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2152,12 +2189,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-basicFields-组合-affiliate_package_name_pid
   description: 'basicFields 组合: affiliate, package_name, pid'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2195,12 +2233,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-click
   description: 'statisticsFields 仅包含: click'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2227,12 +2266,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-af_click
   description: 'statisticsFields 仅包含: af_click'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2259,12 +2299,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-impression
   description: 'statisticsFields 仅包含: impression'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2291,12 +2332,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-af_impression
   description: 'statisticsFields 仅包含: af_impression'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2323,12 +2365,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-hope_click
   description: 'statisticsFields 仅包含: hope_click'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2355,12 +2398,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-conversion
   description: 'statisticsFields 仅包含: conversion'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2387,12 +2431,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-reject_num
   description: 'statisticsFields 仅包含: reject_num'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2419,12 +2464,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-cr
   description: 'statisticsFields 仅包含: cr'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2451,12 +2497,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-af_cr
   description: 'statisticsFields 仅包含: af_cr'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2483,12 +2530,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-event_num
   description: 'statisticsFields 仅包含: event_num'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2515,12 +2563,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-revenue
   description: 'statisticsFields 仅包含: revenue'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2547,12 +2596,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-cost
   description: 'statisticsFields 仅包含: cost'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2579,12 +2629,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-profit
   description: 'statisticsFields 仅包含: profit'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2611,12 +2662,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-单条件-roi
   description: 'statisticsFields 仅包含: roi'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2643,13 +2695,14 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: 
     export_offer_report_list-statisticsFields-组合-af_impression_reject_num_revenue
   description: 'statisticsFields 组合: af_impression, reject_num, revenue'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2678,12 +2731,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-statisticsFields-组合-af_click_reject_num_profit
   description: 'statisticsFields 组合: af_click, reject_num, profit'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2712,13 +2766,14 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: 
     export_offer_report_list-statisticsFields-组合-hope_click_event_num_revenue
   description: 'statisticsFields 组合: hope_click, event_num, revenue'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2747,12 +2802,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-filters-空
   description: filters 为空字典
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2792,12 +2848,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: export_offer_report_list-basicFields-空
   description: basicFields 和 filters 均为空
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2832,12 +2889,13 @@ test_cases:
     filters: {}
     orderDescFields: []
     orderAscFields: []
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-granularity-MONTH
   description: '时间粒度: MONTH, 时间格式: 202602'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -2929,12 +2987,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-granularity-DATE
   description: '时间粒度: DATE, 时间格式: 20260227'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3026,12 +3085,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-granularity-HOUR
   description: '时间粒度: HOUR, 时间格式: 2026022700'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3123,12 +3183,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-affiliate
   description: 'basicFields 仅包含: affiliate'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3172,12 +3233,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-advertiser
   description: 'basicFields 仅包含: advertiser'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3221,12 +3283,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-package_name
   description: 'basicFields 仅包含: package_name'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3270,12 +3333,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-pid
   description: 'basicFields 仅包含: pid'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3319,12 +3383,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-agency
   description: 'basicFields 仅包含: agency'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3368,12 +3433,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-offer_id
   description: 'basicFields 仅包含: offer_id'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3417,12 +3483,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-offer_name
   description: 'basicFields 仅包含: offer_name'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3465,12 +3532,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-attribution_type
   description: 'basicFields 仅包含: attribution_type'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3514,12 +3582,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-third_party
   description: 'basicFields 仅包含: third_party'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3563,12 +3632,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-offer_status
   description: 'basicFields 仅包含: offer_status'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3611,12 +3681,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-country
   description: 'basicFields 仅包含: country'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3660,12 +3731,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-affiliate_private
   description: 'basicFields 仅包含: affiliate_private'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3710,12 +3782,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-affiliate_attribute
   description: 'basicFields 仅包含: affiliate_attribute'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3759,12 +3832,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-platform
   description: 'basicFields 仅包含: platform'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3808,12 +3882,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-dept_name
   description: 'basicFields 仅包含: dept_name'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3857,12 +3932,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-am
   description: 'basicFields 仅包含: am'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3906,12 +3982,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-pm
   description: 'basicFields 仅包含: pm'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -3955,12 +4032,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-单条件-bd
   description: 'basicFields 仅包含: bd'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4002,12 +4080,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-组合-offer_id_country_dept_name
   description: 'basicFields 组合: offer_id, country, dept_name'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4057,13 +4136,14 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: 
     get_offer_report_list-basicFields-组合-agency_offer_status_affiliate_attribute
   description: 'basicFields 组合: agency, offer_status, affiliate_attribute'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4112,12 +4192,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-组合-pid_offer_id_bd
   description: 'basicFields 组合: pid, offer_id, bd'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4165,12 +4246,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-click
   description: 'statisticsFields 仅包含: click'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4246,12 +4328,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-af_click
   description: 'statisticsFields 仅包含: af_click'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4327,12 +4410,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-impression
   description: 'statisticsFields 仅包含: impression'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4408,12 +4492,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-af_impression
   description: 'statisticsFields 仅包含: af_impression'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4489,12 +4574,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-hope_click
   description: 'statisticsFields 仅包含: hope_click'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4570,12 +4656,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-conversion
   description: 'statisticsFields 仅包含: conversion'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4651,12 +4738,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-reject_num
   description: 'statisticsFields 仅包含: reject_num'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4732,12 +4820,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-cr
   description: 'statisticsFields 仅包含: cr'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4813,12 +4902,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-af_cr
   description: 'statisticsFields 仅包含: af_cr'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4894,12 +4984,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-event_num
   description: 'statisticsFields 仅包含: event_num'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -4975,12 +5066,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-revenue
   description: 'statisticsFields 仅包含: revenue'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5056,12 +5148,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-cost
   description: 'statisticsFields 仅包含: cost'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5137,12 +5230,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-profit
   description: 'statisticsFields 仅包含: profit'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5218,12 +5312,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-roi
   description: 'statisticsFields 仅包含: roi'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5299,12 +5394,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-reject_rate
   description: 'statisticsFields 仅包含: reject_rate'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5380,12 +5476,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-af_conversion
   description: 'statisticsFields 仅包含: af_conversion'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5461,12 +5558,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-单条件-gap_rate
   description: 'statisticsFields 仅包含: gap_rate'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5542,12 +5640,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-组合-af_click_profit
   description: 'statisticsFields 组合: af_click, profit'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5624,12 +5723,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-组合-hope_click_conversion_profit
   description: 'statisticsFields 组合: hope_click, conversion, profit'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5707,12 +5807,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-statisticsFields-组合-impression_af_cr_revenue
   description: 'statisticsFields 组合: impression, af_cr, revenue'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5790,12 +5891,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-offer_id
   description: 'filter 仅包含: offer_id'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5839,12 +5941,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-offer_name
   description: 'filter 仅包含: offer_name'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5887,12 +5990,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-affiliate
   description: 'filter 仅包含: affiliate'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5936,12 +6040,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-advertiser
   description: 'filter 仅包含: advertiser'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -5985,12 +6090,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-am
   description: 'filter 仅包含: am'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6034,12 +6140,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-pm
   description: 'filter 仅包含: pm'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6083,12 +6190,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-package_name
   description: 'filter 仅包含: package_name'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6132,12 +6240,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-third_party
   description: 'filter 仅包含: third_party'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6181,12 +6290,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-country
   description: 'filter 仅包含: country'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6230,12 +6340,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-pid
   description: 'filter 仅包含: pid'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6279,12 +6390,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-platform
   description: 'filter 仅包含: platform'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6328,12 +6440,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-agency
   description: 'filter 仅包含: agency'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6377,12 +6490,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-dept_name
   description: 'filter 仅包含: dept_name'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6426,12 +6540,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-attribution_type
   description: 'filter 仅包含: attribution_type'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6475,12 +6590,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-offer_status
   description: 'filter 仅包含: offer_status'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6523,12 +6639,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-affiliate_private
   description: 'filter 仅包含: affiliate_private'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6573,12 +6690,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-单条件-affiliate_attribute
   description: 'filter 仅包含: affiliate_attribute'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6622,12 +6740,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-组合-offer_name_dept_name_offer_status
   description: 'filter 组合: offer_name, dept_name, offer_status'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6674,12 +6793,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-组合-offer_id_third_party_affiliate_private
   description: 'filter 组合: offer_id, third_party, affiliate_private'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6726,12 +6846,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filter-组合-advertiser_platform_attribution_type
   description: 'filter 组合: advertiser, platform, attribution_type'
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6778,12 +6899,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-filters-空
   description: filters 为空字典
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6842,12 +6964,13 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200
 - name: get_offer_report_list-basicFields-空
   description: basicFields 和 filters 均为空
   priority: p1
+  base_url: 'operation'
   tags:
   - daily
   - regression
@@ -6888,6 +7011,6 @@ test_cases:
     pagination:
       pageNum: 1
       pageSize: 25
-  validate:
+  assertions:
   - type: status_code
     expected: 200

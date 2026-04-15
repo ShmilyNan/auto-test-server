@@ -1,0 +1,98 @@
+# 生产环境登录用例
+# ========================================
+
+# 模块信息
+module:
+  name: "登录模块"
+  version: "1.0.0"
+  description: "生产环境登录"
+  author: "Lee"
+
+# 全局配置
+config:
+  headers:
+    Content-Type: "application/json"
+    Accept: "application/json"
+  timeout: 30
+
+# 测试用例列表
+test_cases:
+  # ========================================
+  # 用例1: 生产环境普通用户登录
+  # ========================================
+  - name: "生产环境登录-普通用户"
+    description: "生产环境普通用户登录，获取认证token"
+    order: 0
+    priority: "p0"
+    tags: ["login", "auth"]
+
+    method: "POST"
+    url: "/prod-api/login"
+
+    headers:
+      Content-Type: "application/json"
+
+    body:
+      username: "${PROD_USERNAME}"
+      password: "${PROD_PASSWORD}"
+
+    assertions:
+      - type: "status_code"
+        expected: 200
+
+      - type: "eq"
+        path: "body.code"
+        expected: 200
+
+      - type: "is_not_none"
+        path: "body.token"
+
+    extractions:
+      auth_token:
+        type: "jsonpath"
+        expression: "$.token"
+
+    metadata:
+      feature: "用户登录"
+      role: "user"
+      env: "prod"
+
+  # ========================================
+  # 用例2: 生产环境管理员登录
+  # ========================================
+  - name: "生产环境登录-管理员"
+    description: "生产环境管理员登录，获取管理员认证token"
+    order: 1
+    priority: "p0"
+    tags: ["login", "auth", "admin"]
+
+    method: "POST"
+    url: "/prod-api/login"
+
+    headers:
+      Content-Type: "application/json"
+
+    body:
+      username: "${PROD_ADMIN_USERNAME}"
+      password: "${PROD_ADMIN_PASSWORD}"
+
+    assertions:
+      - type: "status_code"
+        expected: 200
+
+      - type: "eq"
+        path: "body.code"
+        expected: 200
+
+      - type: "is_not_none"
+        path: "body.token"
+
+    extractions:
+      - name: auth_token
+        type: "jsonpath"
+        expression: "$.token"
+
+    metadata:
+      feature: "用户登录"
+      role: "admin"
+      env: "prod"
