@@ -213,17 +213,14 @@ class YamlGenerator:
     ) -> List[CommentedMap]:
         """
         生成普通查询接口的测试用例
-
         规则：
         1. 必传字段：pageNum, pageSize
         2. 其他参数：选填，进行单条件和组合条件测试
-
         Args:
             request: CurlRequest 对象
             case_name: 用例名称
             priority: 优先级
             tags: 标签列表
-
         Returns:
             List[CommentedMap]: 测试用例列表
         """
@@ -288,12 +285,10 @@ class YamlGenerator:
     ) -> CurlRequest:
         """
         创建普通查询接口的单字段请求（保留分页参数）
-
         Args:
             request: 原始请求
             field_name: 字段名
             field_value: 字段值
-
         Returns:
             CurlRequest: 修改后的请求
         """

@@ -189,6 +189,7 @@ class Validator:
             elif isinstance(data, (list, tuple)) and part.isdigit():
                 data = data[int(part)]
             else:
+                logger.warning(f"无法从路径 {path} 提取值，数据类型不支持")
                 return None
             
             if data is None:

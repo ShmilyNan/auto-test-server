@@ -3,6 +3,7 @@
 动态测试用例文件
 从 test_data 目录的 YAML/JSON 文件自动生成 pytest 测试用例
 """
+import os
 import time
 import pytest
 from typing import List, Dict, Any
@@ -85,6 +86,9 @@ def _generate_function_name(test_case: CaseDataStructure, module: str, idx: int)
     import re
     name = re.sub(r'\W', '_', test_case.name)
     name = name.replace(' ', '_').strip('_')
+
+    if not name:
+        name = f"test_unknown_{idx}"
 
     # 确保以 test_ 开头
     if not name.startswith('test_'):
@@ -445,10 +449,25 @@ for test_data in _test_data_list:
                 # 在懒加载模式下，auth_headers 已经是根据 base_url 自动选择的 headers
                 selected_headers = auth_headers
 
-                # 推断 service_type（用于日志）
+                # 推断 service_type
                 service_type = _infer_service_type(tc, env_config)
                 if service_type:
                     logger.info(f"服务类型: {service_type}")
+                    # 检查登录状态
+                    from src.fixtures.login_fixture import get_login_status, get_login_error_message
+
+                    env_name = os.getenv('TEST_ENV', 'test')
+                    login_status = get_login_status(service_type, env_name)
+
+                    if login_status.value == "failed":
+                        # 登录失败，跳过该用例
+                        error_message = get_login_error_message(service_type, env_name)
+                        skip_reason = f"{service_type} 登录失败，跳过用例"
+                        if error_message:
+                            skip_reason += f"（错误: {error_message}）"
+
+                        logger.warning(f"⚠️  {service_type} 登录失败，跳过测试用例: {tc.name}")
+                        pytest.skip(skip_reason)
                 logger.info(f"使用懒加载 headers: {selected_headers}")
 
                 # 检查 headers 是否有效

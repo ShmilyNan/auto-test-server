@@ -40,7 +40,7 @@ from src.fixtures.fixtures import (
 )
 
 logger.info("=" * 60)
-logger.info("🚀 使用懒加载登录机制（统一版本）")
+logger.info("🚀 使用懒加载登录机制")
 logger.info("   - 只在实际需要时才执行登录")
 logger.info("   - 避免不必要的登录请求")
 logger.info("   - 提升测试执行效率")

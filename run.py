@@ -3,6 +3,7 @@
 """
 接口自动化测试平台 - 运行入口
 """
+import subprocess
 import sys
 import os
 import argparse
@@ -85,12 +86,11 @@ def run_tests(
         logger.info(f"测试目录: {test_dir}")
         logger.info(f"=" * 60)
     except:
-        # logger 可能尚未初始化，使用 print
-        print(f"=" * 60)
-        print(f"接口自动化测试平台启动")
-        print(f"环境: {env}")
-        print(f"测试目录: {test_dir}")
-        print(f"=" * 60)
+        logger.info(f"=" * 60)
+        logger.info(f"接口自动化测试平台启动")
+        logger.info(f"环境: {env}")
+        logger.info(f"测试目录: {test_dir}")
+        logger.info(f"=" * 60)
 
     # 设置环境变量（供测试用例使用）
     os.environ['TEST_ENV'] = env
@@ -185,8 +185,8 @@ def main():
         '-m',
         '--markers',
         type=str,
-        # default='single',
-        default=None,
+        default='single',
+        # default=None,
         help='pytest markers'
     )
 
@@ -222,7 +222,9 @@ def main():
 
     # 仅生成报告
     if args.report_only:
-        os.system(f'allure generate {ALLURE_RESULTS_DIR} -o reports/html --clean')
+        # os.system(f'allure generate {ALLURE_RESULTS_DIR} -o reports/html --clean')
+        # 跨平台兼容
+        subprocess.run(['allure', 'generate', str(ALLURE_RESULTS_DIR), '-o', 'reports/html', '--clean'], check=True)
         logger.info("HTML报告已生成到: reports/html")
         return 0
 

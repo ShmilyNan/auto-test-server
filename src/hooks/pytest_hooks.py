@@ -22,7 +22,7 @@ def pytest_configure(config):
                 rotation="10 MB",
                 retention="7 days"
             )
-        except Exception as e:
+        except Exception:
             # 如果初始化失败，继续执行（logger 可能已经被初始化）
             pass
 

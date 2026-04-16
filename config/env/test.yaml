@@ -11,6 +11,14 @@ base_urls:
   # DSP
   dsp: "http://test-huiinex-dsp-web.cdcicd.com"
 
+# 认证配置
+auth:
+  # 登录重试配置
+  retry:
+    max_retries: 3          # 最大重试次数
+    retry_delay: 2          # 重试间隔（秒）
+    timeout: 30             # 登录超时时间（秒）
+
 # 默认请求头
 headers:
   Content-Type: "application/json"
