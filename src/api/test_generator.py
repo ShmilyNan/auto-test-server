@@ -167,9 +167,9 @@ def _execute_test_logic(tc: CaseDataStructure, http_client, validator, extractor
         test_context.set_last_response(response)
 
         # 提取数据
-        if tc.extract:
+        if tc.extractions:
             # 对提取规则进行变量替换（支持随机数等函数）
-            extract_rules = test_context.replace_vars_dict(tc.extract)
+            extract_rules = test_context.replace_vars_dict(tc.extractions)
             extracted_data = extractor.extract(response, extract_rules)
             for key, value in extracted_data.items():
                 test_context.set_extract(key, value)

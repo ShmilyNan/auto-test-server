@@ -20,8 +20,8 @@ test_cases:
   # ========================================
   # 用例1: operation系统用户登录
   # ========================================
-  - name: "operation系统用户登录"
-    description: "测试环境operation系统用户登录，获取认证token"
+  - name: "运营系统用户登录"
+    description: "测试环境运营系统用户登录，获取认证token"
     order: 0
     priority: "p0"
     tags: ["login", "auth"]
@@ -79,11 +79,11 @@ test_cases:
       password: "123123"
 
     assertions:
-      - type: "status_code"
+      - type: status_code
         expected: 200
 
-      - type: "eq"
-        path: "body.msg"
+      - type: eq
+        path: body.msg
         expected: "登录成功"
 
       - type: "is_not_none"
@@ -91,7 +91,7 @@ test_cases:
 
     extractions:
       - name: auth_token
-        type: "jsonpath"
+        type: jsonpath
         expression: "$.data.token"
 
     metadata:

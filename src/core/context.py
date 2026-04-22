@@ -209,7 +209,7 @@ class TestContext:
         - ${global_var} - 全局变量
         - ${local_var} - 局部变量
         - ${cache.var} - 缓存变量
-        - ${$extract.var} - 关联变量
+        - ${$extractions.var} - 关联变量
         支持的函数:
         - ${random()} - 生成 0 到 1 之间的随机小数
         - ${random(min, max)} - 生成 min 到 max 之间的随机整数
@@ -374,8 +374,8 @@ class TestContext:
                     else:
                         text = text.replace(full_match, full_match, 1)
 
-                # 关联变量: ${$extract.key}
-                elif var_expr.startswith('$extract.'):
+                # 关联变量: ${$extractions.key}
+                elif var_expr.startswith('$extractions.'):
                     key = var_expr[9:]
                     value = self.get_extract(key)
                     if value is not None:

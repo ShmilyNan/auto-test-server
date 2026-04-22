@@ -38,7 +38,7 @@ class CaseDataStructure:
     cleanup: Dict[str, Any] = None     # 数据清理（后置处理）
 
     # 提取与依赖
-    extract: Dict[str, Any] = None     # 数据提取规则
+    extractions: Dict[str, Any] = None # 数据提取规则
     depends_on: Optional[str] = None   # 依赖的用例ID
 
     # 验证
@@ -75,8 +75,8 @@ class CaseDataStructure:
             self.setup = []
         if self.teardown is None:
             self.teardown = []
-        if self.extract is None:
-            self.extract = {}
+        if self.extractions is None:
+            self.extractions = {}
         if self.metadata is None:
             self.metadata = {}
         if self.cleanup is None:
@@ -100,7 +100,7 @@ class CaseDataStructure:
             'setup': self.setup,
             'teardown': self.teardown,
             'hooks': self.hooks,
-            'extract': self.extract,
+            'extractions': self.extractions,
             'depends_on': self.depends_on,
             'validate': self.validate,
             'expect': self.expect,
@@ -292,7 +292,7 @@ class CaseDataParser:
             teardown=case_data.get('teardown', []),
             hooks=case_data.get('hooks'),
             cleanup=case_data.get('cleanup', {}),
-            extract=case_data.get('extract', {}),
+            extractions=case_data.get('extractions', {}),
             depends_on=case_data.get('depends_on'),
             validate=case_data.get('validate', []),
             expect=case_data.get('expect'),
@@ -399,5 +399,5 @@ class CaseDataParser:
             if 'name' not in case:
                 logger.error(f"第 {idx + 1} 个用例缺少 name 字段")
                 return False
-        
+
         return True

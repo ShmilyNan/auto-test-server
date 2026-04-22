@@ -1,0 +1,310 @@
+# 广告主模块测试用例示例
+# ========================================
+
+# 模块信息
+module:
+  name: "广告主模块"
+  version: "1.0.0"
+  description: "广告主相关接口测试"
+  author: "Lee"
+
+# 全局配置
+config:
+  # 默认请求头
+  headers:
+    Content-Type: "application/json"
+    Accept: "application/json"
+  
+  # 默认超时时间
+  timeout: 30
+
+# 测试用例列表
+test_cases:
+  # ========================================
+  # 用例1: 获取用户列表-AM
+  # ========================================
+  - name: "获取用户列表-AM"
+    description: "正常获取用户列表（AM），用于创建广告主"
+    order: 0
+    priority: "p1"
+    tags: ["smoke", "daily", "single"]
+
+    base_url: "operation"
+    method: "GET"
+    url: "/prod-api/offer/affiliate/getUserList"
+    require_login: true
+
+    params:
+      pageNum: 1
+      pageSize: 500
+
+    assertions:
+      - type: "status_code"
+        expected: 200
+
+      - type: "eq"
+        path: "body.code"
+        expected: 200
+
+      - type: "eq"
+        path: "body.msg"
+        expected: "查询成功"
+      
+      - type: "is_not_none"
+        path: "body.rows"
+    
+    extractions:
+      user_id:
+        type: "jsonpath"
+        expression: "$.rows[0].id"
+    
+    metadata:
+      feature: "广告主"
+      severity: "critical"
+
+  # ========================================
+  # 用例2: 获取客户列表
+  # ========================================
+  - name: "获取客户列表"
+    description: "获取获取客户列表，用于创建广告主"
+    priority: "p1"
+    tags: ["regression", "single"]
+    order: 0
+    
+    require_login: true
+    base_url: "operation"
+    method: "GET"
+    url: "/prod-api/offer/advertiser/selectCustomerList"
+
+    assertions:
+      - type: "status_code"
+        expected: 200
+      
+      - type: "eq"
+        path: "body.code"
+        expected: 200
+      
+      - type: "eq"
+        path: "body.msg"
+        expected: "操作成功"
+      
+      - type: "type"
+        path: "body.data"
+        expected: "list"
+
+      - type: "is_not_none"
+        path: "body.data"
+
+    extractions:
+      customer_id:
+        type: "jsonpath"
+        expression: "$.data[6].id"
+
+  # ========================================
+  # 用例3: 创建广告主
+  # ========================================
+  - name: "创建广告主-全量传参"
+    description: "创建广告主-全量传参-创建成功"
+    priority: "p0"
+    tags: ["regression", "single"]
+    order: 1
+    depends_on: "获取客户列表"
+
+    base_url: "operation"
+    method: "POST"
+    url: "/prod-api/offer/advertiser/create"
+    require_login: true
+
+    body:
+      address: "test-add-advertiser-${timestamp()}"
+      am: ${$extract.user_id}
+      bd: 10004
+      bdName: ""
+      clientType: 2
+      company: "test-add-advertiser"
+      customerId: ${$extract.customer_id}
+      email: "lancelee0115@gmail.com"
+      status: 1
+
+    assertions:
+      - type: "status_code"
+        expected: 200
+      
+      - type: "eq"
+        path: "body.code"
+        expected: 200
+      
+      - type: "eq"
+        path: "body.msg"
+        expected: "创建成功"
+
+  # ========================================
+  # 用例4: 获取广告主列表
+  # ========================================
+  - name: "获取广告主列表"
+    description: "获取广告主列表"
+    priority: "p1"
+    tags: ["regression","single"]
+    order: 2
+
+    base_url: "operation"
+    method: "POST"
+    url: "/prod-api/offer/advertiser/listAll"
+    require_login: true
+
+    params:
+      pageNum: 1
+      pageSize: 10
+
+    assertions:
+      - type: "status_code"
+        expected: 200
+
+      - type: "eq"
+        path: "body.code"
+        expected: 200
+
+      - type: "eq"
+        path: "body.msg"
+        expected: "查询成功"
+
+      - type: "is_not_none"
+        path: "body.rows"
+
+      - type: "type"
+        path: "body.rows"
+        expected: "list"
+
+  # ========================================
+  # 用例5: 用户广告主-密码错误
+  # ========================================
+  - name: "用户广告主-密码错误"
+    description: "测试广告主时输入错误密码"
+    priority: "p2"
+    tags: ["regression", "negative", "skip"]
+
+    base_url: "operation"
+    method: "POST"
+    url: "/prod-api/login"
+
+    body:
+      username: "Lee"
+      password: "Working@0610"
+
+    assertions:
+      - type: "status_code"
+        expected: 200
+      
+      - type: "eq"
+        path: "body.code"
+        expected: 500
+      
+      - type: "in"
+        path: "body.msg"
+        expected: ["密码错误", "用户不存在", "invalid password"]
+
+  # ========================================
+  # 用例8: 并发请求
+  # ========================================
+  - name: "用户信息查询-并发"
+    description: "测试并发查询用户信息"
+    priority: "p3"
+    tags: ["performance","skip"]
+
+    base_url: "operation"
+    method: "GET"
+    url: "/user/info"
+
+#    headers:
+#      Authorization: "Bearer ${$extract.access_token}"
+
+    assertions:
+      - type: "status_code"
+        expected: 200
+
+      - type: "lt"
+        path: "elapsed"  # 响应时间
+        expected: 1.0  # 小于1秒
+
+  # ========================================
+  # 用例9: 使用SQL断言
+  # ========================================
+  - name: "用户注册后数据库验证"
+    description: "注册成功后验证数据库记录"
+    priority: "p1"
+    tags: ["database","skip"]
+
+    base_url: "operation"
+    method: "POST"
+    url: "/user/register"
+
+    body:
+      username: "sql_test_${timestamp()}"
+      password: "Test@123456"
+      email: "sql_test_${timestamp()}@example.com"
+
+    assertions:
+      - type: "status_code"
+        expected: 200
+
+      # SQL断言（需要数据库配置）
+      - type: "sql"
+        sql: "SELECT COUNT(*) FROM users WHERE username = '${body.data.username}'"
+        expected: 1
+
+      - type: "sql"
+        sql: "SELECT status FROM users WHERE user_id = ${body.data.user_id}"
+        expected: "active"
+
+  # ========================================
+  # 用例10: 文件上传
+  # ========================================
+  - name: "用户头像上传"
+    description: "测试用户头像上传功能"
+    priority: "p2"
+    tags: ["file","skip"]
+
+    base_url: "operation"
+    method: "POST"
+    url: "/user/avatar"
+
+    headers:
+      Authorization: "Bearer ${$extract.access_token}"
+
+    # 文件上传
+    files:
+      avatar: "test_data/avatar.jpg"
+
+    params:
+      type: "avatar"
+
+    assertions:
+      - type: "status_code"
+        expected: 200
+
+      - type: "is_not_none"
+        path: "body.data.url"
+
+      - type: "regex"
+        path: "body.data.url"
+        pattern: "^https?://.*\\.(jpg|png|jpeg)$"
+
+# ========================================
+# 测试套件配置
+# ========================================
+test_suites:
+  - name: "用户注册流程"
+    cases:
+      - "用户广告主-正常流程"
+      - "获取用户信息-已广告主"
+      - "获取用户权限-成功"
+      - "用户登出"
+  
+  - name: "用户广告主异常场景"
+    cases:
+      - "用户广告主-密码错误"
+
+  - name: "冒烟测试"
+    cases:
+      - "用户广告主-正常流程"
+      - "获取用户信息-已广告主"
