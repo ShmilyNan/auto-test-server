@@ -60,7 +60,7 @@ test_cases:
     description: "DDJ-打包前验证"
     order: 0
     priority: "p2"
-    tags: [ "smoke", "daily", "single" ]
+    tags: [ "smoke", "daily" ]
 
     base_url: "operation"
     method: "POST"
@@ -119,7 +119,7 @@ test_cases:
     description: "验证通过，执行制作数据包"
     order: 1
     priority: "p2"
-    tags: [ "smoke", "daily", "single" ]
+    tags: [ "smoke", "daily" ]
 
     base_url: "operation"
     method: "POST"

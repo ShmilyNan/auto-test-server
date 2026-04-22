@@ -267,7 +267,11 @@ class TestContext:
                         text = text.replace(full_match, full_match, 1)
                     else:
                         # ${length.body.data}
-                        path = var_expr[7:]  # 去掉 "length." 前缀
+                        parts = var_expr.split('.', 1)
+                        if len(parts) == 2:
+                            path = parts[1]
+                        else:
+                            path = None
                         length_value = self._get_array_length(path)
                         if length_value is not None:
                             text = text.replace(full_match, str(length_value), 1)
@@ -367,7 +371,11 @@ class TestContext:
 
                 # 缓存变量: ${cache.key}
                 elif var_expr.startswith('cache.'):
-                    key = var_expr[6:]
+                    parts = var_expr.split('.', 1)
+                    if len(parts) == 2:
+                        key = parts[1]
+                    else:
+                        key = None
                     value = self.get_cache(key)
                     if value is not None:
                         text = text.replace(full_match, str(value), 1)
@@ -376,7 +384,11 @@ class TestContext:
 
                 # 关联变量: ${$extractions.key}
                 elif var_expr.startswith('$extractions.'):
-                    key = var_expr[9:]
+                    parts = var_expr.split('.', 1)
+                    if len(parts) == 2:
+                        key = parts[1]
+                    else:
+                        key = None
                     value = self.get_extract(key)
                     if value is not None:
                         text = text.replace(full_match, str(value), 1)

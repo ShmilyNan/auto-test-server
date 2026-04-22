@@ -117,12 +117,12 @@ test_cases:
 
     body:
       address: "test-add-advertiser-${timestamp()}"
-      am: ${$extract.user_id}
+      am: ${$extractions.user_id}
       bd: 10004
       bdName: ""
       clientType: 2
       company: "test-add-advertiser"
-      customerId: ${$extract.customer_id}
+      customerId: ${$extractions.customer_id}
       email: "lancelee0115@gmail.com"
       status: 1
 
