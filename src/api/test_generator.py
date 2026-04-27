@@ -557,8 +557,14 @@ for test_data in _test_data_list:
         'require_login': test_case.require_login,
         'method': test_case.method,
         'url': test_case.url,
-        'description': test_case.description
+        'description': test_case.description,
+        'depends_on': test_case.depends_on
     }
+
+    # 将 depends_on 设置为独立的函数属性（便于钩子函数访问）
+    if test_case.depends_on:
+        test_func._depends_on = test_case.depends_on
+        logger.debug(f"测试用例 {test_case.name} 依赖于: {test_case.depends_on}")
 
     # 将函数添加到模块的命名空间
     globals()[func_name] = test_func

@@ -599,16 +599,6 @@ class Validator:
                 raise ValueError(f"不支持类型: {expected}")
         else:
             expected_type = expected
-            # type_names = {
-            #     str: 'str',
-            #     int: 'int',
-            #     float: 'float',
-            #     bool: 'bool',
-            #     list: 'list',
-            #     dict: 'dict',
-            #     tuple: 'tuple'
-            # }
-            # expected_name = type_names.get(expected_type, str(expected_type))
             expected_name = expected_type.__name__
 
         passed = isinstance(actual, expected_type)

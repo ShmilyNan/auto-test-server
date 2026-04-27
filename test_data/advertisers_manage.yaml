@@ -176,20 +176,28 @@ test_cases:
         expected: "list"
 
   # ========================================
-  # 用例5: 用户广告主-密码错误
+  # 用例5: 新建广告主-必填项未填
   # ========================================
-  - name: "用户广告主-密码错误"
+  - name: "新建广告主-必填项未填"
     description: "测试广告主时输入错误密码"
     priority: "p2"
-    tags: ["regression", "negative", "skip"]
+    tags: ["regression", "negative"]
 
     base_url: "operation"
     method: "POST"
-    url: "/prod-api/login"
+    url: "/prod-api/offer/advertiser/create"
+    require_login: true
 
     body:
-      username: "Lee"
-      password: "Working@0610"
+      address: "test-add-advertiser-${timestamp()}"
+      am: ${$extractions.user_id}
+      bd: 10004
+      bdName: ""
+      clientType: 2
+      company: "test-add-advertiser"
+      customerId: ${$extractions.customer_id}
+      email: "lancelee0115@gmail.com"
+      status: 1
 
     assertions:
       - type: "status_code"
@@ -214,9 +222,6 @@ test_cases:
     base_url: "operation"
     method: "GET"
     url: "/user/info"
-
-#    headers:
-#      Authorization: "Bearer ${$extract.access_token}"
 
     assertions:
       - type: "status_code"

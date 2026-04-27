@@ -130,7 +130,6 @@ class CurlParser:
     def _parse_option(self, option: str, parts: List[str], index: int):
         """
         解析选项参数
-
         Args:
             option: 选项字符串
             parts: 所有参数列表

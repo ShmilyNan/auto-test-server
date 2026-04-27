@@ -54,7 +54,7 @@ class CaseDataStructure:
     timeout: int = 30                  # 超时时间
     skip: bool = False                 # 是否跳过
     skip_reason: Optional[str] = None  # 跳过原因
-    retry: int = 0                     # 重试次数
+    retry: int = 1                     # 重试次数
     metadata: Dict[str, Any] = None    # 元数据
     save_to_file: Optional[Dict[str, str]] = None   # 保存结果到文件（filename, sub_dir）
     require_login: bool = False        # 是否需要登录 token（默认不需要）

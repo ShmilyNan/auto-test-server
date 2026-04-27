@@ -68,13 +68,10 @@ def _load_login_file(
 ) -> Optional[Dict]:
     """
     加载登录用例文件（混合文件方案）
-
     优先级：
     1. test_{service_type}.yaml（独立文件）
     2. test.yaml（通用文件）
-
     重要：所有匹配都使用别名（如 operation、dsp），不使用完整 URL
-
     Returns:
         登录用例字典，如果找不到则返回 None
     """
@@ -503,16 +500,13 @@ def service_headers(http_client, env_config, login_cache) -> Dict[str, Dict[str,
 def auth_headers(request, http_client, env_config, login_cache) -> Dict[str, str]:
     """
     请求头（根据用例的 base_url 自动选择并登录）
-
     功能：
     - 根据测试用例的 base_url 自动识别服务类型
     - 按需执行登录（首次需要时）
     - 使用缓存避免重复登录
     - 如果未找到对应服务或登录失败，使用默认 headers
-
     使用方式：
     在测试用例中添加 `auth_headers` 参数即可自动注入对应服务的 headers
-
     Returns:
         Dict[str, str]: headers
     """

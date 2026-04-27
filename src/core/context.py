@@ -255,7 +255,7 @@ class TestContext:
                     if ' - ' in var_expr:
                         # ${length.body.data - 1}
                         parts = var_expr.split(' - ', 1)
-                        path = parts[0][7:]  # 去掉 "length." 前缀
+                        path = parts[0].split('.', 1)[1]  # 去掉 "length." 前缀
                         try:
                             offset = int(parts[1].strip())
                             length_value = self._get_array_length(path)
