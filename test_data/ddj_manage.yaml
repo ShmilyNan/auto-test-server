@@ -25,7 +25,6 @@ test_cases:
   # ========================================
   - name: "DDJ-AdxIdList"
     description: "DDJ-AdxIdList"
-    order: 0
     priority: "p2"
     tags: ["smoke", "daily"]
 
@@ -58,7 +57,6 @@ test_cases:
   # ========================================
   - name: "DDJ-打包验证"
     description: "DDJ-打包前验证"
-    order: 0
     priority: "p2"
     tags: [ "smoke", "daily" ]
 
@@ -117,7 +115,6 @@ test_cases:
   # ========================================
   - name: "DDj-add-制作数据包"
     description: "验证通过，执行制作数据包"
-    order: 1
     priority: "p2"
     tags: [ "smoke", "daily" ]
 

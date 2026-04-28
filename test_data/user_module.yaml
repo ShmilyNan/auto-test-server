@@ -25,7 +25,6 @@ test_cases:
   # ========================================
   - name: "用户登录-正常流程"
     description: "测试用户正常登录"
-    order: 0
     priority: "p0"
     tags: ["smoke", "daily", "skip"]
 
@@ -66,15 +65,11 @@ test_cases:
     tags: ["regression", "single"]
     
     # 依赖登录用例
-    depends_on: "用户登录-正常流程"
     require_login: true
 
     base_url: "operation"
     method: "GET"
     url: "/prod-api/getInfo"
-    
-#    headers:
-#      Authorization: "Bearer ${$extract.access_token}"
     
     assertions:
       - type: "status_code"

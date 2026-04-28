@@ -25,7 +25,6 @@ test_cases:
   # ========================================
   - name: "获取用户列表-AM"
     description: "正常获取用户列表（AM），用于创建广告主"
-    order: 0
     priority: "p1"
     tags: ["smoke", "daily", "single"]
 
@@ -69,8 +68,7 @@ test_cases:
     description: "获取获取客户列表，用于创建广告主"
     priority: "p1"
     tags: ["regression", "single"]
-    order: 0
-    
+
     require_login: true
     base_url: "operation"
     method: "GET"
@@ -107,7 +105,6 @@ test_cases:
     description: "创建广告主-全量传参-创建成功"
     priority: "p0"
     tags: ["regression", "single"]
-    order: 1
     depends_on: "获取客户列表"
 
     base_url: "operation"
@@ -145,10 +142,9 @@ test_cases:
     description: "获取广告主列表"
     priority: "p1"
     tags: ["regression","single"]
-    order: 2
 
     base_url: "operation"
-    method: "POST"
+    method: "GET"
     url: "/prod-api/offer/advertiser/listAll"
     require_login: true
 

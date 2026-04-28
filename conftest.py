@@ -73,7 +73,7 @@ from src.hooks.dependency_hooks import (
     pytest_runtest_setup,
     pytest_runtest_logreport,
     pytest_sessionstart,
-    pytest_session_finish as dependency_session_finish
+    pytest_sessionfinish as dependency_session_finish
 )
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)

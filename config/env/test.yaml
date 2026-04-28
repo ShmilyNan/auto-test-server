@@ -19,6 +19,10 @@ auth:
     retry_delay: 2          # 重试间隔（秒）
     timeout: 30             # 登录超时时间（秒）
 
+# 依赖管理配置
+dependency:
+  wait_timeout: 60         # 依赖用例等待超时时间（秒）
+
 # 默认请求头
 headers:
   Content-Type: "application/json"
